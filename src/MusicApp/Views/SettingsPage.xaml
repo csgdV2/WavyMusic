@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="MusicApp.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Page.Resources>
+
+        <Style x:Key="SettingCard" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="16,12" />
+        </Style>
+        <Style x:Key="SettingName" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" />
+        <Style x:Key="SettingHint" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
+            <Setter Property="Opacity" Value="0.7" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+        </Style>
+        <Style x:Key="SectionHeading" TargetType="TextBlock" BasedOn="{StaticResource BodyStrongTextBlockStyle}">
+            <Setter Property="Margin" Value="0,10,0,0" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Padding="24,16,24,0" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+
+        <ScrollViewer Grid.Row="1" Padding="0,0,0,0">
+            <StackPanel Spacing="8" MaxWidth="720" HorizontalAlignment="Left" Margin="0,0,0,110">
+
+                <TextBlock Text="Appearance" Style="{StaticResource SectionHeading}" Margin="0,0,0,0" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Theme" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="System follows the light/dark setting in Windows. Darker is a deeper, flat black." />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
+                                  SelectedIndex="{x:Bind ViewModel.ThemeIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="System" />
+                            <ComboBoxItem Content="Light" />
+                            <ComboBoxItem Content="Dark" />
+                            <ComboBoxItem Content="Darker" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Accent color" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Colors the seek bar, selection and highlights. Pick your own or follow Windows." />
+                        </StackPanel>
+                        <Button Grid.Column="1" MinWidth="0" Padding="10,6" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Width="18" Height="18" CornerRadius="9"
+                                        Background="{x:Bind ViewModel.AccentBrush, Mode=OneWay}"
+                                        BorderThickness="1"
+                                        BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AccentLabel, Mode=OneWay}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout x:Name="AccentFlyout" Closed="AccentFlyout_Closed">
+                                    <StackPanel Spacing="12">
+                                        <ColorPicker Color="{x:Bind ViewModel.AccentColor, Mode=TwoWay}"
+                                                     IsAlphaEnabled="False"
+                                                     IsMoreButtonVisible="False"
+                                                     IsColorChannelTextInputVisible="False"
+                                                     IsHexInputVisible="True" />
+                                        <Button Content="Use Windows accent" HorizontalAlignment="Stretch"
+                                                Click="SystemAccent_Click" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Open the sidebar on startup" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Off means the app opens on the content, with the menu behind the hamburger button. You can still open and close it any time." />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                                      OnContent="" OffContent=""
+                                      IsOn="{x:Bind ViewModel.OpenSidebarOnStartup, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Ambient background" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Tints the page behind your music with a soft blur of the cover art, and fades to the next one as songs change." />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                                      OnContent="" OffContent=""
+                                      IsOn="{x:Bind ViewModel.AmbientBackground, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Player layout" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Top keeps the player across the top of the window. Bottom floats it as a rounded bar at the bottom, like Apple Music on the web." />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
+                                  SelectedIndex="{x:Bind ViewModel.MenuLayoutIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Top" />
+                            <ComboBoxItem Content="Bottom" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="Playback" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Get the next song ready early" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Downloads and loads the next song while this one plays, so it starts instantly and runs into it without a gap. Turn off to save data." />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                                      OnContent="" OffContent=""
+                                      IsOn="{x:Bind ViewModel.PrefetchNext, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Volume steps" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="How finely the volume slider moves. Every number changes it by 1%, multiples of 5 snap to 5%." />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="160" VerticalAlignment="Center"
+                                  SelectedIndex="{x:Bind ViewModel.VolumeStepIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Every number" />
+                            <ComboBoxItem Content="Multiples of 5" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="Lyrics" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Where to get lyrics" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="LRCLIB has time-synced lyrics that follow along with the song. Genius and lyrics.ovh are plain text only. Automatic tries LRCLIB first and falls back." />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="150" VerticalAlignment="Center"
+                                  SelectedIndex="{x:Bind ViewModel.LyricsSourceIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Automatic" />
+                            <ComboBoxItem Content="LRCLIB" />
+                            <ComboBoxItem Content="lyrics.ovh" />
+                            <ComboBoxItem Content="Genius" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="Discord" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Show what you're listening to" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Puts the song, the artist and the cover on your Discord profile while it plays." />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                                      OnContent="" OffContent=""
+                                      IsOn="{x:Bind ViewModel.DiscordPresence, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Show up as" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="The name Discord puts after &quot;Listening to&quot;. Takes effect on the next song." />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="150" VerticalAlignment="Center"
+                                  SelectedIndex="{x:Bind ViewModel.DiscordIdentityIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="YouTube Music" />
+                            <ComboBoxItem Content="Music" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="Offline songs" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Keep unplayed songs for" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Saved songs you haven't played in this long are deleted when the app starts. Songs you keep playing are never touched." />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
+                                  SelectedIndex="{x:Bind ViewModel.KeepIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="A day" />
+                            <ComboBoxItem Content="A week" />
+                            <ComboBoxItem Content="A month" />
+                            <ComboBoxItem Content="Forever" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Saved on this PC" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="{x:Bind ViewModel.CacheSummary, Mode=OneWay}" />
+
+                            <TextBlock x:Name="ClearResult" Style="{StaticResource SettingHint}"
+                                       Visibility="Collapsed" />
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Clear list" VerticalAlignment="Center"
+                                Click="Clear_Click" />
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="Keyboard shortcuts" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+
+                    <Grid ColumnSpacing="24" RowSpacing="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Space" Style="{StaticResource SettingName}" />
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Play or pause" Style="{StaticResource SettingHint}" Margin="0" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Ctrl + ← / →" Style="{StaticResource SettingName}" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Previous or next song" Style="{StaticResource SettingHint}" Margin="0" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Shift + ← / →" Style="{StaticResource SettingName}" />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Skip back or forward 10 seconds" Style="{StaticResource SettingHint}" Margin="0" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Ctrl + ↑ / ↓" Style="{StaticResource SettingName}" />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Volume up or down" Style="{StaticResource SettingHint}" Margin="0" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Ctrl + F" Style="{StaticResource SettingName}" />
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="Jump to the search box" Style="{StaticResource SettingHint}" Margin="0" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Ctrl + Space" Style="{StaticResource SettingName}" />
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="Show or hide the sidebar" Style="{StaticResource SettingHint}" Margin="0" />
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="About" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Wavy" Style="{StaticResource SettingName}" />
+                            <TextBlock Text="{x:Bind ViewModel.Version}" Style="{StaticResource SettingHint}" />
+                            <TextBlock Text="{x:Bind ViewModel.Author}" Style="{StaticResource SettingHint}" />
+                            <TextBlock Text="{x:Bind ViewModel.DataFolder}" Style="{StaticResource SettingHint}"
+                                       IsTextSelectionEnabled="True" />
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Open folder" VerticalAlignment="Center"
+                                Click="OpenFolder_Click" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

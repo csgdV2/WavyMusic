@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="MusicApp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:MusicApp.Controls">
+
+    <Grid x:Name="RootGrid">
+
+        <Grid x:Name="Ambient" IsHitTestVisible="False" Visibility="Collapsed">
+            <Grid x:Name="AmbientBack" Opacity="0" />
+            <Grid x:Name="AmbientFront" Opacity="0" />
+            <Rectangle x:Name="AmbientScrim" Opacity="0.28" />
+        </Grid>
+
+        <NavigationView x:Name="Nav"
+                        PaneDisplayMode="Auto"
+                        CompactModeThresholdWidth="0"
+                        IsBackButtonVisible="Visible"
+                        IsBackEnabled="False"
+                        IsSettingsVisible="True"
+                        BackRequested="Nav_BackRequested"
+                        DisplayModeChanged="Nav_DisplayModeChanged"
+                        PaneClosed="Nav_PaneClosed"
+                        PaneOpened="Nav_PaneOpened"
+                        SelectionChanged="Nav_SelectionChanged"
+                        ItemInvoked="Nav_ItemInvoked">
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox x:Name="SearchSuggest"
+                                PlaceholderText="Search"
+                                TextChanged="SearchSuggest_TextChanged"
+                                QuerySubmitted="SearchSuggest_QuerySubmitted">
+                    <AutoSuggestBox.QueryIcon>
+                        <SymbolIcon Symbol="Find" />
+                    </AutoSuggestBox.QueryIcon>
+                </AutoSuggestBox>
+            </NavigationView.AutoSuggestBox>
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Home" Tag="home" IsSelected="True">
+                    <NavigationViewItem.Icon><FontIcon Glyph="&#xEA8A;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="SearchNavItem" Content="Search" Tag="search">
+                    <NavigationViewItem.Icon><FontIcon Glyph="&#xE721;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Name="PlaylistsNavItem" Content="Playlists" Tag="playlists">
+                    <NavigationViewItem.Icon><FontIcon Glyph="&#xE90B;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Name="AlbumsNavItem" Content="Albums" Tag="albums">
+                    <NavigationViewItem.Icon><FontIcon Glyph="&#xE93C;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem Content="History" Tag="history">
+                    <NavigationViewItem.Icon><FontIcon Glyph="&#xE81C;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <Grid RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="ContentArea" Grid.Row="1" ColumnSpacing="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Frame x:Name="ContentFrame" />
+
+                        <InfoBar VerticalAlignment="Bottom" Margin="16"
+                                 Severity="Error"
+                                 Title="Playback"
+                                 IsOpen="{x:Bind Player.HasStatusMessage, Mode=OneWay}"
+                                 Message="{x:Bind Player.StatusMessage, Mode=OneWay}"
+                                 CloseButtonClick="Status_CloseButtonClick" />
+                    </Grid>
+
+                    <controls:LyricsPanel x:Name="LyricsSide" Grid.Column="1" />
+
+                    <controls:QueuePanel x:Name="QueueSide" Grid.Column="2" />
+                </Grid>
+
+                <controls:NowPlayingBar x:Name="NowPlaying" Grid.Row="0" />
+
+                <Grid x:Name="TitleStrip" Grid.Row="0" Height="48"
+                      VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                      Background="Transparent" Visibility="Collapsed" />
+            </Grid>
+        </NavigationView>
+
+        <StackPanel x:Name="Brand"
+                    Orientation="Horizontal" Spacing="8"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    IsHitTestVisible="False" Visibility="Collapsed">
+            <Image Width="20" Height="20" VerticalAlignment="Center"
+                   Source="ms-appx:///Assets/app.png" />
+            <TextBlock Text="Wavy" FontWeight="SemiBold" VerticalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</Window>

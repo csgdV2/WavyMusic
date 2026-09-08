@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page x:ConnectionId='1'
+    x:Class="MusicApp.Views.PlaylistsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:MusicApp.Controls"
+    xmlns:models="using:MusicApp.Core.Models">
+
+    <Grid Padding="24,16,24,0" ColumnSpacing="20" RowSpacing="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0">
+            <TextBlock Text="Playlists" Style="{StaticResource TitleTextBlockStyle}"
+                       VerticalAlignment="Center" />
+            <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Width="32" Height="32" Padding="0" CornerRadius="6"
+                    ToolTipService.ToolTip="Add a playlist">
+                <FontIcon Glyph="&#xE710;" FontSize="14" />
+                <Button.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem x:ConnectionId='25' Text="New playlist…"                  >
+                            <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE710;" /></MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem x:ConnectionId='26' Text="Import from YouTube Music…"                     >
+                            <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE896;" /></MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem x:ConnectionId='27' Text="Import from Spotify…"                            >
+                            <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE93E;" /></MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="0">
+            <ListView x:ConnectionId='20' x:Name="PlaylistList"
+                                                                             
+                                                                             
+                      SelectionMode="Single"
+                      CanReorderItems="True" AllowDrop="True" ReorderMode="Enabled">
+                <ListView.ItemTemplate>
+                    <DataTemplate                             >
+                        <Grid x:ConnectionId='22' Height="56" ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <controls:PlaylistCover x:ConnectionId='23' Grid.Column="0"                     Size="40" Radius="4" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:ConnectionId='24'                                   TextTrimming="CharacterEllipsis" MaxLines="1"
+                                           Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <Grid x:ConnectionId='2' Grid.Row="0" Grid.Column="1" ColumnSpacing="8"
+                                                                                                                    >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <controls:PlaylistCover x:ConnectionId='17'                                                     Size="56" Radius="6" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock x:ConnectionId='18'                                                     
+                               TextTrimming="CharacterEllipsis" MaxLines="1"
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock x:ConnectionId='19'                                                        Opacity="0.7"
+                               Style="{StaticResource CaptionTextBlockStyle}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Button x:ConnectionId='13'                                                  Style="{StaticResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xF5B0;" FontSize="13" />
+                        <TextBlock Text="Play" />
+                    </StackPanel>
+                </Button>
+                <Button x:ConnectionId='14'                                                     ToolTipService.ToolTip="Shuffle">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE8B1;" FontSize="13" />
+                        <TextBlock Text="Shuffle" />
+                    </StackPanel>
+                </Button>
+                <Button x:ConnectionId='15' Content="Rename"                      />
+                <Button x:ConnectionId='16' Content="Delete"                      />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <TextBlock x:ConnectionId='3' Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="360"
+                       Text="This playlist is empty. Play something, then add it from the ⋯ menu on the now-playing bar."
+                                                                                                                                 />
+
+            <ListView x:ConnectionId='4' x:Name="TrackList"
+                                                                          
+                      IsItemClickEnabled="True"                             
+                      SelectionMode="None" Padding="0,0,0,110"
+                      CanReorderItems="True" AllowDrop="True" ReorderMode="Enabled">
+                <ListView.ItemTemplate>
+                    <DataTemplate                          >
+                        <Grid x:ConnectionId='6' Height="60" ColumnSpacing="12" Background="Transparent"
+                                                                                                   >
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:ConnectionId='7' Text="Remove from playlist"                          >
+                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE738;" /></MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Width="44" Height="44" CornerRadius="4"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource ControlAltFillColorSecondaryBrush}">
+                                <Image x:ConnectionId='12' Stretch="UniformToFill"
+                                                                                                                                      />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:ConnectionId='10'                       TextTrimming="CharacterEllipsis" MaxLines="1"
+                                           Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <TextBlock x:ConnectionId='11'                              TextTrimming="CharacterEllipsis" MaxLines="1"
+                                           Opacity="0.7" Style="{StaticResource CaptionTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock x:ConnectionId='8' Grid.Column="2" VerticalAlignment="Center" Opacity="0.6"
+                                                                    Style="{StaticResource CaptionTextBlockStyle}" />
+                            <Button x:ConnectionId='9' x:Name="RowActions" Grid.Column="3"                          Opacity="0"
+                                    Width="32" Height="32" Padding="0" CornerRadius="6"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent" BorderThickness="0"
+                                    ToolTipService.ToolTip="More">
+                                <FontIcon Glyph="&#xE712;" FontSize="15" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Page>
+

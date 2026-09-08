@@ -1,0 +1,15 @@
+App.xbf
+Controls\LyricsPanel.xbf
+Controls\NowPlayingBar.xbf
+Controls\PlaylistCover.xbf
+Controls\QueuePanel.xbf
+MainWindow.xbf
+Views\AlbumPage.xbf
+Views\AlbumsPage.xbf
+Views\ArtistPage.xbf
+Views\HomePage.xbf
+Views\LibraryPage.xbf
+Views\OnlinePlaylistPage.xbf
+Views\PlaylistsPage.xbf
+Views\SearchPage.xbf
+Views\SettingsPage.xbf

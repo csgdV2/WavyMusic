@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:ConnectionId='1'
+    x:Class="MusicApp.Controls.NowPlayingBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid x:ConnectionId='2' x:Name="Shell">
+        <Border x:ConnectionId='3' x:Name="Glass" Visibility="Collapsed"                                 />
+
+        <Border x:ConnectionId='4' x:Name="Outline" IsHitTestVisible="False"
+                Canvas.ZIndex="2"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" />
+
+        <Grid x:ConnectionId='5' x:Name="Root" Height="66" Padding="16,8,150,8" ColumnSpacing="14"
+          Background="{ThemeResource LayerFillColorDefaultBrush}"
+          BorderThickness="0,0,0,1"
+          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+        <Grid.Resources>
+
+            <SolidColorBrush x:Key="ButtonBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:ConnectionId='6' x:Name="TransportPanel" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
+            <Button x:ConnectionId='30'                                                               
+                                                                        
+                    Width="36" Height="36" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Shuffle">
+                <FontIcon x:ConnectionId='38' Glyph="&#xE8B1;" FontSize="15"
+                                                                                  
+                                                                                                                         />
+            </Button>
+            <Button x:ConnectionId='31'                                             
+                                                                        
+                    Width="36" Height="36" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0">
+                <FontIcon Glyph="&#xF8AC;" FontSize="15" />
+            </Button>
+            <Button x:ConnectionId='32'                                              
+                                                                        
+                    Width="40" Height="40" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0">
+                <FontIcon x:ConnectionId='37'                                                        FontSize="18" />
+            </Button>
+            <Button x:ConnectionId='33'                                         
+                                                                        
+                    Width="36" Height="36" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0">
+                <FontIcon Glyph="&#xF8AD;" FontSize="15" />
+            </Button>
+
+            <Button x:ConnectionId='34'                                                             
+                                                                        
+                    Width="36" Height="36" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Repeat">
+                <FontIcon x:ConnectionId='36'                                                     FontSize="15"
+                                                                                 
+                                                                                                                         />
+            </Button>
+            <ProgressRing x:ConnectionId='35' Width="16" Height="16" Margin="6,0,0,0"
+                                                                               />
+        </StackPanel>
+
+        <Border x:ConnectionId='7' x:Name="SongCard" Grid.Column="1" MaxWidth="560" Height="50"
+                VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                CornerRadius="8" Padding="4,3,4,3"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+
+            <Grid x:ConnectionId='15' x:Name="CardGrid" ColumnSpacing="10" Background="Transparent"
+                                                          
+                                                      
+                                                            
+                                                                  
+                                                          
+                                                        
+                                                      >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Image x:ConnectionId='16' Grid.ColumnSpan="3" Source="ms-appx:///Assets/wave.png"
+                       Height="24" Stretch="Uniform"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       IsHitTestVisible="False"
+                                                                                                                                                     />
+
+                <Border x:ConnectionId='17' Grid.Column="0" Width="40" Height="40" CornerRadius="5"
+                        BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
+                        IsHitTestVisible="False"
+                                                                                                                          >
+                    <Image x:ConnectionId='29' Stretch="UniformToFill"
+                                                                                                                                                              />
+                </Border>
+
+                <Grid x:ConnectionId='18' Grid.Column="1" VerticalAlignment="Center"
+                                                                                                                        >
+                    <Grid.Resources>
+                        <SolidColorBrush x:Key="HyperlinkButtonBackground" Color="Transparent" />
+                        <SolidColorBrush x:Key="HyperlinkButtonBackgroundPointerOver" Color="Transparent" />
+                        <SolidColorBrush x:Key="HyperlinkButtonBackgroundPressed" Color="Transparent" />
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="2"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel MaxWidth="320" VerticalAlignment="Center">
+                            <TextBlock x:ConnectionId='26'                                                          
+                                       IsHitTestVisible="False"
+                                       TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" MaxLines="1"
+                                       FontSize="12.5" FontWeight="SemiBold"
+                                       LineHeight="15" LineStackingStrategy="BlockLineHeight" />
+                            <HyperlinkButton x:ConnectionId='27' x:Name="ArtistLink"                     
+                                                                                   
+                                                                                 
+                                             Padding="0" Margin="0" MinWidth="0" MinHeight="0"
+                                             HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                                             ToolTipService.ToolTip="Open artist">
+                                <TextBlock x:ConnectionId='28' x:Name="ArtistText"
+                                                                                                     
+                                           TextAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" MaxLines="1"
+                                           FontSize="11" Opacity="0.7"
+                                           LineHeight="13" LineStackingStrategy="BlockLineHeight"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </HyperlinkButton>
+                        </StackPanel>
+
+                        <Button x:ConnectionId='25' x:Name="MoreButton"                   
+                                Width="28" Height="28" Padding="0" CornerRadius="0"
+                                VerticalAlignment="Center"
+                                Background="Transparent" BorderThickness="0"
+                                ToolTipService.ToolTip="More"
+                                                                                                                                  >
+                            <FontIcon Glyph="&#xE712;" FontSize="15" />
+                        </Button>
+                    </StackPanel>
+
+                    <Grid x:ConnectionId='19' x:Name="SeekRow" Grid.Row="1" Margin="0,2,0,0" ColumnSpacing="8"
+                          IsHitTestVisible="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:ConnectionId='20' x:Name="ElapsedLabel" Grid.Column="0" Opacity="0"
+                                   MinWidth="28" TextAlignment="Right" VerticalAlignment="Center"
+                                   FontSize="10" LineHeight="12" LineStackingStrategy="BlockLineHeight"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                                                       />
+
+                        <Border x:ConnectionId='21' x:Name="ProgressTrack" Grid.Column="1" Height="3" CornerRadius="2"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource ControlFillColorDisabledBrush}">
+                            <ProgressBar x:ConnectionId='24' Height="3" MaxHeight="3" MinHeight="3" Padding="0" Margin="0"
+                                         ShowPaused="False" ShowError="False"
+                                         Minimum="0"
+                                                                                                  
+                                                                                                 />
+                        </Border>
+
+                        <Border x:ConnectionId='22' x:Name="SeekThumb" Grid.Column="1" Opacity="0"
+                                Width="3" Height="11" CornerRadius="1.5"
+                                HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Background="{ThemeResource TextFillColorPrimaryBrush}" />
+
+                        <TextBlock x:ConnectionId='23' x:Name="RemainingLabel" Grid.Column="2" Opacity="0"
+                                   MinWidth="32" TextAlignment="Left" VerticalAlignment="Center"
+                                   FontSize="10" LineHeight="12" LineStackingStrategy="BlockLineHeight"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                                                        />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <StackPanel x:ConnectionId='8' x:Name="VolumePanel" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                    HorizontalAlignment="Right" Spacing="2">
+            <Button Width="36" Height="36" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Volume">
+                <FontIcon Glyph="&#xE767;" FontSize="15" />
+                <Button.Flyout>
+
+                    <Flyout Placement="Top">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="12,4" />
+                                <Setter Property="CornerRadius" Value="10" />
+                                <Setter Property="MinWidth" Value="0" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE993;" FontSize="13" Opacity="0.6" />
+                            <Slider x:ConnectionId='14' x:Name="VolumeSlider" Width="112" VerticalAlignment="Center"
+                                    Minimum="0" Maximum="1" StepFrequency="0.05"
+                                                                                  
+                                    IsThumbToolTipEnabled="True"
+                                    ThumbToolTipValueConverter="{StaticResource PercentTooltip}"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <FontIcon Glyph="&#xE995;" FontSize="13" Opacity="0.6" />
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+
+            <Grid Width="36" Height="36">
+                <Button x:ConnectionId='11'                                                
+                        Width="36" Height="36" Padding="0" CornerRadius="6"
+                        Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Queue">
+                    <FontIcon x:ConnectionId='13' Glyph="&#xE8FD;" FontSize="15"
+                                                                                                                              />
+                </Button>
+                <TextBlock x:ConnectionId='12' Text="&#x221E;" FontSize="12" FontWeight="SemiBold" IsHitTestVisible="False"
+                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,1"
+                           Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                                                                                                  />
+            </Grid>
+
+            <Button x:ConnectionId='9'                                                 
+                    Width="36" Height="36" Padding="0" CornerRadius="6"
+                    Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Lyrics">
+                <PathIcon x:ConnectionId='10' VerticalAlignment="Center"
+                                                                                                                          
+                          Data="F1 M 3.6 1 H 12.4 A 3.1 3.1 0 0 1 15.5 4.1 V 9.4 A 3.1 3.1 0 0 1 12.4 12.5 H 8.4 L 4.9 15.4 V 12.5 H 3.6 A 3.1 3.1 0 0 1 0.5 9.4 V 4.1 A 3.1 3.1 0 0 1 3.6 1 Z M 3.6 2.5 A 1.6 1.6 0 0 0 2 4.1 V 9.4 A 1.6 1.6 0 0 0 3.6 11 H 6.4 V 12.2 L 7.9 11 H 12.4 A 1.6 1.6 0 0 0 14 9.4 V 4.1 A 1.6 1.6 0 0 0 12.4 2.5 Z M 6.75 5.9 A 1.15 1.15 0 1 0 4.45 5.9 A 1.15 1.15 0 0 0 6.4 6.65 C 6.2 7.5 5.8 8.1 5.1 8.6 L 5.9 9.2 C 6.7 8.3 6.8 7.1 6.75 5.9 Z M 11.2 5.9 A 1.15 1.15 0 1 0 8.9 5.9 A 1.15 1.15 0 0 0 10.85 6.65 C 10.65 7.5 10.25 8.1 9.55 8.6 L 10.35 9.2 C 11.15 8.3 11.25 7.1 11.2 5.9 Z" />
+            </Button>
+        </StackPanel>
+    </Grid>
+    </Grid>
+</UserControl>
+

@@ -1,0 +1,11 @@
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\bin\Debug\net8.0\MusicApp.Core.deps.json
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\bin\Debug\net8.0\MusicApp.Core.dll
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\bin\Debug\net8.0\MusicApp.Core.pdb
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\MusicApp.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\MusicApp.Core.AssemblyInfoInputs.cache
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\MusicApp.Core.AssemblyInfo.cs
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\MusicApp.Core.csproj.CoreCompileInputs.cache
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\MusicApp.Core.dll
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\refint\MusicApp.Core.dll
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\MusicApp.Core.pdb
+C:\Users\csgd\Downloads\music\src\MusicApp.Core\obj\Debug\net8.0\ref\MusicApp.Core.dll
