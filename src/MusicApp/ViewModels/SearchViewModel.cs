@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using CommunityToolkit.Mvvm.ComponentModel;
 using MusicApp.Core.Abstractions;
 using MusicApp.Core.Models;
+using MusicApp.Services;
 
 namespace MusicApp.ViewModels;
 
@@ -11,6 +12,7 @@ public sealed partial class SearchViewModel : ObservableObject
     private const string IdlePrompt = "Search for a song to get started.";
 
     private readonly IYtDlpService _ytDlp;
+    private readonly SettingsService _settings;
     private CancellationTokenSource? _cts;
 
     private string? _query;
@@ -25,9 +27,10 @@ public sealed partial class SearchViewModel : ObservableObject
     public ObservableCollection<AlbumResult> Albums { get; } = new();
     public ObservableCollection<PlaylistResult> Playlists { get; } = new();
 
-    public SearchViewModel(IYtDlpService ytDlp)
+    public SearchViewModel(IYtDlpService ytDlp, SettingsService settings)
     {
         _ytDlp = ytDlp;
+        _settings = settings;
 
         void OnChanged(object? _, NotifyCollectionChangedEventArgs __) =>
             OnPropertyChanged(nameof(ShowBusyIndicator));
@@ -89,7 +92,7 @@ public sealed partial class SearchViewModel : ObservableObject
         OnPropertyChanged(nameof(HasQuery));
     }
 
-    public Task SearchAsync(string? query)
+    public Task SearchAsync(string? query, bool recordInHistory = false)
     {
         query = query?.Trim();
         if (string.IsNullOrEmpty(query))
@@ -97,6 +100,9 @@ public sealed partial class SearchViewModel : ObservableObject
             Clear();
             return Task.CompletedTask;
         }
+
+        if (recordInHistory)
+            _settings.AddSearchHistory(query);
 
         var isNewQuery = !string.Equals(query, _query, StringComparison.OrdinalIgnoreCase);
         _query = query;

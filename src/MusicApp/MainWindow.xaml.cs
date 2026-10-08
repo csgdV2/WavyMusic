@@ -39,8 +39,6 @@ public sealed partial class MainWindow : Window
 
     private readonly DispatcherTimer _placementSave = new() { Interval = TimeSpan.FromMilliseconds(400) };
 
-    private readonly DispatcherTimer _searchDebounce = new() { Interval = TimeSpan.FromMilliseconds(160) };
-
     private readonly List<NavigationViewItem> _playlistNavItems = new();
     private readonly List<NavigationViewItem> _albumNavItems = new();
     private bool _playlistsExpanded = true;
@@ -60,6 +58,8 @@ public sealed partial class MainWindow : Window
         _favorites = App.Services.GetRequiredService<FavoritesService>();
         _settings = App.Services.GetRequiredService<SettingsService>();
         InitializeComponent();
+        ContentArea.SizeChanged += (_, _) => UpdateSidePanelLayout();
+        RootGrid.SizeChanged += (_, _) => UpdateNavigationPaneWidth();
 
         SystemBackdrop = new MicaBackdrop();
         Title = "Wavy";
@@ -93,6 +93,7 @@ public sealed partial class MainWindow : Window
                 ApplyTheme();
                 _ambient.Show(Player.CurrentTrack);
             }
+
         };
 
         SyncPlaylistNavItems();
@@ -116,12 +117,6 @@ public sealed partial class MainWindow : Window
         }
 
         UpdateSearchItemVisibility();
-
-        _searchDebounce.Tick += async (_, _) =>
-        {
-            _searchDebounce.Stop();
-            await _search.SearchAsync(SearchSuggest.Text);
-        };
 
         ContentFrame.Navigated += (_, _) => Nav.IsBackEnabled = ContentFrame.CanGoBack;
 
@@ -264,12 +259,13 @@ public sealed partial class MainWindow : Window
         LyricsSide.PanelCorner = corner;
         QueueSide.PanelCorner = corner;
 
-        var inset = bottom ? 32.0 : 0;
+        var inset = bottom ? 32.0 : 16.0;
         ContentArea.Margin = new Thickness(0, inset, 0, 0);
 
         var panelInset = bottom ? Math.Max(0, CaptionHeight() - inset) : 0;
         LyricsSide.PanelTopInset = panelInset;
         QueueSide.PanelTopInset = panelInset;
+        UpdateSidePanelLayout();
 
         if (bottom)
             TitleStrip.Height = CaptionHeight();
@@ -277,6 +273,18 @@ public sealed partial class MainWindow : Window
         SetTitleBar(bottom ? TitleStrip : NowPlaying);
         ClearTitleBarPassthrough();
         UpdateTitleBarPassthrough();
+    }
+
+    private void UpdateSidePanelLayout()
+    {
+        var width = Math.Max(0, ContentArea.ActualWidth);
+        var overlay = width < 920;
+        Grid.SetColumn(LyricsSide, overlay ? 0 : 1);
+        Grid.SetColumn(QueueSide, overlay ? 0 : 2);
+        LyricsSide.HorizontalAlignment = overlay ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
+        QueueSide.HorizontalAlignment = overlay ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
+        LyricsSide.PanelWidth = Math.Min(380, width * (overlay ? 0.62 : 1));
+        QueueSide.PanelWidth = Math.Min(320, width * (overlay ? 0.62 : 1));
     }
 
     private double CaptionHeight()
@@ -421,6 +429,7 @@ public sealed partial class MainWindow : Window
     private void Nav_PaneClosed(NavigationView sender, object args)
     {
         UpdateSearchItemVisibility();
+        UpdateNavigationPaneWidth();
         PlaceBrand();
         SyncNavChildren();
     }
@@ -429,10 +438,6 @@ public sealed partial class MainWindow : Window
     {
         UpdateSearchItemVisibility();
         SyncNavChildren();
-
-        var query = _search.Query ?? string.Empty;
-        if (SearchSuggest.Text != query)
-            SearchSuggest.Text = query;
     }
 
     public static bool IsNavPaneCollapsed { get; private set; }
@@ -441,9 +446,7 @@ public sealed partial class MainWindow : Window
 
     private void UpdateSearchItemVisibility()
     {
-        var minimal = Nav.DisplayMode == NavigationViewDisplayMode.Minimal && !Nav.IsPaneOpen;
-
-        SearchNavItem.Visibility = minimal ? Visibility.Visible : Visibility.Collapsed;
+        SearchNavItem.Visibility = Visibility.Visible;
 
         var collapsed = !Nav.IsPaneOpen;
         if (IsNavPaneCollapsed == collapsed)
@@ -455,6 +458,7 @@ public sealed partial class MainWindow : Window
 
     private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        UpdateHomeIcon(args.SelectedItemContainer as NavigationViewItem);
         if (args.IsSettingsSelected)
         {
             ShowPage(typeof(SettingsPage));
@@ -473,6 +477,7 @@ public sealed partial class MainWindow : Window
         }
 
         var invoked = args.InvokedItemContainer as NavigationViewItem;
+        UpdateHomeIcon(invoked);
         if (invoked?.Tag as string != "search")
             ClearSearch();
 
@@ -480,10 +485,23 @@ public sealed partial class MainWindow : Window
         NavigateTo(invoked);
     }
 
+    private void UpdateNavigationPaneWidth()
+    {
+        var width = RootGrid.ActualWidth;
+        if (width <= 0)
+            return;
+
+        Nav.OpenPaneLength = Math.Min(320, Math.Max(180, width * 0.72));
+    }
+
+    private void UpdateHomeIcon(NavigationViewItem? selectedItem = null)
+    {
+        selectedItem ??= Nav.SelectedItem as NavigationViewItem;
+        HomeIcon.Glyph = ReferenceEquals(selectedItem, HomeNavItem) ? "\uEA8A" : "\uE80F";
+    }
+
     private void ClearSearch()
     {
-        _searchDebounce.Stop();
-        SearchSuggest.Text = string.Empty;
         _search.Clear();
     }
 
@@ -705,37 +723,6 @@ public sealed partial class MainWindow : Window
             ContentFrame.GoBack();
     }
 
-    private void SearchSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-    {
-
-        if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
-            return;
-
-        _searchDebounce.Stop();
-        if (string.IsNullOrWhiteSpace(sender.Text))
-        {
-
-            _search.Clear();
-            return;
-        }
-
-        ShowSearchPage();
-        _searchDebounce.Start();
-    }
-
-    private async void SearchSuggest_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-    {
-        _searchDebounce.Stop();
-        ShowSearchPage();
-        await _search.SearchAsync(args.QueryText);
-    }
-
-    private void ShowSearchPage()
-    {
-        Nav.SelectedItem = SearchNavItem;
-        GoToSection("search");
-    }
-
     private void Status_CloseButtonClick(InfoBar sender, object args) => Player.ClearStatus();
 
     #region Keyboard shortcuts
@@ -810,13 +797,6 @@ public sealed partial class MainWindow : Window
         if (focused is TextBox or AutoSuggestBox or RichEditBox or PasswordBox)
             return;
 
-        if (IsDown(VirtualKey.Control))
-        {
-            Nav.IsPaneOpen = !Nav.IsPaneOpen;
-            e.Handled = true;
-            return;
-        }
-
         Player.PlayPauseCommand.Execute(null);
         e.Handled = true;
     }
@@ -826,9 +806,10 @@ public sealed partial class MainWindow : Window
 
     private void FocusSearchBox()
     {
-        if (Nav.DisplayMode == NavigationViewDisplayMode.Minimal && !Nav.IsPaneOpen)
-            Nav.IsPaneOpen = true;
-        SearchSuggest.Focus(FocusState.Programmatic);
+        Nav.SelectedItem = SearchNavItem;
+        GoToSection("search");
+        if (ContentFrame.Content is SearchPage page)
+            page.FocusSearchBox();
     }
 
     #endregion

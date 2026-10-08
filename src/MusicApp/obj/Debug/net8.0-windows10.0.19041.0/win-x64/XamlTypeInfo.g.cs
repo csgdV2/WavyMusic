@@ -260,8 +260,8 @@ namespace MusicApp.MusicApp_XamlTypeInfo
             _typeNameTable[30] = "Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode";
             _typeNameTable[31] = "System.Enum";
             _typeNameTable[32] = "Microsoft.UI.Xaml.Controls.NavigationViewBackButtonVisible";
-            _typeNameTable[33] = "Microsoft.UI.Xaml.Controls.AutoSuggestBox";
-            _typeNameTable[34] = "System.Collections.Generic.IList`1<Object>";
+            _typeNameTable[33] = "System.Collections.Generic.IList`1<Object>";
+            _typeNameTable[34] = "Microsoft.UI.Xaml.Controls.AutoSuggestBox";
             _typeNameTable[35] = "Microsoft.UI.Xaml.UIElement";
             _typeNameTable[36] = "Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode";
             _typeNameTable[37] = "Microsoft.UI.Xaml.DataTemplate";
@@ -352,8 +352,8 @@ namespace MusicApp.MusicApp_XamlTypeInfo
             _typeTable[30] = typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode);
             _typeTable[31] = typeof(global::System.Enum);
             _typeTable[32] = typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewBackButtonVisible);
-            _typeTable[33] = typeof(global::Microsoft.UI.Xaml.Controls.AutoSuggestBox);
-            _typeTable[34] = typeof(global::System.Collections.Generic.IList<global::System.Object>);
+            _typeTable[33] = typeof(global::System.Collections.Generic.IList<global::System.Object>);
+            _typeTable[34] = typeof(global::Microsoft.UI.Xaml.Controls.AutoSuggestBox);
             _typeTable[35] = typeof(global::Microsoft.UI.Xaml.UIElement);
             _typeTable[36] = typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode);
             _typeTable[37] = typeof(global::Microsoft.UI.Xaml.DataTemplate);
@@ -500,7 +500,7 @@ namespace MusicApp.MusicApp_XamlTypeInfo
         private void StaticInitializer_30_NavigationViewPaneDisplayMode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode).TypeHandle);
         private void StaticInitializer_31_Enum() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Enum).TypeHandle);
         private void StaticInitializer_32_NavigationViewBackButtonVisible() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewBackButtonVisible).TypeHandle);
-        private void StaticInitializer_34_IList() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.Generic.IList<global::System.Object>).TypeHandle);
+        private void StaticInitializer_33_IList() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::System.Collections.Generic.IList<global::System.Object>).TypeHandle);
         private void StaticInitializer_36_NavigationViewDisplayMode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode).TypeHandle);
         private void StaticInitializer_41_NavigationViewOverflowLabelMode() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewOverflowLabelMode).TypeHandle);
         private void StaticInitializer_43_NavigationViewSelectionFollowsFocus() => global::System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(global::Microsoft.UI.Xaml.Controls.NavigationViewSelectionFollowsFocus).TypeHandle);
@@ -550,7 +550,7 @@ namespace MusicApp.MusicApp_XamlTypeInfo
             var newItem = (global::System.Object)item;
             collection.Add(newKey, newItem);
         }
-        private void VectorAdd_34_IList(object instance, object item)
+        private void VectorAdd_33_IList(object instance, object item)
         {
             var collection = (global::System.Collections.Generic.ICollection<global::System.Object>)instance;
             var newItem = (global::System.Object)item;
@@ -680,6 +680,7 @@ namespace MusicApp.MusicApp_XamlTypeInfo
                 userType.AddMemberName("Player");
                 userType.AddMemberName("PanelCorner");
                 userType.AddMemberName("PanelTopInset");
+                userType.AddMemberName("PanelWidth");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -781,6 +782,7 @@ namespace MusicApp.MusicApp_XamlTypeInfo
                 userType.AddMemberName("ViewModel");
                 userType.AddMemberName("PanelCorner");
                 userType.AddMemberName("PanelTopInset");
+                userType.AddMemberName("PanelWidth");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -791,12 +793,13 @@ namespace MusicApp.MusicApp_XamlTypeInfo
                 userType.StaticInitializer = StaticInitializer_28_NavigationView;
                 userType.AddMemberName("PaneDisplayMode");
                 userType.AddMemberName("CompactModeThresholdWidth");
+                userType.AddMemberName("IsPaneToggleButtonVisible");
                 userType.AddMemberName("IsBackButtonVisible");
                 userType.AddMemberName("IsBackEnabled");
                 userType.AddMemberName("IsSettingsVisible");
-                userType.AddMemberName("AutoSuggestBox");
                 userType.AddMemberName("MenuItems");
                 userType.AddMemberName("AlwaysShowHeader");
+                userType.AddMemberName("AutoSuggestBox");
                 userType.AddMemberName("CompactPaneLength");
                 userType.AddMemberName("ContentOverlay");
                 userType.AddMemberName("DisplayMode");
@@ -806,7 +809,6 @@ namespace MusicApp.MusicApp_XamlTypeInfo
                 userType.AddMemberName("Header");
                 userType.AddMemberName("HeaderTemplate");
                 userType.AddMemberName("IsPaneOpen");
-                userType.AddMemberName("IsPaneToggleButtonVisible");
                 userType.AddMemberName("IsPaneVisible");
                 userType.AddMemberName("IsTitleBarAutoPaddingEnabled");
                 userType.AddMemberName("MenuItemContainerStyle");
@@ -859,16 +861,16 @@ namespace MusicApp.MusicApp_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 33:   //  Microsoft.UI.Xaml.Controls.AutoSuggestBox
-                xamlType = new global::MusicApp.MusicApp_XamlTypeInfo.XamlSystemBaseType(typeName, type);
-                break;
-
-            case 34:   //  System.Collections.Generic.IList`1<Object>
+            case 33:   //  System.Collections.Generic.IList`1<Object>
                 userType = new global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType(this, typeName, type, null);
-                userType.StaticInitializer = StaticInitializer_34_IList;
-                userType.CollectionAdd = VectorAdd_34_IList;
+                userType.StaticInitializer = StaticInitializer_33_IList;
+                userType.CollectionAdd = VectorAdd_33_IList;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
+                break;
+
+            case 34:   //  Microsoft.UI.Xaml.Controls.AutoSuggestBox
+                xamlType = new global::MusicApp.MusicApp_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
             case 35:   //  Microsoft.UI.Xaml.UIElement
@@ -1468,1027 +1470,1037 @@ namespace MusicApp.MusicApp_XamlTypeInfo
             var that = (global::MusicApp.Controls.LyricsPanel)instance;
             that.PanelTopInset = (global::System.Double)Value;
         }
-        private object get_11_ProgressBar_ShowPaused(object instance)
+        private void set_11_LyricsPanel_PanelWidth(object instance, object Value)
+        {
+            var that = (global::MusicApp.Controls.LyricsPanel)instance;
+            that.PanelWidth = (global::System.Double)Value;
+        }
+        private object get_12_ProgressBar_ShowPaused(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             return that.ShowPaused;
         }
-        private void set_11_ProgressBar_ShowPaused(object instance, object Value)
+        private void set_12_ProgressBar_ShowPaused(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             that.ShowPaused = (global::System.Boolean)Value;
         }
-        private object get_12_ProgressBar_ShowError(object instance)
+        private object get_13_ProgressBar_ShowError(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             return that.ShowError;
         }
-        private void set_12_ProgressBar_ShowError(object instance, object Value)
+        private void set_13_ProgressBar_ShowError(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             that.ShowError = (global::System.Boolean)Value;
         }
-        private object get_13_ProgressBar_IsIndeterminate(object instance)
+        private object get_14_ProgressBar_IsIndeterminate(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             return that.IsIndeterminate;
         }
-        private void set_13_ProgressBar_IsIndeterminate(object instance, object Value)
+        private void set_14_ProgressBar_IsIndeterminate(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             that.IsIndeterminate = (global::System.Boolean)Value;
         }
-        private object get_14_ProgressBar_TemplateSettings(object instance)
+        private object get_15_ProgressBar_TemplateSettings(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ProgressBar)instance;
             return that.TemplateSettings;
         }
-        private object get_15_NowPlayingBar_ViewModel(object instance)
+        private object get_16_NowPlayingBar_ViewModel(object instance)
         {
             var that = (global::MusicApp.Controls.NowPlayingBar)instance;
             return that.ViewModel;
         }
-        private object get_16_NowPlayingBar_InteractiveRegions(object instance)
+        private object get_17_NowPlayingBar_InteractiveRegions(object instance)
         {
             var that = (global::MusicApp.Controls.NowPlayingBar)instance;
             return that.InteractiveRegions;
         }
-        private object get_17_NowPlayingBar_IsFloating(object instance)
+        private object get_18_NowPlayingBar_IsFloating(object instance)
         {
             var that = (global::MusicApp.Controls.NowPlayingBar)instance;
             return that.IsFloating;
         }
-        private void set_17_NowPlayingBar_IsFloating(object instance, object Value)
+        private void set_18_NowPlayingBar_IsFloating(object instance, object Value)
         {
             var that = (global::MusicApp.Controls.NowPlayingBar)instance;
             that.IsFloating = (global::System.Boolean)Value;
         }
-        private object get_18_PlaylistCover_Playlist(object instance)
+        private object get_19_PlaylistCover_Playlist(object instance)
         {
             var that = (global::MusicApp.Controls.PlaylistCover)instance;
             return that.Playlist;
         }
-        private void set_18_PlaylistCover_Playlist(object instance, object Value)
+        private void set_19_PlaylistCover_Playlist(object instance, object Value)
         {
             var that = (global::MusicApp.Controls.PlaylistCover)instance;
             that.Playlist = (global::System.Object)Value;
         }
-        private object get_19_PlaylistCover_Size(object instance)
+        private object get_20_PlaylistCover_Size(object instance)
         {
             var that = (global::MusicApp.Controls.PlaylistCover)instance;
             return that.Size;
         }
-        private void set_19_PlaylistCover_Size(object instance, object Value)
+        private void set_20_PlaylistCover_Size(object instance, object Value)
         {
             var that = (global::MusicApp.Controls.PlaylistCover)instance;
             that.Size = (global::System.Double)Value;
         }
-        private object get_20_PlaylistCover_Radius(object instance)
+        private object get_21_PlaylistCover_Radius(object instance)
         {
             var that = (global::MusicApp.Controls.PlaylistCover)instance;
             return that.Radius;
         }
-        private void set_20_PlaylistCover_Radius(object instance, object Value)
+        private void set_21_PlaylistCover_Radius(object instance, object Value)
         {
             var that = (global::MusicApp.Controls.PlaylistCover)instance;
             that.Radius = (global::System.Double)Value;
         }
-        private object get_21_QueuePanel_ViewModel(object instance)
+        private object get_22_QueuePanel_ViewModel(object instance)
         {
             var that = (global::MusicApp.Controls.QueuePanel)instance;
             return that.ViewModel;
         }
-        private void set_22_QueuePanel_PanelCorner(object instance, object Value)
+        private void set_23_QueuePanel_PanelCorner(object instance, object Value)
         {
             var that = (global::MusicApp.Controls.QueuePanel)instance;
             that.PanelCorner = (global::Microsoft.UI.Xaml.CornerRadius)Value;
         }
-        private void set_23_QueuePanel_PanelTopInset(object instance, object Value)
+        private void set_24_QueuePanel_PanelTopInset(object instance, object Value)
         {
             var that = (global::MusicApp.Controls.QueuePanel)instance;
             that.PanelTopInset = (global::System.Double)Value;
         }
-        private object get_24_NavigationView_PaneDisplayMode(object instance)
+        private void set_25_QueuePanel_PanelWidth(object instance, object Value)
+        {
+            var that = (global::MusicApp.Controls.QueuePanel)instance;
+            that.PanelWidth = (global::System.Double)Value;
+        }
+        private object get_26_NavigationView_PaneDisplayMode(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.PaneDisplayMode;
         }
-        private void set_24_NavigationView_PaneDisplayMode(object instance, object Value)
+        private void set_26_NavigationView_PaneDisplayMode(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.PaneDisplayMode = (global::Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode)Value;
         }
-        private object get_25_NavigationView_CompactModeThresholdWidth(object instance)
+        private object get_27_NavigationView_CompactModeThresholdWidth(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.CompactModeThresholdWidth;
         }
-        private void set_25_NavigationView_CompactModeThresholdWidth(object instance, object Value)
+        private void set_27_NavigationView_CompactModeThresholdWidth(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.CompactModeThresholdWidth = (global::System.Double)Value;
         }
-        private object get_26_NavigationView_IsBackButtonVisible(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.IsBackButtonVisible;
-        }
-        private void set_26_NavigationView_IsBackButtonVisible(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.IsBackButtonVisible = (global::Microsoft.UI.Xaml.Controls.NavigationViewBackButtonVisible)Value;
-        }
-        private object get_27_NavigationView_IsBackEnabled(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.IsBackEnabled;
-        }
-        private void set_27_NavigationView_IsBackEnabled(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.IsBackEnabled = (global::System.Boolean)Value;
-        }
-        private object get_28_NavigationView_IsSettingsVisible(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.IsSettingsVisible;
-        }
-        private void set_28_NavigationView_IsSettingsVisible(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.IsSettingsVisible = (global::System.Boolean)Value;
-        }
-        private object get_29_NavigationView_AutoSuggestBox(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.AutoSuggestBox;
-        }
-        private void set_29_NavigationView_AutoSuggestBox(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.AutoSuggestBox = (global::Microsoft.UI.Xaml.Controls.AutoSuggestBox)Value;
-        }
-        private object get_30_NavigationView_MenuItems(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.MenuItems;
-        }
-        private object get_31_NavigationView_AlwaysShowHeader(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.AlwaysShowHeader;
-        }
-        private void set_31_NavigationView_AlwaysShowHeader(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.AlwaysShowHeader = (global::System.Boolean)Value;
-        }
-        private object get_32_NavigationView_CompactPaneLength(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.CompactPaneLength;
-        }
-        private void set_32_NavigationView_CompactPaneLength(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.CompactPaneLength = (global::System.Double)Value;
-        }
-        private object get_33_NavigationView_ContentOverlay(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.ContentOverlay;
-        }
-        private void set_33_NavigationView_ContentOverlay(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.ContentOverlay = (global::Microsoft.UI.Xaml.UIElement)Value;
-        }
-        private object get_34_NavigationView_DisplayMode(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.DisplayMode;
-        }
-        private object get_35_NavigationView_ExpandedModeThresholdWidth(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.ExpandedModeThresholdWidth;
-        }
-        private void set_35_NavigationView_ExpandedModeThresholdWidth(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.ExpandedModeThresholdWidth = (global::System.Double)Value;
-        }
-        private object get_36_NavigationView_FooterMenuItems(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.FooterMenuItems;
-        }
-        private object get_37_NavigationView_FooterMenuItemsSource(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.FooterMenuItemsSource;
-        }
-        private void set_37_NavigationView_FooterMenuItemsSource(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.FooterMenuItemsSource = (global::System.Object)Value;
-        }
-        private object get_38_NavigationView_Header(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.Header;
-        }
-        private void set_38_NavigationView_Header(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.Header = (global::System.Object)Value;
-        }
-        private object get_39_NavigationView_HeaderTemplate(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.HeaderTemplate;
-        }
-        private void set_39_NavigationView_HeaderTemplate(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.HeaderTemplate = (global::Microsoft.UI.Xaml.DataTemplate)Value;
-        }
-        private object get_40_NavigationView_IsPaneOpen(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            return that.IsPaneOpen;
-        }
-        private void set_40_NavigationView_IsPaneOpen(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
-            that.IsPaneOpen = (global::System.Boolean)Value;
-        }
-        private object get_41_NavigationView_IsPaneToggleButtonVisible(object instance)
+        private object get_28_NavigationView_IsPaneToggleButtonVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.IsPaneToggleButtonVisible;
         }
-        private void set_41_NavigationView_IsPaneToggleButtonVisible(object instance, object Value)
+        private void set_28_NavigationView_IsPaneToggleButtonVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.IsPaneToggleButtonVisible = (global::System.Boolean)Value;
         }
-        private object get_42_NavigationView_IsPaneVisible(object instance)
+        private object get_29_NavigationView_IsBackButtonVisible(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.IsBackButtonVisible;
+        }
+        private void set_29_NavigationView_IsBackButtonVisible(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.IsBackButtonVisible = (global::Microsoft.UI.Xaml.Controls.NavigationViewBackButtonVisible)Value;
+        }
+        private object get_30_NavigationView_IsBackEnabled(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.IsBackEnabled;
+        }
+        private void set_30_NavigationView_IsBackEnabled(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.IsBackEnabled = (global::System.Boolean)Value;
+        }
+        private object get_31_NavigationView_IsSettingsVisible(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.IsSettingsVisible;
+        }
+        private void set_31_NavigationView_IsSettingsVisible(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.IsSettingsVisible = (global::System.Boolean)Value;
+        }
+        private object get_32_NavigationView_MenuItems(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.MenuItems;
+        }
+        private object get_33_NavigationView_AlwaysShowHeader(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.AlwaysShowHeader;
+        }
+        private void set_33_NavigationView_AlwaysShowHeader(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.AlwaysShowHeader = (global::System.Boolean)Value;
+        }
+        private object get_34_NavigationView_AutoSuggestBox(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.AutoSuggestBox;
+        }
+        private void set_34_NavigationView_AutoSuggestBox(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.AutoSuggestBox = (global::Microsoft.UI.Xaml.Controls.AutoSuggestBox)Value;
+        }
+        private object get_35_NavigationView_CompactPaneLength(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.CompactPaneLength;
+        }
+        private void set_35_NavigationView_CompactPaneLength(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.CompactPaneLength = (global::System.Double)Value;
+        }
+        private object get_36_NavigationView_ContentOverlay(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.ContentOverlay;
+        }
+        private void set_36_NavigationView_ContentOverlay(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.ContentOverlay = (global::Microsoft.UI.Xaml.UIElement)Value;
+        }
+        private object get_37_NavigationView_DisplayMode(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.DisplayMode;
+        }
+        private object get_38_NavigationView_ExpandedModeThresholdWidth(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.ExpandedModeThresholdWidth;
+        }
+        private void set_38_NavigationView_ExpandedModeThresholdWidth(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.ExpandedModeThresholdWidth = (global::System.Double)Value;
+        }
+        private object get_39_NavigationView_FooterMenuItems(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.FooterMenuItems;
+        }
+        private object get_40_NavigationView_FooterMenuItemsSource(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.FooterMenuItemsSource;
+        }
+        private void set_40_NavigationView_FooterMenuItemsSource(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.FooterMenuItemsSource = (global::System.Object)Value;
+        }
+        private object get_41_NavigationView_Header(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.Header;
+        }
+        private void set_41_NavigationView_Header(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.Header = (global::System.Object)Value;
+        }
+        private object get_42_NavigationView_HeaderTemplate(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.HeaderTemplate;
+        }
+        private void set_42_NavigationView_HeaderTemplate(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.HeaderTemplate = (global::Microsoft.UI.Xaml.DataTemplate)Value;
+        }
+        private object get_43_NavigationView_IsPaneOpen(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            return that.IsPaneOpen;
+        }
+        private void set_43_NavigationView_IsPaneOpen(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
+            that.IsPaneOpen = (global::System.Boolean)Value;
+        }
+        private object get_44_NavigationView_IsPaneVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.IsPaneVisible;
         }
-        private void set_42_NavigationView_IsPaneVisible(object instance, object Value)
+        private void set_44_NavigationView_IsPaneVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.IsPaneVisible = (global::System.Boolean)Value;
         }
-        private object get_43_NavigationView_IsTitleBarAutoPaddingEnabled(object instance)
+        private object get_45_NavigationView_IsTitleBarAutoPaddingEnabled(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.IsTitleBarAutoPaddingEnabled;
         }
-        private void set_43_NavigationView_IsTitleBarAutoPaddingEnabled(object instance, object Value)
+        private void set_45_NavigationView_IsTitleBarAutoPaddingEnabled(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.IsTitleBarAutoPaddingEnabled = (global::System.Boolean)Value;
         }
-        private object get_44_NavigationView_MenuItemContainerStyle(object instance)
+        private object get_46_NavigationView_MenuItemContainerStyle(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.MenuItemContainerStyle;
         }
-        private void set_44_NavigationView_MenuItemContainerStyle(object instance, object Value)
+        private void set_46_NavigationView_MenuItemContainerStyle(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.MenuItemContainerStyle = (global::Microsoft.UI.Xaml.Style)Value;
         }
-        private object get_45_NavigationView_MenuItemContainerStyleSelector(object instance)
+        private object get_47_NavigationView_MenuItemContainerStyleSelector(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.MenuItemContainerStyleSelector;
         }
-        private void set_45_NavigationView_MenuItemContainerStyleSelector(object instance, object Value)
+        private void set_47_NavigationView_MenuItemContainerStyleSelector(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.MenuItemContainerStyleSelector = (global::Microsoft.UI.Xaml.Controls.StyleSelector)Value;
         }
-        private object get_46_NavigationView_MenuItemTemplate(object instance)
+        private object get_48_NavigationView_MenuItemTemplate(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.MenuItemTemplate;
         }
-        private void set_46_NavigationView_MenuItemTemplate(object instance, object Value)
+        private void set_48_NavigationView_MenuItemTemplate(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.MenuItemTemplate = (global::Microsoft.UI.Xaml.DataTemplate)Value;
         }
-        private object get_47_NavigationView_MenuItemTemplateSelector(object instance)
+        private object get_49_NavigationView_MenuItemTemplateSelector(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.MenuItemTemplateSelector;
         }
-        private void set_47_NavigationView_MenuItemTemplateSelector(object instance, object Value)
+        private void set_49_NavigationView_MenuItemTemplateSelector(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.MenuItemTemplateSelector = (global::Microsoft.UI.Xaml.Controls.DataTemplateSelector)Value;
         }
-        private object get_48_NavigationView_MenuItemsSource(object instance)
+        private object get_50_NavigationView_MenuItemsSource(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.MenuItemsSource;
         }
-        private void set_48_NavigationView_MenuItemsSource(object instance, object Value)
+        private void set_50_NavigationView_MenuItemsSource(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.MenuItemsSource = (global::System.Object)Value;
         }
-        private object get_49_NavigationView_OpenPaneLength(object instance)
+        private object get_51_NavigationView_OpenPaneLength(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.OpenPaneLength;
         }
-        private void set_49_NavigationView_OpenPaneLength(object instance, object Value)
+        private void set_51_NavigationView_OpenPaneLength(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.OpenPaneLength = (global::System.Double)Value;
         }
-        private object get_50_NavigationView_OverflowLabelMode(object instance)
+        private object get_52_NavigationView_OverflowLabelMode(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.OverflowLabelMode;
         }
-        private void set_50_NavigationView_OverflowLabelMode(object instance, object Value)
+        private void set_52_NavigationView_OverflowLabelMode(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.OverflowLabelMode = (global::Microsoft.UI.Xaml.Controls.NavigationViewOverflowLabelMode)Value;
         }
-        private object get_51_NavigationView_PaneCustomContent(object instance)
+        private object get_53_NavigationView_PaneCustomContent(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.PaneCustomContent;
         }
-        private void set_51_NavigationView_PaneCustomContent(object instance, object Value)
+        private void set_53_NavigationView_PaneCustomContent(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.PaneCustomContent = (global::Microsoft.UI.Xaml.UIElement)Value;
         }
-        private object get_52_NavigationView_PaneFooter(object instance)
+        private object get_54_NavigationView_PaneFooter(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.PaneFooter;
         }
-        private void set_52_NavigationView_PaneFooter(object instance, object Value)
+        private void set_54_NavigationView_PaneFooter(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.PaneFooter = (global::Microsoft.UI.Xaml.UIElement)Value;
         }
-        private object get_53_NavigationView_PaneHeader(object instance)
+        private object get_55_NavigationView_PaneHeader(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.PaneHeader;
         }
-        private void set_53_NavigationView_PaneHeader(object instance, object Value)
+        private void set_55_NavigationView_PaneHeader(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.PaneHeader = (global::Microsoft.UI.Xaml.UIElement)Value;
         }
-        private object get_54_NavigationView_PaneTitle(object instance)
+        private object get_56_NavigationView_PaneTitle(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.PaneTitle;
         }
-        private void set_54_NavigationView_PaneTitle(object instance, object Value)
+        private void set_56_NavigationView_PaneTitle(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.PaneTitle = (global::System.String)Value;
         }
-        private object get_55_NavigationView_PaneToggleButtonStyle(object instance)
+        private object get_57_NavigationView_PaneToggleButtonStyle(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.PaneToggleButtonStyle;
         }
-        private void set_55_NavigationView_PaneToggleButtonStyle(object instance, object Value)
+        private void set_57_NavigationView_PaneToggleButtonStyle(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.PaneToggleButtonStyle = (global::Microsoft.UI.Xaml.Style)Value;
         }
-        private object get_56_NavigationView_SelectedItem(object instance)
+        private object get_58_NavigationView_SelectedItem(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.SelectedItem;
         }
-        private void set_56_NavigationView_SelectedItem(object instance, object Value)
+        private void set_58_NavigationView_SelectedItem(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.SelectedItem = (global::System.Object)Value;
         }
-        private object get_57_NavigationView_SelectionFollowsFocus(object instance)
+        private object get_59_NavigationView_SelectionFollowsFocus(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.SelectionFollowsFocus;
         }
-        private void set_57_NavigationView_SelectionFollowsFocus(object instance, object Value)
+        private void set_59_NavigationView_SelectionFollowsFocus(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.SelectionFollowsFocus = (global::Microsoft.UI.Xaml.Controls.NavigationViewSelectionFollowsFocus)Value;
         }
-        private object get_58_NavigationView_SettingsItem(object instance)
+        private object get_60_NavigationView_SettingsItem(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.SettingsItem;
         }
-        private object get_59_NavigationView_ShoulderNavigationEnabled(object instance)
+        private object get_61_NavigationView_ShoulderNavigationEnabled(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.ShoulderNavigationEnabled;
         }
-        private void set_59_NavigationView_ShoulderNavigationEnabled(object instance, object Value)
+        private void set_61_NavigationView_ShoulderNavigationEnabled(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             that.ShoulderNavigationEnabled = (global::Microsoft.UI.Xaml.Controls.NavigationViewShoulderNavigationEnabled)Value;
         }
-        private object get_60_NavigationView_TemplateSettings(object instance)
+        private object get_62_NavigationView_TemplateSettings(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationView)instance;
             return that.TemplateSettings;
         }
-        private object get_61_NavigationViewItemBase_IsSelected(object instance)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItemBase)instance;
-            return that.IsSelected;
-        }
-        private void set_61_NavigationViewItemBase_IsSelected(object instance, object Value)
-        {
-            var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItemBase)instance;
-            that.IsSelected = (global::System.Boolean)Value;
-        }
-        private object get_62_NavigationViewItem_Icon(object instance)
+        private object get_63_NavigationViewItem_Icon(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.Icon;
         }
-        private void set_62_NavigationViewItem_Icon(object instance, object Value)
+        private void set_63_NavigationViewItem_Icon(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.Icon = (global::Microsoft.UI.Xaml.Controls.IconElement)Value;
         }
-        private object get_63_NavigationViewItem_CompactPaneLength(object instance)
+        private object get_64_NavigationViewItemBase_IsSelected(object instance)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItemBase)instance;
+            return that.IsSelected;
+        }
+        private void set_64_NavigationViewItemBase_IsSelected(object instance, object Value)
+        {
+            var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItemBase)instance;
+            that.IsSelected = (global::System.Boolean)Value;
+        }
+        private object get_65_NavigationViewItem_CompactPaneLength(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.CompactPaneLength;
         }
-        private object get_64_NavigationViewItem_HasUnrealizedChildren(object instance)
+        private object get_66_NavigationViewItem_HasUnrealizedChildren(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.HasUnrealizedChildren;
         }
-        private void set_64_NavigationViewItem_HasUnrealizedChildren(object instance, object Value)
+        private void set_66_NavigationViewItem_HasUnrealizedChildren(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.HasUnrealizedChildren = (global::System.Boolean)Value;
         }
-        private object get_65_NavigationViewItem_InfoBadge(object instance)
+        private object get_67_NavigationViewItem_InfoBadge(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.InfoBadge;
         }
-        private void set_65_NavigationViewItem_InfoBadge(object instance, object Value)
+        private void set_67_NavigationViewItem_InfoBadge(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.InfoBadge = (global::Microsoft.UI.Xaml.Controls.InfoBadge)Value;
         }
-        private object get_66_NavigationViewItem_IsChildSelected(object instance)
+        private object get_68_NavigationViewItem_IsChildSelected(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.IsChildSelected;
         }
-        private void set_66_NavigationViewItem_IsChildSelected(object instance, object Value)
+        private void set_68_NavigationViewItem_IsChildSelected(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.IsChildSelected = (global::System.Boolean)Value;
         }
-        private object get_67_NavigationViewItem_IsExpanded(object instance)
+        private object get_69_NavigationViewItem_IsExpanded(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.IsExpanded;
         }
-        private void set_67_NavigationViewItem_IsExpanded(object instance, object Value)
+        private void set_69_NavigationViewItem_IsExpanded(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.IsExpanded = (global::System.Boolean)Value;
         }
-        private object get_68_NavigationViewItem_MenuItems(object instance)
+        private object get_70_NavigationViewItem_MenuItems(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.MenuItems;
         }
-        private object get_69_NavigationViewItem_MenuItemsSource(object instance)
+        private object get_71_NavigationViewItem_MenuItemsSource(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.MenuItemsSource;
         }
-        private void set_69_NavigationViewItem_MenuItemsSource(object instance, object Value)
+        private void set_71_NavigationViewItem_MenuItemsSource(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.MenuItemsSource = (global::System.Object)Value;
         }
-        private object get_70_NavigationViewItem_SelectsOnInvoked(object instance)
+        private object get_72_NavigationViewItem_SelectsOnInvoked(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             return that.SelectsOnInvoked;
         }
-        private void set_70_NavigationViewItem_SelectsOnInvoked(object instance, object Value)
+        private void set_72_NavigationViewItem_SelectsOnInvoked(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.NavigationViewItem)instance;
             that.SelectsOnInvoked = (global::System.Boolean)Value;
         }
-        private object get_71_InfoBar_Content(object instance)
+        private object get_73_InfoBar_Content(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.Content;
         }
-        private void set_71_InfoBar_Content(object instance, object Value)
+        private void set_73_InfoBar_Content(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.Content = (global::System.Object)Value;
         }
-        private object get_72_InfoBar_Severity(object instance)
+        private object get_74_InfoBar_Severity(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.Severity;
         }
-        private void set_72_InfoBar_Severity(object instance, object Value)
+        private void set_74_InfoBar_Severity(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.Severity = (global::Microsoft.UI.Xaml.Controls.InfoBarSeverity)Value;
         }
-        private object get_73_InfoBar_Title(object instance)
+        private object get_75_InfoBar_Title(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.Title;
         }
-        private void set_73_InfoBar_Title(object instance, object Value)
+        private void set_75_InfoBar_Title(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.Title = (global::System.String)Value;
         }
-        private object get_74_InfoBar_IsOpen(object instance)
+        private object get_76_InfoBar_IsOpen(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.IsOpen;
         }
-        private void set_74_InfoBar_IsOpen(object instance, object Value)
+        private void set_76_InfoBar_IsOpen(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.IsOpen = (global::System.Boolean)Value;
         }
-        private object get_75_InfoBar_Message(object instance)
+        private object get_77_InfoBar_Message(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.Message;
         }
-        private void set_75_InfoBar_Message(object instance, object Value)
+        private void set_77_InfoBar_Message(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.Message = (global::System.String)Value;
         }
-        private object get_76_InfoBar_ActionButton(object instance)
+        private object get_78_InfoBar_ActionButton(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.ActionButton;
         }
-        private void set_76_InfoBar_ActionButton(object instance, object Value)
+        private void set_78_InfoBar_ActionButton(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.ActionButton = (global::Microsoft.UI.Xaml.Controls.Primitives.ButtonBase)Value;
         }
-        private object get_77_InfoBar_CloseButtonCommand(object instance)
+        private object get_79_InfoBar_CloseButtonCommand(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.CloseButtonCommand;
         }
-        private void set_77_InfoBar_CloseButtonCommand(object instance, object Value)
+        private void set_79_InfoBar_CloseButtonCommand(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.CloseButtonCommand = (global::System.Windows.Input.ICommand)Value;
         }
-        private object get_78_InfoBar_CloseButtonCommandParameter(object instance)
+        private object get_80_InfoBar_CloseButtonCommandParameter(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.CloseButtonCommandParameter;
         }
-        private void set_78_InfoBar_CloseButtonCommandParameter(object instance, object Value)
+        private void set_80_InfoBar_CloseButtonCommandParameter(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.CloseButtonCommandParameter = (global::System.Object)Value;
         }
-        private object get_79_InfoBar_CloseButtonStyle(object instance)
+        private object get_81_InfoBar_CloseButtonStyle(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.CloseButtonStyle;
         }
-        private void set_79_InfoBar_CloseButtonStyle(object instance, object Value)
+        private void set_81_InfoBar_CloseButtonStyle(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.CloseButtonStyle = (global::Microsoft.UI.Xaml.Style)Value;
         }
-        private object get_80_InfoBar_ContentTemplate(object instance)
+        private object get_82_InfoBar_ContentTemplate(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.ContentTemplate;
         }
-        private void set_80_InfoBar_ContentTemplate(object instance, object Value)
+        private void set_82_InfoBar_ContentTemplate(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.ContentTemplate = (global::Microsoft.UI.Xaml.DataTemplate)Value;
         }
-        private object get_81_InfoBar_IconSource(object instance)
+        private object get_83_InfoBar_IconSource(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.IconSource;
         }
-        private void set_81_InfoBar_IconSource(object instance, object Value)
+        private void set_83_InfoBar_IconSource(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.IconSource = (global::Microsoft.UI.Xaml.Controls.IconSource)Value;
         }
-        private object get_82_InfoBar_IsClosable(object instance)
+        private object get_84_InfoBar_IsClosable(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.IsClosable;
         }
-        private void set_82_InfoBar_IsClosable(object instance, object Value)
+        private void set_84_InfoBar_IsClosable(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.IsClosable = (global::System.Boolean)Value;
         }
-        private object get_83_InfoBar_IsIconVisible(object instance)
+        private object get_85_InfoBar_IsIconVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.IsIconVisible;
         }
-        private void set_83_InfoBar_IsIconVisible(object instance, object Value)
+        private void set_85_InfoBar_IsIconVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             that.IsIconVisible = (global::System.Boolean)Value;
         }
-        private object get_84_InfoBar_TemplateSettings(object instance)
+        private object get_86_InfoBar_TemplateSettings(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.InfoBar)instance;
             return that.TemplateSettings;
         }
-        private object get_85_MainWindow_Player(object instance)
+        private object get_87_MainWindow_Player(object instance)
         {
             var that = (global::MusicApp.MainWindow)instance;
             return that.Player;
         }
-        private object get_86_AlbumPage_ViewModel(object instance)
+        private object get_88_AlbumPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.AlbumPage)instance;
             return that.ViewModel;
         }
-        private object get_87_AlbumsPage_ViewModel(object instance)
+        private object get_89_AlbumsPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.AlbumsPage)instance;
             return that.ViewModel;
         }
-        private object get_88_ArtistPage_ViewModel(object instance)
+        private object get_90_ArtistPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.ArtistPage)instance;
             return that.ViewModel;
         }
-        private object get_89_HomePage_ViewModel(object instance)
+        private object get_91_HomePage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.HomePage)instance;
             return that.ViewModel;
         }
-        private object get_90_LibraryPage_ViewModel(object instance)
+        private object get_92_LibraryPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.LibraryPage)instance;
             return that.ViewModel;
         }
-        private object get_91_OnlinePlaylistPage_ViewModel(object instance)
+        private object get_93_OnlinePlaylistPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.OnlinePlaylistPage)instance;
             return that.ViewModel;
         }
-        private object get_92_PlaylistsPage_ViewModel(object instance)
+        private object get_94_PlaylistsPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.PlaylistsPage)instance;
             return that.ViewModel;
         }
-        private object get_93_SelectorBar_Items(object instance)
+        private object get_95_SelectorBar_Items(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBar)instance;
             return that.Items;
         }
-        private object get_94_ItemContainer_Child(object instance)
+        private object get_96_ItemContainer_Child(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ItemContainer)instance;
             return that.Child;
         }
-        private void set_94_ItemContainer_Child(object instance, object Value)
+        private void set_96_ItemContainer_Child(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ItemContainer)instance;
             that.Child = (global::Microsoft.UI.Xaml.UIElement)Value;
         }
-        private object get_95_SelectorBarItem_Text(object instance)
+        private object get_97_SelectorBarItem_Text(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBarItem)instance;
             return that.Text;
         }
-        private void set_95_SelectorBarItem_Text(object instance, object Value)
+        private void set_97_SelectorBarItem_Text(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBarItem)instance;
             that.Text = (global::System.String)Value;
         }
-        private object get_96_ItemContainer_IsSelected(object instance)
+        private object get_98_ItemContainer_IsSelected(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ItemContainer)instance;
             return that.IsSelected;
         }
-        private void set_96_ItemContainer_IsSelected(object instance, object Value)
+        private void set_98_ItemContainer_IsSelected(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ItemContainer)instance;
             that.IsSelected = (global::System.Boolean)Value;
         }
-        private object get_97_SelectorBarItem_Icon(object instance)
+        private object get_99_SelectorBarItem_Icon(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBarItem)instance;
             return that.Icon;
         }
-        private void set_97_SelectorBarItem_Icon(object instance, object Value)
+        private void set_99_SelectorBarItem_Icon(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBarItem)instance;
             that.Icon = (global::Microsoft.UI.Xaml.Controls.IconElement)Value;
         }
-        private object get_98_SelectorBar_SelectedItem(object instance)
+        private object get_100_SelectorBar_SelectedItem(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBar)instance;
             return that.SelectedItem;
         }
-        private void set_98_SelectorBar_SelectedItem(object instance, object Value)
+        private void set_100_SelectorBar_SelectedItem(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.SelectorBar)instance;
             that.SelectedItem = (global::Microsoft.UI.Xaml.Controls.SelectorBarItem)Value;
         }
-        private object get_99_SearchPage_ViewModel(object instance)
+        private object get_101_SearchPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.SearchPage)instance;
             return that.ViewModel;
         }
-        private object get_100_ColorPicker_Color(object instance)
+        private object get_102_ColorPicker_Color(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.Color;
         }
-        private void set_100_ColorPicker_Color(object instance, object Value)
+        private void set_102_ColorPicker_Color(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.Color = (global::Windows.UI.Color)Value;
         }
-        private object get_101_ColorPicker_IsAlphaEnabled(object instance)
+        private object get_103_ColorPicker_IsAlphaEnabled(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsAlphaEnabled;
         }
-        private void set_101_ColorPicker_IsAlphaEnabled(object instance, object Value)
+        private void set_103_ColorPicker_IsAlphaEnabled(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsAlphaEnabled = (global::System.Boolean)Value;
         }
-        private object get_102_ColorPicker_IsMoreButtonVisible(object instance)
+        private object get_104_ColorPicker_IsMoreButtonVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsMoreButtonVisible;
         }
-        private void set_102_ColorPicker_IsMoreButtonVisible(object instance, object Value)
+        private void set_104_ColorPicker_IsMoreButtonVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsMoreButtonVisible = (global::System.Boolean)Value;
         }
-        private object get_103_ColorPicker_IsColorChannelTextInputVisible(object instance)
+        private object get_105_ColorPicker_IsColorChannelTextInputVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsColorChannelTextInputVisible;
         }
-        private void set_103_ColorPicker_IsColorChannelTextInputVisible(object instance, object Value)
+        private void set_105_ColorPicker_IsColorChannelTextInputVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsColorChannelTextInputVisible = (global::System.Boolean)Value;
         }
-        private object get_104_ColorPicker_IsHexInputVisible(object instance)
+        private object get_106_ColorPicker_IsHexInputVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsHexInputVisible;
         }
-        private void set_104_ColorPicker_IsHexInputVisible(object instance, object Value)
+        private void set_106_ColorPicker_IsHexInputVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsHexInputVisible = (global::System.Boolean)Value;
         }
-        private object get_105_ColorPicker_ColorSpectrumComponents(object instance)
+        private object get_107_ColorPicker_ColorSpectrumComponents(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.ColorSpectrumComponents;
         }
-        private void set_105_ColorPicker_ColorSpectrumComponents(object instance, object Value)
+        private void set_107_ColorPicker_ColorSpectrumComponents(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.ColorSpectrumComponents = (global::Microsoft.UI.Xaml.Controls.ColorSpectrumComponents)Value;
         }
-        private object get_106_ColorPicker_ColorSpectrumShape(object instance)
+        private object get_108_ColorPicker_ColorSpectrumShape(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.ColorSpectrumShape;
         }
-        private void set_106_ColorPicker_ColorSpectrumShape(object instance, object Value)
+        private void set_108_ColorPicker_ColorSpectrumShape(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.ColorSpectrumShape = (global::Microsoft.UI.Xaml.Controls.ColorSpectrumShape)Value;
         }
-        private object get_107_ColorPicker_IsAlphaSliderVisible(object instance)
+        private object get_109_ColorPicker_IsAlphaSliderVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsAlphaSliderVisible;
         }
-        private void set_107_ColorPicker_IsAlphaSliderVisible(object instance, object Value)
+        private void set_109_ColorPicker_IsAlphaSliderVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsAlphaSliderVisible = (global::System.Boolean)Value;
         }
-        private object get_108_ColorPicker_IsAlphaTextInputVisible(object instance)
+        private object get_110_ColorPicker_IsAlphaTextInputVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsAlphaTextInputVisible;
         }
-        private void set_108_ColorPicker_IsAlphaTextInputVisible(object instance, object Value)
+        private void set_110_ColorPicker_IsAlphaTextInputVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsAlphaTextInputVisible = (global::System.Boolean)Value;
         }
-        private object get_109_ColorPicker_IsColorPreviewVisible(object instance)
+        private object get_111_ColorPicker_IsColorPreviewVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsColorPreviewVisible;
         }
-        private void set_109_ColorPicker_IsColorPreviewVisible(object instance, object Value)
+        private void set_111_ColorPicker_IsColorPreviewVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsColorPreviewVisible = (global::System.Boolean)Value;
         }
-        private object get_110_ColorPicker_IsColorSliderVisible(object instance)
+        private object get_112_ColorPicker_IsColorSliderVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsColorSliderVisible;
         }
-        private void set_110_ColorPicker_IsColorSliderVisible(object instance, object Value)
+        private void set_112_ColorPicker_IsColorSliderVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsColorSliderVisible = (global::System.Boolean)Value;
         }
-        private object get_111_ColorPicker_IsColorSpectrumVisible(object instance)
+        private object get_113_ColorPicker_IsColorSpectrumVisible(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.IsColorSpectrumVisible;
         }
-        private void set_111_ColorPicker_IsColorSpectrumVisible(object instance, object Value)
+        private void set_113_ColorPicker_IsColorSpectrumVisible(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.IsColorSpectrumVisible = (global::System.Boolean)Value;
         }
-        private object get_112_ColorPicker_MaxHue(object instance)
+        private object get_114_ColorPicker_MaxHue(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.MaxHue;
         }
-        private void set_112_ColorPicker_MaxHue(object instance, object Value)
+        private void set_114_ColorPicker_MaxHue(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.MaxHue = (global::System.Int32)Value;
         }
-        private object get_113_ColorPicker_MaxSaturation(object instance)
+        private object get_115_ColorPicker_MaxSaturation(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.MaxSaturation;
         }
-        private void set_113_ColorPicker_MaxSaturation(object instance, object Value)
+        private void set_115_ColorPicker_MaxSaturation(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.MaxSaturation = (global::System.Int32)Value;
         }
-        private object get_114_ColorPicker_MaxValue(object instance)
+        private object get_116_ColorPicker_MaxValue(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.MaxValue;
         }
-        private void set_114_ColorPicker_MaxValue(object instance, object Value)
+        private void set_116_ColorPicker_MaxValue(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.MaxValue = (global::System.Int32)Value;
         }
-        private object get_115_ColorPicker_MinHue(object instance)
+        private object get_117_ColorPicker_MinHue(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.MinHue;
         }
-        private void set_115_ColorPicker_MinHue(object instance, object Value)
+        private void set_117_ColorPicker_MinHue(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.MinHue = (global::System.Int32)Value;
         }
-        private object get_116_ColorPicker_MinSaturation(object instance)
+        private object get_118_ColorPicker_MinSaturation(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.MinSaturation;
         }
-        private void set_116_ColorPicker_MinSaturation(object instance, object Value)
+        private void set_118_ColorPicker_MinSaturation(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.MinSaturation = (global::System.Int32)Value;
         }
-        private object get_117_ColorPicker_MinValue(object instance)
+        private object get_119_ColorPicker_MinValue(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.MinValue;
         }
-        private void set_117_ColorPicker_MinValue(object instance, object Value)
+        private void set_119_ColorPicker_MinValue(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.MinValue = (global::System.Int32)Value;
         }
-        private object get_118_ColorPicker_Orientation(object instance)
+        private object get_120_ColorPicker_Orientation(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.Orientation;
         }
-        private void set_118_ColorPicker_Orientation(object instance, object Value)
+        private void set_120_ColorPicker_Orientation(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.Orientation = (global::Microsoft.UI.Xaml.Controls.Orientation)Value;
         }
-        private object get_119_ColorPicker_PreviousColor(object instance)
+        private object get_121_ColorPicker_PreviousColor(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             return that.PreviousColor;
         }
-        private void set_119_ColorPicker_PreviousColor(object instance, object Value)
+        private void set_121_ColorPicker_PreviousColor(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.ColorPicker)instance;
             that.PreviousColor = (global::System.Nullable<global::Windows.UI.Color>)Value;
         }
-        private object get_120_SettingsPage_ViewModel(object instance)
+        private object get_122_SettingsPage_ViewModel(object instance)
         {
             var that = (global::MusicApp.Views.SettingsPage)instance;
             return that.ViewModel;
         }
-        private object get_121_TreeViewNode_Children(object instance)
+        private object get_123_TreeViewNode_Children(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Children;
         }
-        private object get_122_TreeViewNode_Content(object instance)
+        private object get_124_TreeViewNode_Content(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Content;
         }
-        private void set_122_TreeViewNode_Content(object instance, object Value)
+        private void set_124_TreeViewNode_Content(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             that.Content = (global::System.Object)Value;
         }
-        private object get_123_TreeViewNode_Depth(object instance)
+        private object get_125_TreeViewNode_Depth(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Depth;
         }
-        private object get_124_TreeViewNode_HasChildren(object instance)
+        private object get_126_TreeViewNode_HasChildren(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.HasChildren;
         }
-        private object get_125_TreeViewNode_HasUnrealizedChildren(object instance)
+        private object get_127_TreeViewNode_HasUnrealizedChildren(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.HasUnrealizedChildren;
         }
-        private void set_125_TreeViewNode_HasUnrealizedChildren(object instance, object Value)
+        private void set_127_TreeViewNode_HasUnrealizedChildren(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             that.HasUnrealizedChildren = (global::System.Boolean)Value;
         }
-        private object get_126_TreeViewNode_IsExpanded(object instance)
+        private object get_128_TreeViewNode_IsExpanded(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.IsExpanded;
         }
-        private void set_126_TreeViewNode_IsExpanded(object instance, object Value)
+        private void set_128_TreeViewNode_IsExpanded(object instance, object Value)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             that.IsExpanded = (global::System.Boolean)Value;
         }
-        private object get_127_TreeViewNode_Parent(object instance)
+        private object get_129_TreeViewNode_Parent(object instance)
         {
             var that = (global::Microsoft.UI.Xaml.Controls.TreeViewNode)instance;
             return that.Parent;
@@ -2571,801 +2583,811 @@ namespace MusicApp.MusicApp_XamlTypeInfo
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PanelTopInset", "Double");
                 xamlMember.Setter = set_10_LyricsPanel_PanelTopInset;
                 break;
+            case "MusicApp.Controls.LyricsPanel.PanelWidth":
+                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.LyricsPanel");
+                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PanelWidth", "Double");
+                xamlMember.Setter = set_11_LyricsPanel_PanelWidth;
+                break;
             case "Microsoft.UI.Xaml.Controls.ProgressBar.ShowPaused":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ProgressBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ShowPaused", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_11_ProgressBar_ShowPaused;
-                xamlMember.Setter = set_11_ProgressBar_ShowPaused;
+                xamlMember.Getter = get_12_ProgressBar_ShowPaused;
+                xamlMember.Setter = set_12_ProgressBar_ShowPaused;
                 break;
             case "Microsoft.UI.Xaml.Controls.ProgressBar.ShowError":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ProgressBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ShowError", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_12_ProgressBar_ShowError;
-                xamlMember.Setter = set_12_ProgressBar_ShowError;
+                xamlMember.Getter = get_13_ProgressBar_ShowError;
+                xamlMember.Setter = set_13_ProgressBar_ShowError;
                 break;
             case "Microsoft.UI.Xaml.Controls.ProgressBar.IsIndeterminate":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ProgressBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsIndeterminate", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_13_ProgressBar_IsIndeterminate;
-                xamlMember.Setter = set_13_ProgressBar_IsIndeterminate;
+                xamlMember.Getter = get_14_ProgressBar_IsIndeterminate;
+                xamlMember.Setter = set_14_ProgressBar_IsIndeterminate;
                 break;
             case "Microsoft.UI.Xaml.Controls.ProgressBar.TemplateSettings":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ProgressBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "TemplateSettings", "Microsoft.UI.Xaml.Controls.ProgressBarTemplateSettings");
-                xamlMember.Getter = get_14_ProgressBar_TemplateSettings;
+                xamlMember.Getter = get_15_ProgressBar_TemplateSettings;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Controls.NowPlayingBar.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.NowPlayingBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.PlayerViewModel");
-                xamlMember.Getter = get_15_NowPlayingBar_ViewModel;
+                xamlMember.Getter = get_16_NowPlayingBar_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Controls.NowPlayingBar.InteractiveRegions":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.NowPlayingBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "InteractiveRegions", "System.Collections.Generic.IReadOnlyList`1<Microsoft.UI.Xaml.FrameworkElement>");
-                xamlMember.Getter = get_16_NowPlayingBar_InteractiveRegions;
+                xamlMember.Getter = get_17_NowPlayingBar_InteractiveRegions;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Controls.NowPlayingBar.IsFloating":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.NowPlayingBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsFloating", "Boolean");
-                xamlMember.Getter = get_17_NowPlayingBar_IsFloating;
-                xamlMember.Setter = set_17_NowPlayingBar_IsFloating;
+                xamlMember.Getter = get_18_NowPlayingBar_IsFloating;
+                xamlMember.Setter = set_18_NowPlayingBar_IsFloating;
                 break;
             case "MusicApp.Controls.PlaylistCover.Playlist":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.PlaylistCover");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Playlist", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_18_PlaylistCover_Playlist;
-                xamlMember.Setter = set_18_PlaylistCover_Playlist;
+                xamlMember.Getter = get_19_PlaylistCover_Playlist;
+                xamlMember.Setter = set_19_PlaylistCover_Playlist;
                 break;
             case "MusicApp.Controls.PlaylistCover.Size":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.PlaylistCover");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Size", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_19_PlaylistCover_Size;
-                xamlMember.Setter = set_19_PlaylistCover_Size;
+                xamlMember.Getter = get_20_PlaylistCover_Size;
+                xamlMember.Setter = set_20_PlaylistCover_Size;
                 break;
             case "MusicApp.Controls.PlaylistCover.Radius":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.PlaylistCover");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Radius", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_20_PlaylistCover_Radius;
-                xamlMember.Setter = set_20_PlaylistCover_Radius;
+                xamlMember.Getter = get_21_PlaylistCover_Radius;
+                xamlMember.Setter = set_21_PlaylistCover_Radius;
                 break;
             case "MusicApp.Controls.QueuePanel.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.QueuePanel");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.PlayerViewModel");
-                xamlMember.Getter = get_21_QueuePanel_ViewModel;
+                xamlMember.Getter = get_22_QueuePanel_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Controls.QueuePanel.PanelCorner":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.QueuePanel");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PanelCorner", "Microsoft.UI.Xaml.CornerRadius");
-                xamlMember.Setter = set_22_QueuePanel_PanelCorner;
+                xamlMember.Setter = set_23_QueuePanel_PanelCorner;
                 break;
             case "MusicApp.Controls.QueuePanel.PanelTopInset":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.QueuePanel");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PanelTopInset", "Double");
-                xamlMember.Setter = set_23_QueuePanel_PanelTopInset;
+                xamlMember.Setter = set_24_QueuePanel_PanelTopInset;
+                break;
+            case "MusicApp.Controls.QueuePanel.PanelWidth":
+                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Controls.QueuePanel");
+                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PanelWidth", "Double");
+                xamlMember.Setter = set_25_QueuePanel_PanelWidth;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.PaneDisplayMode":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PaneDisplayMode", "Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_24_NavigationView_PaneDisplayMode;
-                xamlMember.Setter = set_24_NavigationView_PaneDisplayMode;
+                xamlMember.Getter = get_26_NavigationView_PaneDisplayMode;
+                xamlMember.Setter = set_26_NavigationView_PaneDisplayMode;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.CompactModeThresholdWidth":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "CompactModeThresholdWidth", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_25_NavigationView_CompactModeThresholdWidth;
-                xamlMember.Setter = set_25_NavigationView_CompactModeThresholdWidth;
+                xamlMember.Getter = get_27_NavigationView_CompactModeThresholdWidth;
+                xamlMember.Setter = set_27_NavigationView_CompactModeThresholdWidth;
+                break;
+            case "Microsoft.UI.Xaml.Controls.NavigationView.IsPaneToggleButtonVisible":
+                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
+                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsPaneToggleButtonVisible", "Boolean");
+                xamlMember.SetIsDependencyProperty();
+                xamlMember.Getter = get_28_NavigationView_IsPaneToggleButtonVisible;
+                xamlMember.Setter = set_28_NavigationView_IsPaneToggleButtonVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.IsBackButtonVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsBackButtonVisible", "Microsoft.UI.Xaml.Controls.NavigationViewBackButtonVisible");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_26_NavigationView_IsBackButtonVisible;
-                xamlMember.Setter = set_26_NavigationView_IsBackButtonVisible;
+                xamlMember.Getter = get_29_NavigationView_IsBackButtonVisible;
+                xamlMember.Setter = set_29_NavigationView_IsBackButtonVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.IsBackEnabled":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsBackEnabled", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_27_NavigationView_IsBackEnabled;
-                xamlMember.Setter = set_27_NavigationView_IsBackEnabled;
+                xamlMember.Getter = get_30_NavigationView_IsBackEnabled;
+                xamlMember.Setter = set_30_NavigationView_IsBackEnabled;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.IsSettingsVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsSettingsVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_28_NavigationView_IsSettingsVisible;
-                xamlMember.Setter = set_28_NavigationView_IsSettingsVisible;
-                break;
-            case "Microsoft.UI.Xaml.Controls.NavigationView.AutoSuggestBox":
-                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
-                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "AutoSuggestBox", "Microsoft.UI.Xaml.Controls.AutoSuggestBox");
-                xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_29_NavigationView_AutoSuggestBox;
-                xamlMember.Setter = set_29_NavigationView_AutoSuggestBox;
+                xamlMember.Getter = get_31_NavigationView_IsSettingsVisible;
+                xamlMember.Setter = set_31_NavigationView_IsSettingsVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.MenuItems":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItems", "System.Collections.Generic.IList`1<Object>");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_30_NavigationView_MenuItems;
+                xamlMember.Getter = get_32_NavigationView_MenuItems;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.AlwaysShowHeader":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "AlwaysShowHeader", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_31_NavigationView_AlwaysShowHeader;
-                xamlMember.Setter = set_31_NavigationView_AlwaysShowHeader;
+                xamlMember.Getter = get_33_NavigationView_AlwaysShowHeader;
+                xamlMember.Setter = set_33_NavigationView_AlwaysShowHeader;
+                break;
+            case "Microsoft.UI.Xaml.Controls.NavigationView.AutoSuggestBox":
+                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
+                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "AutoSuggestBox", "Microsoft.UI.Xaml.Controls.AutoSuggestBox");
+                xamlMember.SetIsDependencyProperty();
+                xamlMember.Getter = get_34_NavigationView_AutoSuggestBox;
+                xamlMember.Setter = set_34_NavigationView_AutoSuggestBox;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.CompactPaneLength":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "CompactPaneLength", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_32_NavigationView_CompactPaneLength;
-                xamlMember.Setter = set_32_NavigationView_CompactPaneLength;
+                xamlMember.Getter = get_35_NavigationView_CompactPaneLength;
+                xamlMember.Setter = set_35_NavigationView_CompactPaneLength;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.ContentOverlay":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ContentOverlay", "Microsoft.UI.Xaml.UIElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_33_NavigationView_ContentOverlay;
-                xamlMember.Setter = set_33_NavigationView_ContentOverlay;
+                xamlMember.Getter = get_36_NavigationView_ContentOverlay;
+                xamlMember.Setter = set_36_NavigationView_ContentOverlay;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.DisplayMode":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "DisplayMode", "Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_34_NavigationView_DisplayMode;
+                xamlMember.Getter = get_37_NavigationView_DisplayMode;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.ExpandedModeThresholdWidth":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ExpandedModeThresholdWidth", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_35_NavigationView_ExpandedModeThresholdWidth;
-                xamlMember.Setter = set_35_NavigationView_ExpandedModeThresholdWidth;
+                xamlMember.Getter = get_38_NavigationView_ExpandedModeThresholdWidth;
+                xamlMember.Setter = set_38_NavigationView_ExpandedModeThresholdWidth;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.FooterMenuItems":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "FooterMenuItems", "System.Collections.Generic.IList`1<Object>");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_36_NavigationView_FooterMenuItems;
+                xamlMember.Getter = get_39_NavigationView_FooterMenuItems;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.FooterMenuItemsSource":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "FooterMenuItemsSource", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_37_NavigationView_FooterMenuItemsSource;
-                xamlMember.Setter = set_37_NavigationView_FooterMenuItemsSource;
+                xamlMember.Getter = get_40_NavigationView_FooterMenuItemsSource;
+                xamlMember.Setter = set_40_NavigationView_FooterMenuItemsSource;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.Header":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Header", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_38_NavigationView_Header;
-                xamlMember.Setter = set_38_NavigationView_Header;
+                xamlMember.Getter = get_41_NavigationView_Header;
+                xamlMember.Setter = set_41_NavigationView_Header;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.HeaderTemplate":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "HeaderTemplate", "Microsoft.UI.Xaml.DataTemplate");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_39_NavigationView_HeaderTemplate;
-                xamlMember.Setter = set_39_NavigationView_HeaderTemplate;
+                xamlMember.Getter = get_42_NavigationView_HeaderTemplate;
+                xamlMember.Setter = set_42_NavigationView_HeaderTemplate;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.IsPaneOpen":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsPaneOpen", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_40_NavigationView_IsPaneOpen;
-                xamlMember.Setter = set_40_NavigationView_IsPaneOpen;
-                break;
-            case "Microsoft.UI.Xaml.Controls.NavigationView.IsPaneToggleButtonVisible":
-                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
-                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsPaneToggleButtonVisible", "Boolean");
-                xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_41_NavigationView_IsPaneToggleButtonVisible;
-                xamlMember.Setter = set_41_NavigationView_IsPaneToggleButtonVisible;
+                xamlMember.Getter = get_43_NavigationView_IsPaneOpen;
+                xamlMember.Setter = set_43_NavigationView_IsPaneOpen;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.IsPaneVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsPaneVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_42_NavigationView_IsPaneVisible;
-                xamlMember.Setter = set_42_NavigationView_IsPaneVisible;
+                xamlMember.Getter = get_44_NavigationView_IsPaneVisible;
+                xamlMember.Setter = set_44_NavigationView_IsPaneVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.IsTitleBarAutoPaddingEnabled":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsTitleBarAutoPaddingEnabled", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_43_NavigationView_IsTitleBarAutoPaddingEnabled;
-                xamlMember.Setter = set_43_NavigationView_IsTitleBarAutoPaddingEnabled;
+                xamlMember.Getter = get_45_NavigationView_IsTitleBarAutoPaddingEnabled;
+                xamlMember.Setter = set_45_NavigationView_IsTitleBarAutoPaddingEnabled;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.MenuItemContainerStyle":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItemContainerStyle", "Microsoft.UI.Xaml.Style");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_44_NavigationView_MenuItemContainerStyle;
-                xamlMember.Setter = set_44_NavigationView_MenuItemContainerStyle;
+                xamlMember.Getter = get_46_NavigationView_MenuItemContainerStyle;
+                xamlMember.Setter = set_46_NavigationView_MenuItemContainerStyle;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.MenuItemContainerStyleSelector":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItemContainerStyleSelector", "Microsoft.UI.Xaml.Controls.StyleSelector");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_45_NavigationView_MenuItemContainerStyleSelector;
-                xamlMember.Setter = set_45_NavigationView_MenuItemContainerStyleSelector;
+                xamlMember.Getter = get_47_NavigationView_MenuItemContainerStyleSelector;
+                xamlMember.Setter = set_47_NavigationView_MenuItemContainerStyleSelector;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.MenuItemTemplate":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItemTemplate", "Microsoft.UI.Xaml.DataTemplate");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_46_NavigationView_MenuItemTemplate;
-                xamlMember.Setter = set_46_NavigationView_MenuItemTemplate;
+                xamlMember.Getter = get_48_NavigationView_MenuItemTemplate;
+                xamlMember.Setter = set_48_NavigationView_MenuItemTemplate;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.MenuItemTemplateSelector":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItemTemplateSelector", "Microsoft.UI.Xaml.Controls.DataTemplateSelector");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_47_NavigationView_MenuItemTemplateSelector;
-                xamlMember.Setter = set_47_NavigationView_MenuItemTemplateSelector;
+                xamlMember.Getter = get_49_NavigationView_MenuItemTemplateSelector;
+                xamlMember.Setter = set_49_NavigationView_MenuItemTemplateSelector;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.MenuItemsSource":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItemsSource", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_48_NavigationView_MenuItemsSource;
-                xamlMember.Setter = set_48_NavigationView_MenuItemsSource;
+                xamlMember.Getter = get_50_NavigationView_MenuItemsSource;
+                xamlMember.Setter = set_50_NavigationView_MenuItemsSource;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.OpenPaneLength":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "OpenPaneLength", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_49_NavigationView_OpenPaneLength;
-                xamlMember.Setter = set_49_NavigationView_OpenPaneLength;
+                xamlMember.Getter = get_51_NavigationView_OpenPaneLength;
+                xamlMember.Setter = set_51_NavigationView_OpenPaneLength;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.OverflowLabelMode":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "OverflowLabelMode", "Microsoft.UI.Xaml.Controls.NavigationViewOverflowLabelMode");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_50_NavigationView_OverflowLabelMode;
-                xamlMember.Setter = set_50_NavigationView_OverflowLabelMode;
+                xamlMember.Getter = get_52_NavigationView_OverflowLabelMode;
+                xamlMember.Setter = set_52_NavigationView_OverflowLabelMode;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.PaneCustomContent":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PaneCustomContent", "Microsoft.UI.Xaml.UIElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_51_NavigationView_PaneCustomContent;
-                xamlMember.Setter = set_51_NavigationView_PaneCustomContent;
+                xamlMember.Getter = get_53_NavigationView_PaneCustomContent;
+                xamlMember.Setter = set_53_NavigationView_PaneCustomContent;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.PaneFooter":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PaneFooter", "Microsoft.UI.Xaml.UIElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_52_NavigationView_PaneFooter;
-                xamlMember.Setter = set_52_NavigationView_PaneFooter;
+                xamlMember.Getter = get_54_NavigationView_PaneFooter;
+                xamlMember.Setter = set_54_NavigationView_PaneFooter;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.PaneHeader":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PaneHeader", "Microsoft.UI.Xaml.UIElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_53_NavigationView_PaneHeader;
-                xamlMember.Setter = set_53_NavigationView_PaneHeader;
+                xamlMember.Getter = get_55_NavigationView_PaneHeader;
+                xamlMember.Setter = set_55_NavigationView_PaneHeader;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.PaneTitle":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PaneTitle", "String");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_54_NavigationView_PaneTitle;
-                xamlMember.Setter = set_54_NavigationView_PaneTitle;
+                xamlMember.Getter = get_56_NavigationView_PaneTitle;
+                xamlMember.Setter = set_56_NavigationView_PaneTitle;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.PaneToggleButtonStyle":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PaneToggleButtonStyle", "Microsoft.UI.Xaml.Style");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_55_NavigationView_PaneToggleButtonStyle;
-                xamlMember.Setter = set_55_NavigationView_PaneToggleButtonStyle;
+                xamlMember.Getter = get_57_NavigationView_PaneToggleButtonStyle;
+                xamlMember.Setter = set_57_NavigationView_PaneToggleButtonStyle;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.SelectedItem":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "SelectedItem", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_56_NavigationView_SelectedItem;
-                xamlMember.Setter = set_56_NavigationView_SelectedItem;
+                xamlMember.Getter = get_58_NavigationView_SelectedItem;
+                xamlMember.Setter = set_58_NavigationView_SelectedItem;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.SelectionFollowsFocus":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "SelectionFollowsFocus", "Microsoft.UI.Xaml.Controls.NavigationViewSelectionFollowsFocus");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_57_NavigationView_SelectionFollowsFocus;
-                xamlMember.Setter = set_57_NavigationView_SelectionFollowsFocus;
+                xamlMember.Getter = get_59_NavigationView_SelectionFollowsFocus;
+                xamlMember.Setter = set_59_NavigationView_SelectionFollowsFocus;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.SettingsItem":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "SettingsItem", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_58_NavigationView_SettingsItem;
+                xamlMember.Getter = get_60_NavigationView_SettingsItem;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.ShoulderNavigationEnabled":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ShoulderNavigationEnabled", "Microsoft.UI.Xaml.Controls.NavigationViewShoulderNavigationEnabled");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_59_NavigationView_ShoulderNavigationEnabled;
-                xamlMember.Setter = set_59_NavigationView_ShoulderNavigationEnabled;
+                xamlMember.Getter = get_61_NavigationView_ShoulderNavigationEnabled;
+                xamlMember.Setter = set_61_NavigationView_ShoulderNavigationEnabled;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationView.TemplateSettings":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationView");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "TemplateSettings", "Microsoft.UI.Xaml.Controls.NavigationViewTemplateSettings");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_60_NavigationView_TemplateSettings;
+                xamlMember.Getter = get_62_NavigationView_TemplateSettings;
                 xamlMember.SetIsReadOnly();
-                break;
-            case "Microsoft.UI.Xaml.Controls.NavigationViewItemBase.IsSelected":
-                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItemBase");
-                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsSelected", "Boolean");
-                xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_61_NavigationViewItemBase_IsSelected;
-                xamlMember.Setter = set_61_NavigationViewItemBase_IsSelected;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.Icon":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Icon", "Microsoft.UI.Xaml.Controls.IconElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_62_NavigationViewItem_Icon;
-                xamlMember.Setter = set_62_NavigationViewItem_Icon;
+                xamlMember.Getter = get_63_NavigationViewItem_Icon;
+                xamlMember.Setter = set_63_NavigationViewItem_Icon;
+                break;
+            case "Microsoft.UI.Xaml.Controls.NavigationViewItemBase.IsSelected":
+                userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItemBase");
+                xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsSelected", "Boolean");
+                xamlMember.SetIsDependencyProperty();
+                xamlMember.Getter = get_64_NavigationViewItemBase_IsSelected;
+                xamlMember.Setter = set_64_NavigationViewItemBase_IsSelected;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.CompactPaneLength":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "CompactPaneLength", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_63_NavigationViewItem_CompactPaneLength;
+                xamlMember.Getter = get_65_NavigationViewItem_CompactPaneLength;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.HasUnrealizedChildren":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "HasUnrealizedChildren", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_64_NavigationViewItem_HasUnrealizedChildren;
-                xamlMember.Setter = set_64_NavigationViewItem_HasUnrealizedChildren;
+                xamlMember.Getter = get_66_NavigationViewItem_HasUnrealizedChildren;
+                xamlMember.Setter = set_66_NavigationViewItem_HasUnrealizedChildren;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.InfoBadge":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "InfoBadge", "Microsoft.UI.Xaml.Controls.InfoBadge");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_65_NavigationViewItem_InfoBadge;
-                xamlMember.Setter = set_65_NavigationViewItem_InfoBadge;
+                xamlMember.Getter = get_67_NavigationViewItem_InfoBadge;
+                xamlMember.Setter = set_67_NavigationViewItem_InfoBadge;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.IsChildSelected":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsChildSelected", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_66_NavigationViewItem_IsChildSelected;
-                xamlMember.Setter = set_66_NavigationViewItem_IsChildSelected;
+                xamlMember.Getter = get_68_NavigationViewItem_IsChildSelected;
+                xamlMember.Setter = set_68_NavigationViewItem_IsChildSelected;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.IsExpanded":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsExpanded", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_67_NavigationViewItem_IsExpanded;
-                xamlMember.Setter = set_67_NavigationViewItem_IsExpanded;
+                xamlMember.Getter = get_69_NavigationViewItem_IsExpanded;
+                xamlMember.Setter = set_69_NavigationViewItem_IsExpanded;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.MenuItems":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItems", "System.Collections.Generic.IList`1<Object>");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_68_NavigationViewItem_MenuItems;
+                xamlMember.Getter = get_70_NavigationViewItem_MenuItems;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.MenuItemsSource":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MenuItemsSource", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_69_NavigationViewItem_MenuItemsSource;
-                xamlMember.Setter = set_69_NavigationViewItem_MenuItemsSource;
+                xamlMember.Getter = get_71_NavigationViewItem_MenuItemsSource;
+                xamlMember.Setter = set_71_NavigationViewItem_MenuItemsSource;
                 break;
             case "Microsoft.UI.Xaml.Controls.NavigationViewItem.SelectsOnInvoked":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.NavigationViewItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "SelectsOnInvoked", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_70_NavigationViewItem_SelectsOnInvoked;
-                xamlMember.Setter = set_70_NavigationViewItem_SelectsOnInvoked;
+                xamlMember.Getter = get_72_NavigationViewItem_SelectsOnInvoked;
+                xamlMember.Setter = set_72_NavigationViewItem_SelectsOnInvoked;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.Content":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Content", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_71_InfoBar_Content;
-                xamlMember.Setter = set_71_InfoBar_Content;
+                xamlMember.Getter = get_73_InfoBar_Content;
+                xamlMember.Setter = set_73_InfoBar_Content;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.Severity":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Severity", "Microsoft.UI.Xaml.Controls.InfoBarSeverity");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_72_InfoBar_Severity;
-                xamlMember.Setter = set_72_InfoBar_Severity;
+                xamlMember.Getter = get_74_InfoBar_Severity;
+                xamlMember.Setter = set_74_InfoBar_Severity;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.Title":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Title", "String");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_73_InfoBar_Title;
-                xamlMember.Setter = set_73_InfoBar_Title;
+                xamlMember.Getter = get_75_InfoBar_Title;
+                xamlMember.Setter = set_75_InfoBar_Title;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.IsOpen":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsOpen", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_74_InfoBar_IsOpen;
-                xamlMember.Setter = set_74_InfoBar_IsOpen;
+                xamlMember.Getter = get_76_InfoBar_IsOpen;
+                xamlMember.Setter = set_76_InfoBar_IsOpen;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.Message":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Message", "String");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_75_InfoBar_Message;
-                xamlMember.Setter = set_75_InfoBar_Message;
+                xamlMember.Getter = get_77_InfoBar_Message;
+                xamlMember.Setter = set_77_InfoBar_Message;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.ActionButton":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ActionButton", "Microsoft.UI.Xaml.Controls.Primitives.ButtonBase");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_76_InfoBar_ActionButton;
-                xamlMember.Setter = set_76_InfoBar_ActionButton;
+                xamlMember.Getter = get_78_InfoBar_ActionButton;
+                xamlMember.Setter = set_78_InfoBar_ActionButton;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.CloseButtonCommand":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "CloseButtonCommand", "System.Windows.Input.ICommand");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_77_InfoBar_CloseButtonCommand;
-                xamlMember.Setter = set_77_InfoBar_CloseButtonCommand;
+                xamlMember.Getter = get_79_InfoBar_CloseButtonCommand;
+                xamlMember.Setter = set_79_InfoBar_CloseButtonCommand;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.CloseButtonCommandParameter":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "CloseButtonCommandParameter", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_78_InfoBar_CloseButtonCommandParameter;
-                xamlMember.Setter = set_78_InfoBar_CloseButtonCommandParameter;
+                xamlMember.Getter = get_80_InfoBar_CloseButtonCommandParameter;
+                xamlMember.Setter = set_80_InfoBar_CloseButtonCommandParameter;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.CloseButtonStyle":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "CloseButtonStyle", "Microsoft.UI.Xaml.Style");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_79_InfoBar_CloseButtonStyle;
-                xamlMember.Setter = set_79_InfoBar_CloseButtonStyle;
+                xamlMember.Getter = get_81_InfoBar_CloseButtonStyle;
+                xamlMember.Setter = set_81_InfoBar_CloseButtonStyle;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.ContentTemplate":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ContentTemplate", "Microsoft.UI.Xaml.DataTemplate");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_80_InfoBar_ContentTemplate;
-                xamlMember.Setter = set_80_InfoBar_ContentTemplate;
+                xamlMember.Getter = get_82_InfoBar_ContentTemplate;
+                xamlMember.Setter = set_82_InfoBar_ContentTemplate;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.IconSource":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IconSource", "Microsoft.UI.Xaml.Controls.IconSource");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_81_InfoBar_IconSource;
-                xamlMember.Setter = set_81_InfoBar_IconSource;
+                xamlMember.Getter = get_83_InfoBar_IconSource;
+                xamlMember.Setter = set_83_InfoBar_IconSource;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.IsClosable":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsClosable", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_82_InfoBar_IsClosable;
-                xamlMember.Setter = set_82_InfoBar_IsClosable;
+                xamlMember.Getter = get_84_InfoBar_IsClosable;
+                xamlMember.Setter = set_84_InfoBar_IsClosable;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.IsIconVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsIconVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_83_InfoBar_IsIconVisible;
-                xamlMember.Setter = set_83_InfoBar_IsIconVisible;
+                xamlMember.Getter = get_85_InfoBar_IsIconVisible;
+                xamlMember.Setter = set_85_InfoBar_IsIconVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.InfoBar.TemplateSettings":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.InfoBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "TemplateSettings", "Microsoft.UI.Xaml.Controls.InfoBarTemplateSettings");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_84_InfoBar_TemplateSettings;
+                xamlMember.Getter = get_86_InfoBar_TemplateSettings;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.MainWindow.Player":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.MainWindow");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Player", "MusicApp.ViewModels.PlayerViewModel");
-                xamlMember.Getter = get_85_MainWindow_Player;
+                xamlMember.Getter = get_87_MainWindow_Player;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.AlbumPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.AlbumPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.AlbumViewModel");
-                xamlMember.Getter = get_86_AlbumPage_ViewModel;
+                xamlMember.Getter = get_88_AlbumPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.AlbumsPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.AlbumsPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.AlbumsViewModel");
-                xamlMember.Getter = get_87_AlbumsPage_ViewModel;
+                xamlMember.Getter = get_89_AlbumsPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.ArtistPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.ArtistPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.ArtistViewModel");
-                xamlMember.Getter = get_88_ArtistPage_ViewModel;
+                xamlMember.Getter = get_90_ArtistPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.HomePage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.HomePage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.HomeViewModel");
-                xamlMember.Getter = get_89_HomePage_ViewModel;
+                xamlMember.Getter = get_91_HomePage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.LibraryPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.LibraryPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.LibraryViewModel");
-                xamlMember.Getter = get_90_LibraryPage_ViewModel;
+                xamlMember.Getter = get_92_LibraryPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.OnlinePlaylistPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.OnlinePlaylistPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.OnlinePlaylistViewModel");
-                xamlMember.Getter = get_91_OnlinePlaylistPage_ViewModel;
+                xamlMember.Getter = get_93_OnlinePlaylistPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "MusicApp.Views.PlaylistsPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.PlaylistsPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.PlaylistsViewModel");
-                xamlMember.Getter = get_92_PlaylistsPage_ViewModel;
+                xamlMember.Getter = get_94_PlaylistsPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.SelectorBar.Items":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.SelectorBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Items", "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.SelectorBarItem>");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_93_SelectorBar_Items;
+                xamlMember.Getter = get_95_SelectorBar_Items;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.ItemContainer.Child":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ItemContainer");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Child", "Microsoft.UI.Xaml.UIElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_94_ItemContainer_Child;
-                xamlMember.Setter = set_94_ItemContainer_Child;
+                xamlMember.Getter = get_96_ItemContainer_Child;
+                xamlMember.Setter = set_96_ItemContainer_Child;
                 break;
             case "Microsoft.UI.Xaml.Controls.SelectorBarItem.Text":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.SelectorBarItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Text", "String");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_95_SelectorBarItem_Text;
-                xamlMember.Setter = set_95_SelectorBarItem_Text;
+                xamlMember.Getter = get_97_SelectorBarItem_Text;
+                xamlMember.Setter = set_97_SelectorBarItem_Text;
                 break;
             case "Microsoft.UI.Xaml.Controls.ItemContainer.IsSelected":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ItemContainer");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsSelected", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_96_ItemContainer_IsSelected;
-                xamlMember.Setter = set_96_ItemContainer_IsSelected;
+                xamlMember.Getter = get_98_ItemContainer_IsSelected;
+                xamlMember.Setter = set_98_ItemContainer_IsSelected;
                 break;
             case "Microsoft.UI.Xaml.Controls.SelectorBarItem.Icon":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.SelectorBarItem");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Icon", "Microsoft.UI.Xaml.Controls.IconElement");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_97_SelectorBarItem_Icon;
-                xamlMember.Setter = set_97_SelectorBarItem_Icon;
+                xamlMember.Getter = get_99_SelectorBarItem_Icon;
+                xamlMember.Setter = set_99_SelectorBarItem_Icon;
                 break;
             case "Microsoft.UI.Xaml.Controls.SelectorBar.SelectedItem":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.SelectorBar");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "SelectedItem", "Microsoft.UI.Xaml.Controls.SelectorBarItem");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_98_SelectorBar_SelectedItem;
-                xamlMember.Setter = set_98_SelectorBar_SelectedItem;
+                xamlMember.Getter = get_100_SelectorBar_SelectedItem;
+                xamlMember.Setter = set_100_SelectorBar_SelectedItem;
                 break;
             case "MusicApp.Views.SearchPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.SearchPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.SearchViewModel");
-                xamlMember.Getter = get_99_SearchPage_ViewModel;
+                xamlMember.Getter = get_101_SearchPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.Color":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Color", "Windows.UI.Color");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_100_ColorPicker_Color;
-                xamlMember.Setter = set_100_ColorPicker_Color;
+                xamlMember.Getter = get_102_ColorPicker_Color;
+                xamlMember.Setter = set_102_ColorPicker_Color;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsAlphaEnabled":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsAlphaEnabled", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_101_ColorPicker_IsAlphaEnabled;
-                xamlMember.Setter = set_101_ColorPicker_IsAlphaEnabled;
+                xamlMember.Getter = get_103_ColorPicker_IsAlphaEnabled;
+                xamlMember.Setter = set_103_ColorPicker_IsAlphaEnabled;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsMoreButtonVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsMoreButtonVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_102_ColorPicker_IsMoreButtonVisible;
-                xamlMember.Setter = set_102_ColorPicker_IsMoreButtonVisible;
+                xamlMember.Getter = get_104_ColorPicker_IsMoreButtonVisible;
+                xamlMember.Setter = set_104_ColorPicker_IsMoreButtonVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsColorChannelTextInputVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsColorChannelTextInputVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_103_ColorPicker_IsColorChannelTextInputVisible;
-                xamlMember.Setter = set_103_ColorPicker_IsColorChannelTextInputVisible;
+                xamlMember.Getter = get_105_ColorPicker_IsColorChannelTextInputVisible;
+                xamlMember.Setter = set_105_ColorPicker_IsColorChannelTextInputVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsHexInputVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsHexInputVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_104_ColorPicker_IsHexInputVisible;
-                xamlMember.Setter = set_104_ColorPicker_IsHexInputVisible;
+                xamlMember.Getter = get_106_ColorPicker_IsHexInputVisible;
+                xamlMember.Setter = set_106_ColorPicker_IsHexInputVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.ColorSpectrumComponents":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ColorSpectrumComponents", "Microsoft.UI.Xaml.Controls.ColorSpectrumComponents");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_105_ColorPicker_ColorSpectrumComponents;
-                xamlMember.Setter = set_105_ColorPicker_ColorSpectrumComponents;
+                xamlMember.Getter = get_107_ColorPicker_ColorSpectrumComponents;
+                xamlMember.Setter = set_107_ColorPicker_ColorSpectrumComponents;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.ColorSpectrumShape":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ColorSpectrumShape", "Microsoft.UI.Xaml.Controls.ColorSpectrumShape");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_106_ColorPicker_ColorSpectrumShape;
-                xamlMember.Setter = set_106_ColorPicker_ColorSpectrumShape;
+                xamlMember.Getter = get_108_ColorPicker_ColorSpectrumShape;
+                xamlMember.Setter = set_108_ColorPicker_ColorSpectrumShape;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsAlphaSliderVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsAlphaSliderVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_107_ColorPicker_IsAlphaSliderVisible;
-                xamlMember.Setter = set_107_ColorPicker_IsAlphaSliderVisible;
+                xamlMember.Getter = get_109_ColorPicker_IsAlphaSliderVisible;
+                xamlMember.Setter = set_109_ColorPicker_IsAlphaSliderVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsAlphaTextInputVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsAlphaTextInputVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_108_ColorPicker_IsAlphaTextInputVisible;
-                xamlMember.Setter = set_108_ColorPicker_IsAlphaTextInputVisible;
+                xamlMember.Getter = get_110_ColorPicker_IsAlphaTextInputVisible;
+                xamlMember.Setter = set_110_ColorPicker_IsAlphaTextInputVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsColorPreviewVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsColorPreviewVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_109_ColorPicker_IsColorPreviewVisible;
-                xamlMember.Setter = set_109_ColorPicker_IsColorPreviewVisible;
+                xamlMember.Getter = get_111_ColorPicker_IsColorPreviewVisible;
+                xamlMember.Setter = set_111_ColorPicker_IsColorPreviewVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsColorSliderVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsColorSliderVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_110_ColorPicker_IsColorSliderVisible;
-                xamlMember.Setter = set_110_ColorPicker_IsColorSliderVisible;
+                xamlMember.Getter = get_112_ColorPicker_IsColorSliderVisible;
+                xamlMember.Setter = set_112_ColorPicker_IsColorSliderVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.IsColorSpectrumVisible":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsColorSpectrumVisible", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_111_ColorPicker_IsColorSpectrumVisible;
-                xamlMember.Setter = set_111_ColorPicker_IsColorSpectrumVisible;
+                xamlMember.Getter = get_113_ColorPicker_IsColorSpectrumVisible;
+                xamlMember.Setter = set_113_ColorPicker_IsColorSpectrumVisible;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.MaxHue":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MaxHue", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_112_ColorPicker_MaxHue;
-                xamlMember.Setter = set_112_ColorPicker_MaxHue;
+                xamlMember.Getter = get_114_ColorPicker_MaxHue;
+                xamlMember.Setter = set_114_ColorPicker_MaxHue;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.MaxSaturation":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MaxSaturation", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_113_ColorPicker_MaxSaturation;
-                xamlMember.Setter = set_113_ColorPicker_MaxSaturation;
+                xamlMember.Getter = get_115_ColorPicker_MaxSaturation;
+                xamlMember.Setter = set_115_ColorPicker_MaxSaturation;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.MaxValue":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MaxValue", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_114_ColorPicker_MaxValue;
-                xamlMember.Setter = set_114_ColorPicker_MaxValue;
+                xamlMember.Getter = get_116_ColorPicker_MaxValue;
+                xamlMember.Setter = set_116_ColorPicker_MaxValue;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.MinHue":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MinHue", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_115_ColorPicker_MinHue;
-                xamlMember.Setter = set_115_ColorPicker_MinHue;
+                xamlMember.Getter = get_117_ColorPicker_MinHue;
+                xamlMember.Setter = set_117_ColorPicker_MinHue;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.MinSaturation":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MinSaturation", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_116_ColorPicker_MinSaturation;
-                xamlMember.Setter = set_116_ColorPicker_MinSaturation;
+                xamlMember.Getter = get_118_ColorPicker_MinSaturation;
+                xamlMember.Setter = set_118_ColorPicker_MinSaturation;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.MinValue":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "MinValue", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_117_ColorPicker_MinValue;
-                xamlMember.Setter = set_117_ColorPicker_MinValue;
+                xamlMember.Getter = get_119_ColorPicker_MinValue;
+                xamlMember.Setter = set_119_ColorPicker_MinValue;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.Orientation":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Orientation", "Microsoft.UI.Xaml.Controls.Orientation");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_118_ColorPicker_Orientation;
-                xamlMember.Setter = set_118_ColorPicker_Orientation;
+                xamlMember.Getter = get_120_ColorPicker_Orientation;
+                xamlMember.Setter = set_120_ColorPicker_Orientation;
                 break;
             case "Microsoft.UI.Xaml.Controls.ColorPicker.PreviousColor":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.ColorPicker");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "PreviousColor", "System.Nullable`1<Windows.UI.Color>");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_119_ColorPicker_PreviousColor;
-                xamlMember.Setter = set_119_ColorPicker_PreviousColor;
+                xamlMember.Getter = get_121_ColorPicker_PreviousColor;
+                xamlMember.Setter = set_121_ColorPicker_PreviousColor;
                 break;
             case "MusicApp.Views.SettingsPage.ViewModel":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MusicApp.Views.SettingsPage");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "ViewModel", "MusicApp.ViewModels.SettingsViewModel");
-                xamlMember.Getter = get_120_SettingsPage_ViewModel;
+                xamlMember.Getter = get_122_SettingsPage_ViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Children":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Children", "System.Collections.Generic.IList`1<Microsoft.UI.Xaml.Controls.TreeViewNode>");
-                xamlMember.Getter = get_121_TreeViewNode_Children;
+                xamlMember.Getter = get_123_TreeViewNode_Children;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Content":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Content", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_122_TreeViewNode_Content;
-                xamlMember.Setter = set_122_TreeViewNode_Content;
+                xamlMember.Getter = get_124_TreeViewNode_Content;
+                xamlMember.Setter = set_124_TreeViewNode_Content;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Depth":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Depth", "Int32");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_123_TreeViewNode_Depth;
+                xamlMember.Getter = get_125_TreeViewNode_Depth;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.HasChildren":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "HasChildren", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_124_TreeViewNode_HasChildren;
+                xamlMember.Getter = get_126_TreeViewNode_HasChildren;
                 xamlMember.SetIsReadOnly();
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.HasUnrealizedChildren":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "HasUnrealizedChildren", "Boolean");
-                xamlMember.Getter = get_125_TreeViewNode_HasUnrealizedChildren;
-                xamlMember.Setter = set_125_TreeViewNode_HasUnrealizedChildren;
+                xamlMember.Getter = get_127_TreeViewNode_HasUnrealizedChildren;
+                xamlMember.Setter = set_127_TreeViewNode_HasUnrealizedChildren;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.IsExpanded":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "IsExpanded", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_126_TreeViewNode_IsExpanded;
-                xamlMember.Setter = set_126_TreeViewNode_IsExpanded;
+                xamlMember.Getter = get_128_TreeViewNode_IsExpanded;
+                xamlMember.Setter = set_128_TreeViewNode_IsExpanded;
                 break;
             case "Microsoft.UI.Xaml.Controls.TreeViewNode.Parent":
                 userType = (global::MusicApp.MusicApp_XamlTypeInfo.XamlUserType)GetXamlTypeByName("Microsoft.UI.Xaml.Controls.TreeViewNode");
                 xamlMember = new global::MusicApp.MusicApp_XamlTypeInfo.XamlMember(this, "Parent", "Microsoft.UI.Xaml.Controls.TreeViewNode");
-                xamlMember.Getter = get_127_TreeViewNode_Parent;
+                xamlMember.Getter = get_129_TreeViewNode_Parent;
                 xamlMember.SetIsReadOnly();
                 break;
             }

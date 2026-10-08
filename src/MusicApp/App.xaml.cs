@@ -93,6 +93,7 @@ public partial class App : Application
 
         services.AddSingleton(new FavoritesService(AppPaths.DataRoot));
         services.AddSingleton(new SettingsService(AppPaths.DataRoot));
+        services.AddSingleton<LoudnessNormalizationService>();
 
         services.AddSingleton<PlaybackService>();
         services.AddSingleton<PlayerViewModel>();

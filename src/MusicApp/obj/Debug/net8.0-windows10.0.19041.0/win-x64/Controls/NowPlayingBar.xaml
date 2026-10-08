@@ -12,7 +12,7 @@
                 BorderThickness="0,0,0,1"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" />
 
-        <Grid x:ConnectionId='5' x:Name="Root" Height="66" Padding="16,8,150,8" ColumnSpacing="14"
+        <Grid x:ConnectionId='5' x:Name="Root" Height="66" Padding="16,8,16,8" ColumnSpacing="14"
           Background="{ThemeResource LayerFillColorDefaultBrush}"
           BorderThickness="0,0,0,1"
           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
@@ -31,7 +31,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel x:ConnectionId='6' x:Name="TransportPanel" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
-            <Button x:ConnectionId='30'                                                               
+            <Button x:ConnectionId='30' x:Name="ShuffleButton"                                                               
                                                                         
                     Width="36" Height="36" Padding="0" CornerRadius="6"
                     Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Shuffle">
@@ -58,7 +58,7 @@
                 <FontIcon Glyph="&#xF8AD;" FontSize="15" />
             </Button>
 
-            <Button x:ConnectionId='34'                                                             
+            <Button x:ConnectionId='34' x:Name="RepeatButton"                                                             
                                                                         
                     Width="36" Height="36" Padding="0" CornerRadius="6"
                     Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Repeat">

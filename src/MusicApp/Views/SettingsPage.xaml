@@ -186,6 +186,197 @@
                     </Grid>
                 </Border>
 
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Normalize audio" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Targets −16 LUFS integrated for consistent playback volume. First play may take longer while a normalized copy is prepared." />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                                      OnContent="" OffContent=""
+                                      IsOn="{x:Bind ViewModel.AudioNormalization, Mode=TwoWay}" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <StackPanel Spacing="12">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Equalizer" Style="{StaticResource SettingName}" />
+                                <TextBlock Style="{StaticResource SettingHint}"
+                                           Text="Adjust sound frequencies to customize the audio. Drag bars up to boost or down to reduce." />
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Reset" VerticalAlignment="Center"
+                                    Click="ResetEqualizer_Click" />
+                        </Grid>
+
+                        <Grid RowSpacing="6" Margin="0,8,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Height="120">
+                                <Canvas x:Name="EqualizerCurve" Height="120" VerticalAlignment="Stretch"
+                                        SizeChanged="EqualizerCurve_SizeChanged" IsHitTestVisible="False">
+                                    <Line x:Name="EqGrid12" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Line x:Name="EqGrid6" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Line x:Name="EqGrid0" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.45" StrokeThickness="1.2" />
+                                    <Line x:Name="EqGridMinus6" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Line x:Name="EqGridMinus12" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Path x:Name="EqualizerResponse" Stroke="{ThemeResource AccentFillColorDefaultBrush}"
+                                          StrokeThickness="2.5" StrokeLineJoin="Round" />
+                                </Canvas>
+                                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Spacing="0"
+                                            IsHitTestVisible="False">
+                                    <TextBlock Text="+12 dB" FontSize="10" Opacity="0.65" />
+                                    <Border Height="31" Opacity="0" />
+                                    <TextBlock Text="0 dB" FontSize="10" Opacity="0.65" />
+                                    <Border Height="31" Opacity="0" />
+                                    <TextBlock Text="−12 dB" FontSize="10" Opacity="0.65" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid x:Name="EqualizerGraph" Grid.Row="1" ColumnSpacing="8" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Slider x:Name="Eq32" Grid.Column="0" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="0" Grid.Row="1" Text="32 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq64" Grid.Column="1" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="1" Grid.Row="1" Text="64 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq125" Grid.Column="2" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="2" Grid.Row="1" Text="125 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq250" Grid.Column="3" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="3" Grid.Row="1" Text="250 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq500" Grid.Column="4" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="4" Grid.Row="1" Text="500 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq1k" Grid.Column="5" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="5" Grid.Row="1" Text="1 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq2k" Grid.Column="6" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="6" Grid.Row="1" Text="2 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq4k" Grid.Column="7" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="7" Grid.Row="1" Text="4 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq8k" Grid.Column="8" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="8" Grid.Row="1" Text="8 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:Name="Eq16k" Grid.Column="9" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                    ValueChanged="Equalizer_ValueChanged"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="9" Grid.Row="1" Text="16 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="Search history" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Recent searches" Style="{StaticResource SettingName}" />
+                                <TextBlock Text="Searches are saved on this device." Style="{StaticResource SettingHint}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Clear history" VerticalAlignment="Center"
+                                    Click="ClearSearchHistory_Click" />
+                        </Grid>
+                        <TextBlock Text="No searches yet." Style="{StaticResource SettingHint}"
+                                   Visibility="{x:Bind ViewModel.HasSearchHistory, Mode=OneWay, Converter={StaticResource BoolToVisibility}, ConverterParameter=Invert}" />
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.SearchHistory, Mode=OneWay}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" FontSize="13" Margin="0,2"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
                 <TextBlock Text="Lyrics" Style="{StaticResource SectionHeading}" />
 
                 <Border Style="{StaticResource SettingCard}">

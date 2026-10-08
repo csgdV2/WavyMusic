@@ -5,17 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="using:MusicApp.Core.Models">
 
-    <Grid Padding="24,16,24,0" RowSpacing="12">
+    <Grid Padding="24,24,24,0" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" ColumnSpacing="12">
+        <Grid x:Name="SearchHeader" Grid.Row="0" ColumnSpacing="12"
+              SizeChanged="SearchHeader_SizeChanged">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" x:Name="PageTitle" Text="Search" VerticalAlignment="Center"
@@ -23,10 +24,31 @@
 
             <AutoSuggestBox Grid.Column="1" x:Name="InlineSearch"
                             HorizontalAlignment="Right" VerticalAlignment="Center"
-                            Width="320" Visibility="Collapsed"
+                            Width="440" MinWidth="120" MaxWidth="480"
                             PlaceholderText="Search"
+                            GotFocus="InlineSearch_GotFocus"
+                            SuggestionChosen="InlineSearch_SuggestionChosen"
                             TextChanged="InlineSearch_TextChanged"
                             QuerySubmitted="InlineSearch_QuerySubmitted">
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnSpacing="12"
+                              PointerEntered="HistorySuggestion_PointerEntered"
+                              PointerExited="HistorySuggestion_PointerExited">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding}" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                            <Button Grid.Column="1" Width="28" Height="28" Padding="0"
+                                    Visibility="Collapsed" Click="RemoveSearchHistory_Click"
+                                    ToolTipService.ToolTip="Remove from search history">
+                                <FontIcon Glyph="&#xE711;" FontSize="11" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
                 <AutoSuggestBox.QueryIcon>
                     <SymbolIcon Symbol="Find" />
                 </AutoSuggestBox.QueryIcon>

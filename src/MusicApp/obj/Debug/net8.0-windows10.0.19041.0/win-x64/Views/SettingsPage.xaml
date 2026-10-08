@@ -48,7 +48,7 @@
                             <TextBlock Style="{StaticResource SettingHint}"
                                        Text="System follows the light/dark setting in Windows. Darker is a deeper, flat black." />
                         </StackPanel>
-                        <ComboBox x:ConnectionId='23' Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
+                        <ComboBox x:ConnectionId='47' Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
                                                                                             >
                             <ComboBoxItem Content="System" />
                             <ComboBoxItem Content="Light" />
@@ -71,22 +71,22 @@
                         </StackPanel>
                         <Button Grid.Column="1" MinWidth="0" Padding="10,6" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                <Border x:ConnectionId='18' Width="18" Height="18" CornerRadius="9"
+                                <Border x:ConnectionId='42' Width="18" Height="18" CornerRadius="9"
                                                                                                 
                                         BorderThickness="1"
                                         BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" />
-                                <TextBlock x:ConnectionId='19'                                                   
+                                <TextBlock x:ConnectionId='43'                                                   
                                            VerticalAlignment="Center" />
                             </StackPanel>
                             <Button.Flyout>
-                                <Flyout x:ConnectionId='20' x:Name="AccentFlyout"                             >
+                                <Flyout x:ConnectionId='44' x:Name="AccentFlyout"                             >
                                     <StackPanel Spacing="12">
-                                        <ColorPicker x:ConnectionId='21'                                                    
+                                        <ColorPicker x:ConnectionId='45'                                                    
                                                      IsAlphaEnabled="False"
                                                      IsMoreButtonVisible="False"
                                                      IsColorChannelTextInputVisible="False"
                                                      IsHexInputVisible="True" />
-                                        <Button x:ConnectionId='22' Content="Use Windows accent" HorizontalAlignment="Stretch"
+                                        <Button x:ConnectionId='46' Content="Use Windows accent" HorizontalAlignment="Stretch"
                                                                            />
                                     </StackPanel>
                                 </Flyout>
@@ -106,7 +106,7 @@
                             <TextBlock Style="{StaticResource SettingHint}"
                                        Text="Off means the app opens on the content, with the menu behind the hamburger button. You can still open and close it any time." />
                         </StackPanel>
-                        <ToggleSwitch x:ConnectionId='17' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                        <ToggleSwitch x:ConnectionId='41' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
                                       OnContent="" OffContent=""
                                                                                                   />
                     </Grid>
@@ -123,7 +123,7 @@
                             <TextBlock Style="{StaticResource SettingHint}"
                                        Text="Tints the page behind your music with a soft blur of the cover art, and fades to the next one as songs change." />
                         </StackPanel>
-                        <ToggleSwitch x:ConnectionId='16' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                        <ToggleSwitch x:ConnectionId='40' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
                                       OnContent="" OffContent=""
                                                                                                />
                     </Grid>
@@ -140,7 +140,7 @@
                             <TextBlock Style="{StaticResource SettingHint}"
                                        Text="Top keeps the player across the top of the window. Bottom floats it as a rounded bar at the bottom, like Apple Music on the web." />
                         </StackPanel>
-                        <ComboBox x:ConnectionId='15' Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
+                        <ComboBox x:ConnectionId='39' Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
                                                                                                  >
                             <ComboBoxItem Content="Top" />
                             <ComboBoxItem Content="Bottom" />
@@ -161,7 +161,7 @@
                             <TextBlock Style="{StaticResource SettingHint}"
                                        Text="Downloads and loads the next song while this one plays, so it starts instantly and runs into it without a gap. Turn off to save data." />
                         </StackPanel>
-                        <ToggleSwitch x:ConnectionId='14' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                        <ToggleSwitch x:ConnectionId='38' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
                                       OnContent="" OffContent=""
                                                                                           />
                     </Grid>
@@ -178,12 +178,203 @@
                             <TextBlock Style="{StaticResource SettingHint}"
                                        Text="How finely the volume slider moves. Every number changes it by 1%, multiples of 5 snap to 5%." />
                         </StackPanel>
-                        <ComboBox x:ConnectionId='13' Grid.Column="1" MinWidth="160" VerticalAlignment="Center"
+                        <ComboBox x:ConnectionId='37' Grid.Column="1" MinWidth="160" VerticalAlignment="Center"
                                                                                                  >
                             <ComboBoxItem Content="Every number" />
                             <ComboBoxItem Content="Multiples of 5" />
                         </ComboBox>
                     </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="Normalize audio" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHint}"
+                                       Text="Balances volume across songs so quieter tracks play at the same level as louder ones." />
+                        </StackPanel>
+                        <ToggleSwitch x:ConnectionId='36' Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
+                                      OnContent="" OffContent=""
+                                                                                                />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource SettingCard}">
+                    <StackPanel Spacing="12">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Equalizer" Style="{StaticResource SettingName}" />
+                                <TextBlock Style="{StaticResource SettingHint}"
+                                           Text="Adjust sound frequencies to customize the audio. Drag bars up to boost or down to reduce." />
+                            </StackPanel>
+                            <Button x:ConnectionId='35' Grid.Column="1" Content="Reset" VerticalAlignment="Center"
+                                                                 />
+                        </Grid>
+
+                        <Grid RowSpacing="6" Margin="0,8,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Height="120">
+                                <Canvas x:ConnectionId='28' x:Name="EqualizerCurve" Height="120" VerticalAlignment="Stretch"
+                                                                                 IsHitTestVisible="False">
+                                    <Line x:ConnectionId='29' x:Name="EqGrid12" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Line x:ConnectionId='30' x:Name="EqGrid6" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Line x:ConnectionId='31' x:Name="EqGrid0" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.45" StrokeThickness="1.2" />
+                                    <Line x:ConnectionId='32' x:Name="EqGridMinus6" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Line x:ConnectionId='33' x:Name="EqGridMinus12" Stroke="{ThemeResource TextFillColorSecondaryBrush}" Opacity="0.22" StrokeThickness="0.6" />
+                                    <Path x:ConnectionId='34' x:Name="EqualizerResponse" Stroke="{ThemeResource AccentFillColorDefaultBrush}"
+                                          StrokeThickness="2.5" StrokeLineJoin="Round" />
+                                </Canvas>
+                                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Spacing="0"
+                                            IsHitTestVisible="False">
+                                    <TextBlock Text="+12 dB" FontSize="10" Opacity="0.65" />
+                                    <Border Height="31" Opacity="0" />
+                                    <TextBlock Text="0 dB" FontSize="10" Opacity="0.65" />
+                                    <Border Height="31" Opacity="0" />
+                                    <TextBlock Text="−12 dB" FontSize="10" Opacity="0.65" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid x:ConnectionId='17' x:Name="EqualizerGraph" Grid.Row="1" ColumnSpacing="8" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Slider x:ConnectionId='18' x:Name="Eq32" Grid.Column="0" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="0" Grid.Row="1" Text="32 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='19' x:Name="Eq64" Grid.Column="1" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="1" Grid.Row="1" Text="64 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='20' x:Name="Eq125" Grid.Column="2" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="2" Grid.Row="1" Text="125 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='21' x:Name="Eq250" Grid.Column="3" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="3" Grid.Row="1" Text="250 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='22' x:Name="Eq500" Grid.Column="4" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="4" Grid.Row="1" Text="500 Hz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='23' x:Name="Eq1k" Grid.Column="5" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="5" Grid.Row="1" Text="1 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='24' x:Name="Eq2k" Grid.Column="6" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="6" Grid.Row="1" Text="2 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='25' x:Name="Eq4k" Grid.Column="7" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="7" Grid.Row="1" Text="4 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='26' x:Name="Eq8k" Grid.Column="8" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="8" Grid.Row="1" Text="8 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+
+                            <Slider x:ConnectionId='27' x:Name="Eq16k" Grid.Column="9" Grid.Row="0" Orientation="Vertical" Height="120"
+                                    Minimum="-12" Maximum="12" StepFrequency="0.5" Value="0"
+                                    VerticalAlignment="Top" HorizontalAlignment="Center"
+                                                                         
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                            <TextBlock Grid.Column="9" Grid.Row="1" Text="16 kHz" FontSize="11" Opacity="0.7"
+                                       HorizontalAlignment="Center" TextAlignment="Center" />
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="Search history" Style="{StaticResource SectionHeading}" />
+
+                <Border Style="{StaticResource SettingCard}">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Recent searches" Style="{StaticResource SettingName}" />
+                                <TextBlock Text="Searches are saved on this device." Style="{StaticResource SettingHint}" />
+                            </StackPanel>
+                            <Button x:ConnectionId='16' Grid.Column="1" Content="Clear history" VerticalAlignment="Center"
+                                                                     />
+                        </Grid>
+                        <TextBlock x:ConnectionId='13' Text="No searches yet." Style="{StaticResource SettingHint}"
+                                                                                                                                                                         />
+                        <ItemsControl x:ConnectionId='14'                                                            >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" FontSize="13" Margin="0,2"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                 </Border>
 
                 <TextBlock Text="Lyrics" Style="{StaticResource SectionHeading}" />

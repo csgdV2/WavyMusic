@@ -147,6 +147,11 @@ public sealed partial class LyricsPanel : UserControl
         set => Root.Margin = new Thickness(0, value, 0, 0);
     }
 
+    public double PanelWidth
+    {
+        set => Root.Width = value;
+    }
+
     private void HookScroller()
     {
         if (_scroller is not null)

@@ -19,6 +19,8 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
 
     private readonly IYtDlpService _ytDlp;
     private readonly CacheService _cache;
+    private readonly SettingsService _settings;
+    private readonly LoudnessNormalizationService _normalizer;
     private readonly DispatcherQueue _dispatcher;
     private readonly DispatcherQueueTimer _handoff;
 
@@ -48,10 +50,13 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
     [ObservableProperty] private TimeSpan _duration;
     [ObservableProperty] private string? _statusMessage;
 
-    public PlaybackService(IYtDlpService ytDlp, CacheService cache, DispatcherQueue dispatcher)
+    public PlaybackService(IYtDlpService ytDlp, CacheService cache, SettingsService settings,
+        LoudnessNormalizationService normalizer, DispatcherQueue dispatcher)
     {
         _ytDlp = ytDlp;
         _cache = cache;
+        _settings = settings;
+        _normalizer = normalizer;
         _dispatcher = dispatcher;
 
         _player = CreatePlayer();
@@ -134,6 +139,20 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
 
         if (!string.IsNullOrEmpty(localPath) && File.Exists(localPath))
         {
+            if (_settings.AudioNormalization)
+            {
+                IsBusy = true;
+                try
+                {
+                    var normalized = await _normalizer.NormalizeAsync(localPath, token).ConfigureAwait(false);
+                    token.ThrowIfCancellationRequested();
+                    Play(generation, MediaSource.CreateFromUri(new Uri(normalized)));
+                    return;
+                }
+                catch (OperationCanceledException) { return; }
+                catch { /* The original remains playable if this file cannot be decoded or encoded. */ }
+                finally { RunOnUi(() => { if (generation == _generation) IsBusy = false; }); }
+            }
             Play(generation, MediaSource.CreateFromUri(new Uri(localPath)));
             return;
         }
@@ -144,10 +163,39 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
             var stream = await _ytDlp.ResolveStreamAsync(track, token).ConfigureAwait(false);
             token.ThrowIfCancellationRequested();
 
+            if (_settings.AudioNormalization && stream.DashManifest is { Length: > 0 })
+            {
+                await _cache.EnsureCachedFromSourceAsync(track, token).ConfigureAwait(false);
+                if (_cache.TryGetLocalPath(track.Id) is { } downloaded)
+                {
+                    try
+                    {
+                        var normalized = await _normalizer.NormalizeAsync(downloaded, token).ConfigureAwait(false);
+                        token.ThrowIfCancellationRequested();
+                        Play(generation, MediaSource.CreateFromUri(new Uri(normalized)));
+                        return;
+                    }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* Continue with the adaptive stream if decoding or encoding fails. */ }
+                }
+            }
+
             if (stream.DashManifest is null or { Length: 0 }
                 && await _cache.FetchAsync(track, stream.Url, token).ConfigureAwait(false) is { } file)
             {
                 token.ThrowIfCancellationRequested();
+                if (_settings.AudioNormalization)
+                {
+                    try
+                    {
+                        var normalized = await _normalizer.NormalizeAsync(file, token).ConfigureAwait(false);
+                        token.ThrowIfCancellationRequested();
+                        Play(generation, MediaSource.CreateFromUri(new Uri(normalized)));
+                        return;
+                    }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* Fall back to the downloaded original. */ }
+                }
                 Play(generation, MediaSource.CreateFromUri(new Uri(file)));
                 return;
             }
@@ -260,7 +308,20 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
             if (local is null)
             {
                 var stream = await _ytDlp.ResolveStreamAsync(track, ct).ConfigureAwait(false);
-                local = await _cache.FetchAsync(track, stream.Url, ct).ConfigureAwait(false);
+                if (_settings.AudioNormalization && stream.DashManifest is { Length: > 0 })
+                {
+                    await _cache.EnsureCachedFromSourceAsync(track, ct).ConfigureAwait(false);
+                    local = _cache.TryGetLocalPath(track.Id);
+                    if (local is null)
+                    {
+                        Arm(track, await CreateSourceAsync(stream).ConfigureAwait(false), local: false);
+                        return;
+                    }
+                }
+                else
+                {
+                    local = await _cache.FetchAsync(track, stream.Url, ct).ConfigureAwait(false);
+                }
 
                 if (local is null)
                 {
@@ -269,6 +330,12 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
                 }
             }
 
+            if (_settings.AudioNormalization && File.Exists(local))
+            {
+                try { local = await _normalizer.NormalizeAsync(local, ct).ConfigureAwait(false); }
+                catch (OperationCanceledException) { throw; }
+                catch { /* The original cached track is still usable. */ }
+            }
             Arm(track, MediaSource.CreateFromUri(new Uri(local)), local: true);
         }
         catch

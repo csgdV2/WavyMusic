@@ -8,14 +8,15 @@
     <Grid x:ConnectionId='2' x:Name="RootGrid">
 
         <Grid x:ConnectionId='3' x:Name="Ambient" IsHitTestVisible="False" Visibility="Collapsed">
-            <Grid x:ConnectionId='17' x:Name="AmbientBack" Opacity="0" />
-            <Grid x:ConnectionId='18' x:Name="AmbientFront" Opacity="0" />
-            <Rectangle x:ConnectionId='19' x:Name="AmbientScrim" Opacity="0.28" />
+            <Grid x:ConnectionId='18' x:Name="AmbientBack" Opacity="0" />
+            <Grid x:ConnectionId='19' x:Name="AmbientFront" Opacity="0" />
+            <Rectangle x:ConnectionId='20' x:Name="AmbientScrim" Opacity="0.28" />
         </Grid>
 
         <NavigationView x:ConnectionId='4' x:Name="Nav"
                         PaneDisplayMode="Auto"
                         CompactModeThresholdWidth="0"
+                        IsPaneToggleButtonVisible="False"
                         IsBackButtonVisible="Visible"
                         IsBackEnabled="False"
                         IsSettingsVisible="True"
@@ -25,22 +26,12 @@
                                                    
                                                                
                                                      >
-            <NavigationView.AutoSuggestBox>
-                <AutoSuggestBox x:ConnectionId='6' x:Name="SearchSuggest"
-                                PlaceholderText="Search"
-                                                                       
-                                                                             >
-                    <AutoSuggestBox.QueryIcon>
-                        <SymbolIcon Symbol="Find" />
-                    </AutoSuggestBox.QueryIcon>
-                </AutoSuggestBox>
-            </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Home" Tag="home" IsSelected="True">
-                    <NavigationViewItem.Icon><FontIcon Glyph="&#xEA8A;" /></NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:ConnectionId='7' x:Name="SearchNavItem" Content="Search" Tag="search">
+                <NavigationViewItem x:ConnectionId='6' x:Name="SearchNavItem" Content="Search" Tag="search">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE721;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:ConnectionId='7' x:Name="HomeNavItem" Content="Home" Tag="home" IsSelected="True">
+                    <NavigationViewItem.Icon><FontIcon x:ConnectionId='10' x:Name="HomeIcon" Glyph="&#xEA8A;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
 
                 <NavigationViewItem x:ConnectionId='8' x:Name="PlaylistsNavItem" Content="Playlists" Tag="playlists">
@@ -62,7 +53,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid x:ConnectionId='10' x:Name="ContentArea" Grid.Row="1" ColumnSpacing="0">
+                <Grid x:ConnectionId='11' x:Name="ContentArea" Grid.Row="1" ColumnSpacing="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -70,9 +61,9 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
-                        <Frame x:ConnectionId='15' x:Name="ContentFrame" />
+                        <Frame x:ConnectionId='16' x:Name="ContentFrame" />
 
-                        <InfoBar x:ConnectionId='16' VerticalAlignment="Bottom" Margin="16"
+                        <InfoBar x:ConnectionId='17' VerticalAlignment="Bottom" Margin="16"
                                  Severity="Error"
                                  Title="Playback"
                                                                                        
@@ -80,16 +71,16 @@
                                                                             />
                     </Grid>
 
-                    <controls:LyricsPanel x:ConnectionId='13' x:Name="LyricsSide" Grid.Column="1" />
+                    <controls:LyricsPanel x:ConnectionId='14' x:Name="LyricsSide" Grid.Column="1" Canvas.ZIndex="1" />
 
-                    <controls:QueuePanel x:ConnectionId='14' x:Name="QueueSide" Grid.Column="2" />
+                    <controls:QueuePanel x:ConnectionId='15' x:Name="QueueSide" Grid.Column="2" Canvas.ZIndex="1" />
                 </Grid>
 
-                <controls:NowPlayingBar x:ConnectionId='11' x:Name="NowPlaying" Grid.Row="0" />
+                <controls:NowPlayingBar x:ConnectionId='12' x:Name="NowPlaying" Grid.Row="0" Canvas.ZIndex="2" />
 
-                <Grid x:ConnectionId='12' x:Name="TitleStrip" Grid.Row="0" Height="48"
+                <Grid x:ConnectionId='13' x:Name="TitleStrip" Grid.Row="0" Height="48"
                       VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                      Background="Transparent" Visibility="Collapsed" />
+                      Background="Transparent" Visibility="Collapsed" Canvas.ZIndex="3" />
             </Grid>
         </NavigationView>
 

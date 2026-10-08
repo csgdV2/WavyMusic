@@ -12,7 +12,7 @@
                 BorderThickness="0,0,0,1"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" />
 
-        <Grid x:Name="Root" Height="66" Padding="16,8,150,8" ColumnSpacing="14"
+        <Grid x:Name="Root" Height="66" Padding="16,8,16,8" ColumnSpacing="14"
           Background="{ThemeResource LayerFillColorDefaultBrush}"
           BorderThickness="0,0,0,1"
           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
@@ -31,7 +31,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel x:Name="TransportPanel" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
-            <Button Command="{x:Bind ViewModel.ToggleShuffleCommand, Mode=OneWay}"
+            <Button x:Name="ShuffleButton" Command="{x:Bind ViewModel.ToggleShuffleCommand, Mode=OneWay}"
                     IsEnabled="{x:Bind ViewModel.HasTrack, Mode=OneWay}"
                     Width="36" Height="36" Padding="0" CornerRadius="6"
                     Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Shuffle">
@@ -58,7 +58,7 @@
                 <FontIcon Glyph="&#xF8AD;" FontSize="15" />
             </Button>
 
-            <Button Command="{x:Bind ViewModel.CycleRepeatCommand, Mode=OneWay}"
+            <Button x:Name="RepeatButton" Command="{x:Bind ViewModel.CycleRepeatCommand, Mode=OneWay}"
                     IsEnabled="{x:Bind ViewModel.HasTrack, Mode=OneWay}"
                     Width="36" Height="36" Padding="0" CornerRadius="6"
                     Background="Transparent" BorderThickness="0" ToolTipService.ToolTip="Repeat">

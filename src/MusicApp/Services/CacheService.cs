@@ -61,6 +61,12 @@ public sealed class CacheService
     }
 
     public Task EnsureCachedAsync(Track track, CancellationToken ct = default)
+        => EnsureCachedAsync(track, false, ct);
+
+    public Task EnsureCachedFromSourceAsync(Track track, CancellationToken ct = default)
+        => EnsureCachedAsync(track, true, ct);
+
+    private Task EnsureCachedAsync(Track track, bool forceYtDlp, CancellationToken ct)
     {
         if (TryGetLocalPath(track.Id) is not null)
             return Task.CompletedTask;
@@ -69,7 +75,7 @@ public sealed class CacheService
         {
             if (_inFlight.TryGetValue(track.Id, out var existing))
                 return existing;
-            var task = DownloadAsync(track, ct);
+            var task = DownloadAsync(track, ct, forceYtDlp);
             _inFlight[track.Id] = task;
             return task;
         }
@@ -138,6 +144,7 @@ public sealed class CacheService
             {
                 if (e.LastPlayedUtc >= cutoff || e.FilePath.Length == 0)
                     continue;
+                TryDelete(e.FilePath + ".norm16.m4a");
                 TryDelete(e.FilePath);
                 e.FilePath = "";
                 removed++;
@@ -157,6 +164,7 @@ public sealed class CacheService
             {
                 if (e.FilePath.Length == 0)
                     continue;
+                TryDelete(e.FilePath + ".norm16.m4a");
                 TryDelete(e.FilePath);
                 e.FilePath = "";
                 removed++;
@@ -166,12 +174,11 @@ public sealed class CacheService
         return removed;
     }
 
-    private async Task DownloadAsync(Track track, CancellationToken ct)
+    private async Task DownloadAsync(Track track, CancellationToken ct, bool forceYtDlp)
     {
         try
         {
-
-            if (await TryDownloadDirectAsync(track, ct).ConfigureAwait(false) is not null)
+            if (!forceYtDlp && await TryDownloadDirectAsync(track, ct).ConfigureAwait(false) is not null)
                 return;
 
             var template = Path.Combine(_cacheDir, track.Id + ".%(ext)s");
@@ -318,7 +325,10 @@ public sealed class CacheService
             {
                 if (string.Equals(path, _indexPath, StringComparison.OrdinalIgnoreCase))
                     continue;
-                if (!known.Contains(path))
+                var normalizedSource = path.EndsWith(".norm16.m4a", StringComparison.OrdinalIgnoreCase)
+                    ? path[..^".norm16.m4a".Length]
+                    : null;
+                if (!known.Contains(path) && (normalizedSource is null || !known.Contains(normalizedSource)))
                     TryDelete(path);
             }
         }

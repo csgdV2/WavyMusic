@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("csgd")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.6.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.6.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.6.0+0aa29d3bb2b9a6c35ab6df8749413bdaf7c49b53")]
 [assembly: System.Reflection.AssemblyProductAttribute("Wavy")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Wavy")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.6.0.0")]

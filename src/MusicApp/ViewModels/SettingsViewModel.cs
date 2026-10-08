@@ -19,7 +19,14 @@ public sealed partial class SettingsViewModel : ObservableObject
     {
         _settings = settings;
         _cache = cache;
+        _settings.Changed += (_, name) =>
+        {
+            if (name == nameof(SettingsService.SearchHistory))
+                SearchHistoryChanged?.Invoke(this, EventArgs.Empty);
+        };
     }
+
+    public event EventHandler? SearchHistoryChanged;
 
     public int ThemeIndex
     {
@@ -172,6 +179,43 @@ public sealed partial class SettingsViewModel : ObservableObject
             _settings.LyricsSource = (LyricsSource)value;
             OnPropertyChanged();
         }
+    }
+
+    public bool AudioNormalization
+    {
+        get => _settings.AudioNormalization;
+        set
+        {
+            if (value == _settings.AudioNormalization)
+                return;
+            _settings.AudioNormalization = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double[] EqualizerBands
+    {
+        get => _settings.EqualizerBands;
+        set
+        {
+            _settings.EqualizerBands = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public IReadOnlyList<string> SearchHistory => _settings.SearchHistory;
+    public bool HasSearchHistory => SearchHistory.Count > 0;
+
+    public void ClearSearchHistory()
+    {
+        _settings.ClearSearchHistory();
+        RefreshSearchHistory();
+    }
+
+    public void RefreshSearchHistory()
+    {
+        OnPropertyChanged(nameof(SearchHistory));
+        OnPropertyChanged(nameof(HasSearchHistory));
     }
 
     public int KeepIndex

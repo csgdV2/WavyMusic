@@ -43,6 +43,7 @@ public sealed partial class NowPlayingBar : UserControl
 
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         ProgressTrack.SizeChanged += (_, _) => PlaceSeekThumb();
+        Root.SizeChanged += (_, _) => AdaptToWidth();
 
         var settings = App.Services.GetRequiredService<Services.SettingsService>();
         ApplyVolumeStep(settings);
@@ -110,7 +111,7 @@ public sealed partial class NowPlayingBar : UserControl
                 HorizontalAlignment = HorizontalAlignment.Stretch;
                 Margin = new Thickness(0);
                 Root.Height = 66;
-                Root.Padding = new Thickness(16, 8, 150, 8);
+                Root.Padding = new Thickness(16, 8, 16, 8);
                 Root.CornerRadius = new CornerRadius(0);
                 Root.BorderThickness = new Thickness(0);
                 Outline.CornerRadius = new CornerRadius(0);
@@ -122,12 +123,22 @@ public sealed partial class NowPlayingBar : UserControl
                 Root.Background = Application.Current.Resources["LayerFillColorDefaultBrush"] as Brush
                     ?? Root.Background;
                 SongCard.Width = double.NaN;
+                SongCard.MaxWidth = 560;
                 SongCard.HorizontalAlignment = HorizontalAlignment.Stretch;
                 SongCard.Background =
                     Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] as Brush;
                 SongCard.BorderThickness = new Thickness(1);
             }
+            AdaptToWidth();
         }
+    }
+
+    private void AdaptToWidth()
+    {
+        var compact = Root.ActualWidth < 700;
+        ShuffleButton.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
+        RepeatButton.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
+        VolumeSlider.Visibility = compact ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void ApplyVolumeStep(Services.SettingsService settings)

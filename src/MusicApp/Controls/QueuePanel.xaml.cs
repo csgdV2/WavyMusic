@@ -27,6 +27,11 @@ public sealed partial class QueuePanel : UserControl
         set => Root.Margin = new Thickness(0, value, 0, 0);
     }
 
+    public double PanelWidth
+    {
+        set => Root.Width = value;
+    }
+
     private async void Queue_ItemClick(object sender, ItemClickEventArgs e)
     {
         if (e.ClickedItem is Track track)

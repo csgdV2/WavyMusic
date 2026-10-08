@@ -72,6 +72,7 @@
                     <Setter Property="Padding" Value="8,2,8,2" />
                     <Setter Property="CornerRadius" Value="8" />
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="0,1,0,1" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>

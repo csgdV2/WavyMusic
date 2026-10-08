@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using MusicApp.Controls;
 using MusicApp.Core.Models;
+using MusicApp.Services;
 using MusicApp.ViewModels;
 
 namespace MusicApp.Views;
@@ -15,16 +16,20 @@ public sealed partial class SearchPage : Page
 {
     public SearchViewModel ViewModel { get; }
     private readonly PlayerViewModel _player;
+    private readonly SettingsService _settings;
 
     public SearchPage()
     {
         ViewModel = App.Services.GetRequiredService<SearchViewModel>();
         _player = App.Services.GetRequiredService<PlayerViewModel>();
+        _settings = App.Services.GetRequiredService<SettingsService>();
         InitializeComponent();
+        RefreshSearchHistory();
 
         SelectFilterItem(ViewModel.SelectedFilter);
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         MainWindow.NavPaneStateChanged += OnNavPaneStateChanged;
+        _settings.Changed += OnSettingsChanged;
 
         Loaded += (_, _) => SyncInlineSearch();
 
@@ -33,6 +38,7 @@ public sealed partial class SearchPage : Page
             _debounce?.Stop();
             ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
             MainWindow.NavPaneStateChanged -= OnNavPaneStateChanged;
+            _settings.Changed -= OnSettingsChanged;
         };
     }
 
@@ -40,20 +46,71 @@ public sealed partial class SearchPage : Page
 
     private void OnNavPaneStateChanged(object? sender, EventArgs e) => SyncInlineSearch();
 
+    private void OnSettingsChanged(object? sender, string name)
+    {
+        if (name == nameof(SettingsService.SearchHistory))
+            RefreshSearchHistory();
+    }
+
+    private void RefreshSearchHistory()
+    {
+        var history = _settings.SearchHistory.ToArray();
+        InlineSearch.ItemsSource = history;
+        if (history.Length > 0 && string.IsNullOrWhiteSpace(InlineSearch.Text)
+            && InlineSearch.FocusState != FocusState.Unfocused)
+            InlineSearch.IsSuggestionListOpen = true;
+    }
+
+    private void InlineSearch_GotFocus(object sender, RoutedEventArgs e)
+    {
+        InlineSearch.DispatcherQueue.TryEnqueue(() =>
+        {
+            if (string.IsNullOrWhiteSpace(InlineSearch.Text) && _settings.SearchHistory.Count > 0)
+                InlineSearch.IsSuggestionListOpen = true;
+        });
+    }
+
+    private async void InlineSearch_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+    {
+        if (args.SelectedItem is not string query)
+            return;
+        sender.Text = query;
+        _debounce?.Stop();
+        await ViewModel.SearchAsync(query, recordInHistory: true);
+    }
+
+    private void HistorySuggestion_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is Grid row && row.Children.OfType<Button>().FirstOrDefault() is { } removeButton)
+            removeButton.Visibility = Visibility.Visible;
+    }
+
+    private void HistorySuggestion_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is Grid row && row.Children.OfType<Button>().FirstOrDefault() is { } removeButton)
+            removeButton.Visibility = Visibility.Collapsed;
+    }
+
+    private void RemoveSearchHistory_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { DataContext: string query } button)
+            _settings.RemoveSearchHistory(query);
+    }
+
     private void SyncInlineSearch()
     {
-        var show = MainWindow.IsNavPaneCollapsed;
-        InlineSearch.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
-
-        if (!show)
-        {
-            _debounce?.Stop();
-            return;
-        }
-
+        InlineSearch.Visibility = Visibility.Visible;
         var query = ViewModel.Query ?? string.Empty;
         if (InlineSearch.Text != query)
             InlineSearch.Text = query;
+    }
+
+    public void FocusSearchBox() => InlineSearch.Focus(FocusState.Programmatic);
+
+    private void SearchHeader_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var available = Math.Max(120, e.NewSize.Width - PageTitle.ActualWidth - SearchHeader.ColumnSpacing);
+        InlineSearch.Width = Math.Min(480, available);
     }
 
     private void InlineSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -67,6 +124,8 @@ public sealed partial class SearchPage : Page
         if (string.IsNullOrWhiteSpace(sender.Text))
         {
             ViewModel.Clear();
+            if (_settings.SearchHistory.Count > 0)
+                sender.IsSuggestionListOpen = true;
             return;
         }
 
@@ -78,14 +137,14 @@ public sealed partial class SearchPage : Page
         var timer = DispatcherQueue.CreateTimer();
         timer.Interval = TimeSpan.FromMilliseconds(450);
         timer.IsRepeating = false;
-        timer.Tick += async (_, _) => await ViewModel.SearchAsync(InlineSearch.Text);
+        timer.Tick += async (_, _) => await ViewModel.SearchAsync(InlineSearch.Text, recordInHistory: true);
         return timer;
     }
 
     private async void InlineSearch_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         _debounce?.Stop();
-        await ViewModel.SearchAsync(args.QueryText);
+        await ViewModel.SearchAsync(args.QueryText, recordInHistory: true);
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

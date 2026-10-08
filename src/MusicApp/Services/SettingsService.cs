@@ -200,6 +200,66 @@ public sealed class SettingsService
         }
     }
 
+    public bool AudioNormalization
+    {
+        get => _stored.AudioNormalization;
+        set
+        {
+            if (_stored.AudioNormalization == value)
+                return;
+            _stored.AudioNormalization = value;
+            Commit(nameof(AudioNormalization));
+        }
+    }
+
+    public double[] EqualizerBands
+    {
+        get => _stored.EqualizerBands ?? new double[10];
+        set
+        {
+            _stored.EqualizerBands = value;
+            Commit(nameof(EqualizerBands));
+        }
+    }
+
+    public IReadOnlyList<string> SearchHistory => _stored.SearchHistory ?? Array.Empty<string>();
+
+    public void AddSearchHistory(string query)
+    {
+        query = query.Trim();
+        if (query.Length == 0)
+            return;
+
+        var history = SearchHistory
+            .Where(item => !string.Equals(item, query, StringComparison.OrdinalIgnoreCase))
+            .Prepend(query)
+            .Take(20)
+            .ToArray();
+        _stored.SearchHistory = history;
+        Commit(nameof(SearchHistory));
+    }
+
+    public void ClearSearchHistory()
+    {
+        if (SearchHistory.Count == 0)
+            return;
+
+        _stored.SearchHistory = Array.Empty<string>();
+        Commit(nameof(SearchHistory));
+    }
+
+    public void RemoveSearchHistory(string query)
+    {
+        var history = SearchHistory
+            .Where(item => !string.Equals(item, query, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+        if (history.Length == SearchHistory.Count)
+            return;
+
+        _stored.SearchHistory = history;
+        Commit(nameof(SearchHistory));
+    }
+
     public WindowPlacement? Placement
     {
         get => _stored.WindowWidth > 0 && _stored.WindowHeight > 0
@@ -267,6 +327,9 @@ public sealed class SettingsService
         public DiscordIdentity DiscordIdentity { get; set; } = DiscordIdentity.Music;
         public MenuLayout MenuLayout { get; set; } = MenuLayout.Bottom;
         public LyricsSource LyricsSource { get; set; } = LyricsSource.Auto;
+        public bool AudioNormalization { get; set; } = true;
+        public double[]? EqualizerBands { get; set; }
+        public string[]? SearchHistory { get; set; }
 
         public int WindowX { get; set; }
         public int WindowY { get; set; }

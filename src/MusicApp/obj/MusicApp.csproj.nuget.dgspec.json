@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp\\MusicApp.csproj": {}
+    "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp\\MusicApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp.Core\\MusicApp.Core.csproj": {
+    "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp.Core\\MusicApp.Core.csproj": {
       "version": "1.6.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp.Core\\MusicApp.Core.csproj",
+        "projectUniqueName": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp.Core\\MusicApp.Core.csproj",
         "projectName": "MusicApp.Core",
-        "projectPath": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp.Core\\MusicApp.Core.csproj",
+        "projectPath": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp.Core\\MusicApp.Core.csproj",
         "packagesPath": "C:\\Users\\csgd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp.Core\\obj\\",
+        "outputPath": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\csgd\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -24,7 +24,6 @@
         },
         "frameworks": {
           "net8.0": {
-            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -38,12 +37,10 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.400"
+        }
       },
       "frameworks": {
         "net8.0": {
-          "framework": "net8.0",
           "targetAlias": "net8.0",
           "imports": [
             "net461",
@@ -56,54 +53,23 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Runtime.win-x64",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
-              "version": "[8.0.30, 8.0.30]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json"
-        }
-      },
-      "runtimes": {
-        "win-x64": {
-          "#import": []
+          "runtimeIdentifierGraphPath": "C:\\Users\\csgd\\AppData\\Local\\WavyMusic-dotnet\\sdk\\8.0.425/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp\\MusicApp.csproj": {
+    "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp\\MusicApp.csproj": {
       "version": "1.6.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp\\MusicApp.csproj",
+        "projectUniqueName": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp\\MusicApp.csproj",
         "projectName": "MusicApp",
-        "projectPath": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp\\MusicApp.csproj",
+        "projectPath": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp\\MusicApp.csproj",
         "packagesPath": "C:\\Users\\csgd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp\\obj\\",
+        "outputPath": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\csgd\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -115,12 +81,11 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0-windows10.0.19041.0": {
-            "framework": "net8.0-windows10.0.19041",
+          "net8.0-windows10.0.19041": {
             "targetAlias": "net8.0-windows10.0.19041.0",
             "projectReferences": {
-              "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp.Core\\MusicApp.Core.csproj": {
-                "projectPath": "C:\\Users\\csgd\\Downloads\\music\\src\\MusicApp.Core\\MusicApp.Core.csproj"
+              "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp.Core\\MusicApp.Core.csproj": {
+                "projectPath": "C:\\Users\\csgd\\Downloads\\WavyMusic\\src\\MusicApp.Core\\MusicApp.Core.csproj"
               }
             }
           }
@@ -134,12 +99,10 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.400"
+        }
       },
       "frameworks": {
-        "net8.0-windows10.0.19041.0": {
-          "framework": "net8.0-windows10.0.19041",
+        "net8.0-windows10.0.19041": {
           "targetAlias": "net8.0-windows10.0.19041.0",
           "dependencies": {
             "CommunityToolkit.Mvvm": {
@@ -157,6 +120,10 @@
             "Microsoft.WindowsAppSDK": {
               "target": "Package",
               "version": "[2.4.0, )"
+            },
+            "NAudio": {
+              "target": "Package",
+              "version": "[2.2.1, )"
             }
           },
           "imports": [
@@ -172,63 +139,43 @@
           "warn": true,
           "downloadDependencies": [
             {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
               "name": "Microsoft.AspNetCore.App.Runtime.win-arm64",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[8.0.31, 8.0.31]"
             },
             {
               "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-arm64",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.30, 8.0.30]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[8.0.31, 8.0.31]"
             },
             {
               "name": "Microsoft.NETCore.App.Runtime.win-arm64",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[8.0.31, 8.0.31]"
             },
             {
               "name": "Microsoft.NETCore.App.Runtime.win-x64",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[8.0.31, 8.0.31]"
             },
             {
               "name": "Microsoft.Windows.SDK.NET.Ref",
-              "version": "[10.0.19041.57, 10.0.19041.57]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[10.0.19041.56, 10.0.19041.56]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Runtime.win-arm64",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[8.0.31, 8.0.31]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
-              "version": "[8.0.30, 8.0.30]"
+              "version": "[8.0.31, 8.0.31]"
             }
           ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             },
-            "Microsoft.Windows.SDK.NET.Ref.Windows": {
+            "Microsoft.Windows.SDK.NET.Ref": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\csgd\\AppData\\Local\\WavyMusic-dotnet\\sdk\\8.0.425/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

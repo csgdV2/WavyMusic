@@ -16,6 +16,7 @@
         <NavigationView x:Name="Nav"
                         PaneDisplayMode="Auto"
                         CompactModeThresholdWidth="0"
+                        IsPaneToggleButtonVisible="False"
                         IsBackButtonVisible="Visible"
                         IsBackEnabled="False"
                         IsSettingsVisible="True"
@@ -25,22 +26,12 @@
                         PaneOpened="Nav_PaneOpened"
                         SelectionChanged="Nav_SelectionChanged"
                         ItemInvoked="Nav_ItemInvoked">
-            <NavigationView.AutoSuggestBox>
-                <AutoSuggestBox x:Name="SearchSuggest"
-                                PlaceholderText="Search"
-                                TextChanged="SearchSuggest_TextChanged"
-                                QuerySubmitted="SearchSuggest_QuerySubmitted">
-                    <AutoSuggestBox.QueryIcon>
-                        <SymbolIcon Symbol="Find" />
-                    </AutoSuggestBox.QueryIcon>
-                </AutoSuggestBox>
-            </NavigationView.AutoSuggestBox>
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Home" Tag="home" IsSelected="True">
-                    <NavigationViewItem.Icon><FontIcon Glyph="&#xEA8A;" /></NavigationViewItem.Icon>
-                </NavigationViewItem>
                 <NavigationViewItem x:Name="SearchNavItem" Content="Search" Tag="search">
                     <NavigationViewItem.Icon><FontIcon Glyph="&#xE721;" /></NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="HomeNavItem" Content="Home" Tag="home" IsSelected="True">
+                    <NavigationViewItem.Icon><FontIcon x:Name="HomeIcon" Glyph="&#xEA8A;" /></NavigationViewItem.Icon>
                 </NavigationViewItem>
 
                 <NavigationViewItem x:Name="PlaylistsNavItem" Content="Playlists" Tag="playlists">
@@ -80,16 +71,16 @@
                                  CloseButtonClick="Status_CloseButtonClick" />
                     </Grid>
 
-                    <controls:LyricsPanel x:Name="LyricsSide" Grid.Column="1" />
+                    <controls:LyricsPanel x:Name="LyricsSide" Grid.Column="1" Canvas.ZIndex="1" />
 
-                    <controls:QueuePanel x:Name="QueueSide" Grid.Column="2" />
+                    <controls:QueuePanel x:Name="QueueSide" Grid.Column="2" Canvas.ZIndex="1" />
                 </Grid>
 
-                <controls:NowPlayingBar x:Name="NowPlaying" Grid.Row="0" />
+                <controls:NowPlayingBar x:Name="NowPlaying" Grid.Row="0" Canvas.ZIndex="2" />
 
                 <Grid x:Name="TitleStrip" Grid.Row="0" Height="48"
                       VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                      Background="Transparent" Visibility="Collapsed" />
+                      Background="Transparent" Visibility="Collapsed" Canvas.ZIndex="3" />
             </Grid>
         </NavigationView>
 
