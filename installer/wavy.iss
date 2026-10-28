@@ -1,6 +1,6 @@
 #define AppName "Wavy"
-#define AppVersion "1.7"
-#define AppExe "MusicApp.exe"
+#define AppVersion "1.8"
+#define AppExe "Wavy.exe"
 #define AppPublisher "csgd"
 
 [Setup]
@@ -15,7 +15,7 @@ UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
 OutputDir=..\dist
 OutputBaseFilename=Wavy-{#AppVersion}-setup
-SetupIconFile=..\src\MusicApp\Assets\app.ico
+SetupIconFile=..\src\Wavy\Assets\app.ico
 Compression=lzma2/max
 SolidCompression=yes
 ArchitecturesAllowed=x64compatible

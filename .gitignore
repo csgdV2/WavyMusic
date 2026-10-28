@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+.vs/
+dist/
+!website/dist/
+!website/dist/**
+publish/
+/Wavy-website-netlify.zip
+*.user
+*.suo
+google-oauth.json
+client_secret_*.json
+tests/**
+tests

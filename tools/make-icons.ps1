@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
-$assets = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\src\MusicApp\Assets'))
+$assets = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\src\Wavy\Assets'))
 if (-not (Test-Path $assets)) { New-Item -ItemType Directory -Path $assets | Out-Null }
 
 function Get-PngBytes {
