@@ -76,6 +76,7 @@ public sealed class YouTubeMusicBrowseClient
                 Id = t.Id,
                 Title = t.Title,
                 Artist = t.Artist ?? artist,
+                ArtistBrowseId = t.ArtistBrowseId ?? (creditRun.ValueKind == JsonValueKind.Object ? YouTubeMusicJson.FindFirstString(creditRun, "browseId") : null),
                 Album = title,
                 Duration = t.Duration,
                 ReleaseYear = year,
@@ -227,6 +228,7 @@ public sealed class YouTubeMusicBrowseClient
                 Id = id,
                 Title = title,
                 Artist = TileArtist(tile),
+                ArtistBrowseId = YouTubeMusicJson.BrowseId(tile, "MUSIC_PAGE_TYPE_ARTIST"),
                 ThumbnailUrl = YouTubeMusicJson.PickThumbnail(tile),
             });
         }

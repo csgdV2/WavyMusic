@@ -15,7 +15,7 @@ internal static class DiscordPresenceChecks
         using var server = new NamedPipeServerStream(prefix + "0", PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         var player = new PlaybackService
         {
-            CurrentTrack = new Track { Id = "first", Title = "First song", Artist = "First artist" },
+            CurrentTrack = new Track { Id = "first", Title = "First song", Artist = "First artist", Album = " FIRST SONG ", ThumbnailUrl = "https://example.com/first.png" },
             IsPlaying = true, Duration = TimeSpan.FromMinutes(3),
         };
         using var presence = new DiscordPresenceService(player, new SettingsService(), prefix);
@@ -46,7 +46,7 @@ internal static class DiscordPresenceChecks
 
         await ((Task)tick.Invoke(presence, null)!).WaitAsync(timeout.Token);
         Check(shown.GetValue(presence) is not null, "Discord accepts acknowledged activity after ping and unrelated event");
-        player.CurrentTrack = new Track { Id = "second", Title = "Second song", Artist = "A" };
+        player.CurrentTrack = new Track { Id = "second", Title = "Second song", Artist = "A", ArtistBrowseId = "UCArtist", Album = "Actual album", ThumbnailUrl = "https://example.com/second.png" };
         await ((Task)tick.Invoke(presence, null)!).WaitAsync(timeout.Token);
         player.IsPlaying = false;
         await ((Task)tick.Invoke(presence, null)!).WaitAsync(timeout.Token);
@@ -59,6 +59,12 @@ internal static class DiscordPresenceChecks
         Check(first.GetProperty("type").GetInt32() == 2 && first.GetProperty("name").GetString() == "First artist", "listening activity headline sends the artist instead of the app name");
         Check(second.GetProperty("name").GetString() == "A" && second.GetProperty("state").GetString() == "A", "switching tracks updates both headlines and preserves single-character artists");
         Check(second.GetProperty("details").GetString() == "Second song", "song title remains in the rich presence details");
+        Check(first.GetProperty("state_url").GetString() == "https://music.youtube.com/search?q=First%20artist"
+            && second.GetProperty("state_url").GetString() == "https://music.youtube.com/channel/UCArtist",
+            "artist text links to its profile when known, with an encoded artist search fallback");
+        Check(second.GetProperty("details_url").GetString() == "https://music.youtube.com/watch?v=second", "song title retains its own clickable song link");
+        Check(!first.GetProperty("assets").TryGetProperty("large_text", out _), "Discord activity omits an album line that duplicates the song title");
+        Check(second.GetProperty("assets").GetProperty("large_text").GetString() == "Actual album", "Discord activity preserves distinct album information");
         Check(requests[2].GetProperty("args").GetProperty("activity").ValueKind == JsonValueKind.Null, "pausing clears the listening activity");
         Check(shown.GetValue(presence) is null, "a rejected Discord update is not cached as successful");
     }

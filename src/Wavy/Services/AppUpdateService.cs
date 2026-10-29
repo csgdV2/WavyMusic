@@ -11,7 +11,7 @@ public sealed partial class AppUpdateService : ObservableObject
     private CancellationTokenSource? _operation;
     private string? _installer;
     private AppRelease? _release;
-    private static Version InstalledVersion => typeof(App).Assembly.GetName().Version ?? new Version(1, 9, 1);
+    private static Version InstalledVersion => typeof(App).Assembly.GetName().Version ?? new Version(1, 9, 2);
 
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private bool _hasUpdate;

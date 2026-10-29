@@ -282,6 +282,7 @@ internal static class YouTubeMusicJson
             Id = id,
             Title = title,
             Artist = parts.Artist ?? parts.Plain.FirstOrDefault(),
+            ArtistBrowseId = BrowseId(item, "MUSIC_PAGE_TYPE_ARTIST"),
             Album = includeAlbum ? parts.Album : null,
 
             Duration = ParseDuration(FixedColumnText(item, 0)) ?? ParseDuration(parts.Trailing),

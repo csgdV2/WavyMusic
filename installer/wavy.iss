@@ -1,5 +1,5 @@
 #define AppName "Wavy"
-#define AppVersion "1.9.1"
+#define AppVersion "1.9.2"
 #define AppExe "Wavy.exe"
 #define AppPublisher "csgd"
 
@@ -21,7 +21,12 @@ SolidCompression=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=lowest
-WizardStyle=modern
+WizardStyle=modern dynamic windows11 hidebevels
+WizardBackColor=#F5F5F5
+WizardBackColorDynamicDark=#101013
+WizardSmallImageFile=..\src\Wavy\Assets\app.png
+WizardSmallImageBackColor=#F5F5F5
+WizardSmallImageBackColorDynamicDark=#101013
 DisableProgramGroupPage=yes
 
 [Languages]

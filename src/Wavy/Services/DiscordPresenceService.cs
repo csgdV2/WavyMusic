@@ -97,6 +97,9 @@ public sealed class DiscordPresenceService : IDisposable
             ["state"] = Trim(track.Artist, "Unknown artist"),
         };
 
+        if (track.ArtistUrl is { } artistUrl)
+            activity["state_url"] = artistUrl;
+
         if (playing && duration > TimeSpan.Zero)
         {
             activity["timestamps"] = new Dictionary<string, object?>
@@ -108,12 +111,13 @@ public sealed class DiscordPresenceService : IDisposable
 
         if (!string.IsNullOrWhiteSpace(track.ThumbnailUrl))
         {
-            activity["assets"] = new Dictionary<string, object?>
-            {
-
-                ["large_image"] = track.ThumbnailUrl,
-                ["large_text"] = Trim(track.Title, "Unknown song"),
-            };
+            var assets = new Dictionary<string, object?> { ["large_image"] = track.ThumbnailUrl };
+            var album = track.Album?.Trim();
+            if (!string.IsNullOrWhiteSpace(album)
+                && !string.Equals(album, track.Title.Trim(), StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(album, track.Artist?.Trim(), StringComparison.OrdinalIgnoreCase))
+                assets["large_text"] = Trim(album, "");
+            activity["assets"] = assets;
         }
 
         var payload = JsonSerializer.Serialize(activity);

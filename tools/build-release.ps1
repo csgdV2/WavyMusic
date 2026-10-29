@@ -14,16 +14,16 @@ if (-not (Test-Path -LiteralPath (Join-Path $publishFolder 'App.xbf'))) { throw 
 if ($BuildInstaller) {
     $compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
     $compilerCandidates = @(
+        "$env:LOCALAPPDATA/Programs/Inno Setup 7/ISCC.exe",
+        'C:/Program Files/Inno Setup 7/ISCC.exe',
         $(if ($compiler) { $compiler.Source }),
         "$env:LOCALAPPDATA/Programs/Inno Setup 6/ISCC.exe",
-        "$env:LOCALAPPDATA/Programs/Inno Setup 7/ISCC.exe",
         "$env:LOCALAPPDATA/WavyBuild/InnoSetup6/ISCC.exe",
-        'C:/Program Files (x86)/Inno Setup 6/ISCC.exe',
-        'C:/Program Files/Inno Setup 7/ISCC.exe'
+        'C:/Program Files (x86)/Inno Setup 6/ISCC.exe'
     )
     $compilerPath = $compilerCandidates | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -First 1
     if (-not $compilerPath) { throw 'Install Inno Setup from jrsoftware.org, then rerun with -BuildInstaller.' }
     & $compilerPath (Join-Path $projectRoot 'installer/wavy.iss')
     if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed.' }
 }
-Write-Output "Wavy 1.9.1 is ready in $publishFolder"
+Write-Output "Wavy 1.9.2 is ready in $publishFolder"

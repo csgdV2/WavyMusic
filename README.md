@@ -34,7 +34,7 @@ powershell -ExecutionPolicy Bypass -File tools/build-release.ps1
 .\publish\win-x64\Wavy.exe
 ```
 
-The output is in `publish/win-x64`. To also build the installer, install Inno Setup 6 or 7 and run:
+The output is in `publish/win-x64`. To also build the installer with its light and dark themes, install Inno Setup 7 and run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/build-release.ps1 -BuildInstaller

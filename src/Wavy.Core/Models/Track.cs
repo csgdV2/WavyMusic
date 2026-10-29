@@ -11,6 +11,8 @@ public sealed class Track
 
     public string? Artist { get; init; }
 
+    public string? ArtistBrowseId { get; init; }
+
     public string? Album { get; init; }
 
     public TimeSpan? Duration { get; init; }
@@ -31,6 +33,11 @@ public sealed class Track
         && Artist is { Length: > 0 } artist
             ? $"{artist} • {album}"
             : Artist ?? string.Empty;
+
+    [JsonIgnore]
+    public string? ArtistUrl => !string.IsNullOrWhiteSpace(ArtistBrowseId)
+        ? $"https://music.youtube.com/channel/{Uri.EscapeDataString(ArtistBrowseId)}"
+        : !string.IsNullOrWhiteSpace(Artist) ? $"https://music.youtube.com/search?q={Uri.EscapeDataString(Artist.Trim())}" : null;
 
     [JsonIgnore]
     public string SourceUrl => $"https://www.youtube.com/watch?v={Id}";
