@@ -19,6 +19,7 @@ public sealed partial class SearchViewModel : ObservableObject
     private string? _query;
     private (SearchFilter Filter, string Query)? _loaded;
 
+    [ObservableProperty] private ArtistResult? _featuredArtist;
     [ObservableProperty] private bool _isSearching;
     [ObservableProperty] private string? _message;
     [ObservableProperty] private SearchFilter _selectedFilter = SearchFilter.Songs;
@@ -64,8 +65,13 @@ public sealed partial class SearchViewModel : ObservableObject
     public bool ShowArtists => HasQuery && SelectedFilter == SearchFilter.Artists;
     public bool ShowAlbums => HasQuery && SelectedFilter == SearchFilter.Albums;
     public bool ShowPlaylists => HasQuery && SelectedFilter == SearchFilter.Playlists;
+    public bool ShowFeaturedArtist => HasQuery && SelectedFilter == SearchFilter.Songs && FeaturedArtist is not null;
+
+    partial void OnFeaturedArtistChanged(ArtistResult? value) => OnPropertyChanged(nameof(ShowFeaturedArtist));
+
     private void QueryVisibilityChanged()
     {
+        OnPropertyChanged(nameof(ShowFeaturedArtist));
         OnPropertyChanged(nameof(HasQuery)); OnPropertyChanged(nameof(Query));
         OnPropertyChanged(nameof(ShowTracks)); OnPropertyChanged(nameof(ShowArtists));
         OnPropertyChanged(nameof(ShowAlbums)); OnPropertyChanged(nameof(ShowPlaylists));
@@ -85,6 +91,8 @@ public sealed partial class SearchViewModel : ObservableObject
 
     partial void OnSelectedFilterChanged(SearchFilter value)
     {
+        FeaturedArtist = null;
+        OnPropertyChanged(nameof(ShowFeaturedArtist));
         OnPropertyChanged(nameof(ShowTracks));
         OnPropertyChanged(nameof(ShowArtists));
         OnPropertyChanged(nameof(ShowAlbums));
@@ -104,6 +112,7 @@ public sealed partial class SearchViewModel : ObservableObject
         _cts = null;
         _query = null;
         _loaded = null;
+        FeaturedArtist = null;
         Results.Clear();
         Artists.Clear();
         Albums.Clear();
@@ -130,6 +139,7 @@ public sealed partial class SearchViewModel : ObservableObject
         _query = query;
         if (isNewQuery)
         {
+            FeaturedArtist = null;
             Results.Clear(); Artists.Clear(); Albums.Clear(); Playlists.Clear();
             QueryVisibilityChanged();
         }
@@ -178,10 +188,14 @@ public sealed partial class SearchViewModel : ObservableObject
                     break;
 
                 default:
+                    var artistMatch = filter == SearchFilter.Songs ? FindArtistAsync(query, token) : Task.CompletedTask;
                     var tracks = await _ytDlp.SearchAsync(query, filter, 12, token);
                     if (token.IsCancellationRequested)
                         return;
                     count = Fill(Results, tracks);
+                    await artistMatch;
+                    if (token.IsCancellationRequested) return;
+                    if (FeaturedArtist is not null) count++;
                     break;
             }
 
@@ -201,6 +215,28 @@ public sealed partial class SearchViewModel : ObservableObject
             if (!token.IsCancellationRequested)
                 IsSearching = false;
         }
+    }
+
+    private async Task FindArtistAsync(string query, CancellationToken token)
+    {
+        try
+        {
+            var artists = await _ytDlp.SearchArtistsAsync(query, 5, token);
+            if (token.IsCancellationRequested) return;
+            var normalized = ArtistName(query);
+            FeaturedArtist = artists.FirstOrDefault(a => ArtistName(a.Name) == normalized)
+                ?? (normalized.Length >= 3 ? artists.FirstOrDefault(a => ArtistName(a.Name).StartsWith(normalized, StringComparison.Ordinal)) : null);
+        }
+        catch (OperationCanceledException) { }
+        catch { }
+    }
+
+    private static string ArtistName(string value)
+    {
+        value = value.Trim();
+        if (value.StartsWith("the ", StringComparison.OrdinalIgnoreCase)) value = value[4..];
+        return new string(value.Normalize(System.Text.NormalizationForm.FormD)
+            .Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
     }
 
     private static int Fill<T>(ObservableCollection<T> target, IReadOnlyList<T> items)

@@ -25,6 +25,10 @@ using (var doc = JsonDocument.Parse("""
 }
 
 await DiscordPresenceChecks.RunAsync();
+await DownloadSourceChecks.RunAsync();
+await LyricsProviderChecks.RunAsync();
+await UpdateChecks.RunAsync();
+await PlaybackQueueChecks.RunAsync();
 
 Track PickTrack(string id, string title, string artist) => new() { Id = id, Title = title, Artist = artist };
 var seedTracks = new[] { PickTrack("a", "One", "First"), PickTrack("b", "Two", "First"), PickTrack("c", "Three", "Second"), PickTrack("d", "Four", "Third") };
@@ -55,6 +59,24 @@ Check(!search.HasQuery && search.Results.Count == 0 && !search.IsSearching, "cle
 search.SelectedFilter = SearchFilter.Artists;
 Check(!search.ShowArtists && search.Recent.Count == 1, "empty search hides the previous result filter");
 
+proxy.ArtistResults = new[] { new ArtistResult { BrowseId = "artist-frrsty", Name = "Frrsty", Subtitle = "Artist", ThumbnailUrl = "portrait" } };
+search.SelectedFilter = SearchFilter.Songs;
+await search.SearchAsync("Frrsty");
+Check(search.ShowFeaturedArtist && search.FeaturedArtist?.BrowseId == "artist-frrsty" && search.Results.Count == 1, "song searches include a matching artist alongside tracks");
+await search.SearchAsync("Frr");
+Check(search.ShowFeaturedArtist, "artist name prefixes match without requiring the Artists filter");
+await search.SearchAsync("Unrelated song");
+Check(!search.ShowFeaturedArtist && search.Results.Count == 1, "unrelated artist suggestions do not become featured matches");
+proxy.FailArtists = true;
+await search.SearchAsync("artist lookup unavailable");
+Check(search.Results.Count == 1 && search.Message is null, "artist lookup failure preserves song results");
+proxy.FailArtists = false;
+var lateArtistSearch = search.SearchAsync("late artist");
+search.Clear();
+proxy.DelayedArtist.SetResult(new[] { new ArtistResult { BrowseId = "stale-artist", Name = "late artist" } });
+await lateArtistSearch;
+Check(!search.ShowFeaturedArtist && search.FeaturedArtist is null && search.Results.Count == 0, "clearing search discards a late artist result");
+
 var folder = Path.Combine(Path.GetTempPath(), "Wavy-regression-" + Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(folder);
 try
@@ -84,6 +106,30 @@ try
     settings.EqualizerBands[5] = -12;
     var equalized = Read(await processor.NormalizeAsync(source));
     Check(Rms(equalized) < Rms(originalSamples) * 0.35, "1 kHz EQ cut changes actual output audio");
+    settings.EqualizerBands = new double[10];
+    settings.AudioNormalization = true;
+    foreach (var sampleRate in new[] { 44100, 48000, 96000 })
+    {
+        var brightPath = Path.Combine(folder, $"bright-{sampleRate}.wav");
+        using (var writer = new WaveFileWriter(brightPath, WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2)))
+        {
+            var samples = new float[sampleRate * 2];
+            for (var frame = 0; frame < sampleRate; frame++)
+            {
+                samples[frame * 2] = (float)(0.08 * Math.Sin(2 * Math.PI * 100 * frame / sampleRate) + 0.04 * Math.Sin(2 * Math.PI * 12000 * frame / sampleRate));
+                samples[frame * 2 + 1] = (float)(0.06 * Math.Sin(2 * Math.PI * 18000 * frame / sampleRate));
+            }
+            writer.WriteSamples(samples, 0, samples.Length);
+        }
+        var before = Read(brightPath);
+        var brightOutput = await processor.NormalizeAsync(brightPath);
+        var after = Read(brightOutput);
+        var scale = before.Zip(after).Sum(p => (double)p.First * p.Second) / before.Sum(x => (double)x * x);
+        using var outputReader = new WaveFileReader(brightOutput);
+        Check(outputReader.WaveFormat.SampleRate == sampleRate && outputReader.WaveFormat.Channels == 2
+            && before.Length == after.Length && before.Zip(after).All(p => Math.Abs(p.Second - p.First * scale) < 0.000001),
+            $"normalization preserves bass, 12/18 kHz detail, stereo and sample rate at {sampleRate} Hz");
+    }
     using var cancelled = new CancellationTokenSource(); cancelled.Cancel();
     try { await processor.NormalizeAsync(source, cancelled.Token); throw new Exception("Cancellation was ignored"); }
     catch (OperationCanceledException) { Console.WriteLine("PASS: audio processing honors cancellation"); }
@@ -105,10 +151,18 @@ static double Rms(float[] samples) => Math.Sqrt(samples.Average(x => (double)x *
 public class CatalogueProxy : DispatchProxy
 {
     public TaskCompletionSource<IReadOnlyList<Track>> Delayed { get; } = new();
+    public IReadOnlyList<ArtistResult> ArtistResults { get; set; } = Array.Empty<ArtistResult>();
+    public bool FailArtists { get; set; }
+    public TaskCompletionSource<IReadOnlyList<ArtistResult>> DelayedArtist { get; } = new();
     protected override object? Invoke(MethodInfo? method, object?[]? args)
     {
         if (method?.Name == nameof(IYtDlpService.SearchAsync))
             return args?[0] as string == "delayed" ? Delayed.Task : Task.FromResult<IReadOnlyList<Track>>(new[] { new Track { Id = "result", Title = "Result" } });
+        if (method?.Name == nameof(IYtDlpService.SearchArtistsAsync))
+        {
+            if (FailArtists) throw new IOException("Artist catalogue unavailable");
+            return args?[0] as string == "late artist" ? DelayedArtist.Task : Task.FromResult(ArtistResults);
+        }
         throw new NotSupportedException(method?.Name);
     }
 }

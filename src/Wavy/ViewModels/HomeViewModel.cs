@@ -164,11 +164,11 @@ public sealed class HomeViewModel : ObservableObject
                     Mix.Add(list.Tracks[depth]);
     }
 
-    public Task PlayRecentAsync(Track track) => PlayFromAsync(Recent, track);
-    public Task PlayMixAsync(Track track) => PlayFromAsync(Mix, track);
-    public Task PlaySuggestionAsync(Track track) => PlayFromAsync(Suggestions, track);
-    public Task PlayTrendingAsync(Track track) => PlayFromAsync(Trending, track);
-    public Task PlayFreshAsync(Track track) => PlayFromAsync(Fresh, track);
+    public Task PlayRecentAsync(Track track) => _player.PlayRadioAsync(track);
+    public Task PlayMixAsync(Track track) => _player.PlayRadioAsync(track);
+    public Task PlaySuggestionAsync(Track track) => _player.PlayRadioAsync(track);
+    public Task PlayTrendingAsync(Track track) => _player.PlayRadioAsync(track);
+    public Task PlayFreshAsync(Track track) => _player.PlayRadioAsync(track);
 
     public async Task PlayPlaylistAsync(Playlist playlist)
     {
@@ -182,13 +182,6 @@ public sealed class HomeViewModel : ObservableObject
         var details = await _catalogue.GetAlbumAsync(album.BrowseId);
         var tracks = details?.Tracks.ToList();
         if (tracks is { Count: > 0 }) await _player.PlayFromAsync(tracks, 0, lockQueue: true);
-    }
-
-    private async Task PlayFromAsync(IReadOnlyList<Track> row, Track track)
-    {
-        var tracks = row.ToList();
-        var at = tracks.FindIndex(t => t.Id == track.Id);
-        if (at >= 0) await _player.PlayFromAsync(tracks, at);
     }
 
     private void SectionsChanged()

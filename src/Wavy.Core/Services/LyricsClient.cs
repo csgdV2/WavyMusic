@@ -12,19 +12,17 @@ public sealed class LyricsClient
     private static readonly Regex TimeTag =
         new(@"\[(?<m>\d{1,3}):(?<s>\d{1,2})(?:[.:](?<f>\d{1,3}))?\]", RegexOptions.Compiled);
 
-    private readonly HttpClient _http = new(Ipv4Http.CreateHandler())
-    {
-        Timeout = TimeSpan.FromSeconds(12),
-    };
+    private readonly HttpClient _http;
 
-    public LyricsClient()
+    public LyricsClient(HttpClient? http = null)
     {
-        _http.DefaultRequestHeaders.UserAgent.ParseAdd("Wavy/1.3 (music player)");
+        _http = http ?? new HttpClient(Ipv4Http.CreateHandler()) { Timeout = TimeSpan.FromSeconds(12) };
+        _http.DefaultRequestHeaders.UserAgent.ParseAdd("Wavy/1.9 (https://github.com/csgdV2/WavyMusic)");
     }
 
     public async Task<Lyrics?> GetAsync(
         string title, string? artist, double durationSeconds,
-        LyricsSource source, CancellationToken ct = default)
+        LyricsSource source, CancellationToken ct = default, string? album = null)
     {
         if (string.IsNullOrWhiteSpace(title))
             return null;
@@ -34,74 +32,88 @@ public sealed class LyricsClient
 
         return source switch
         {
-            LyricsSource.LrcLib => await FromLrcLibAsync(clean, who, durationSeconds, ct).ConfigureAwait(false),
+            LyricsSource.LrcLib => await FromLrcLibAsync(clean, who, durationSeconds, ct, album).ConfigureAwait(false),
             LyricsSource.LyricsOvh => await FromLyricsOvhAsync(clean, who, ct).ConfigureAwait(false),
             LyricsSource.Genius => await FromGeniusAsync(clean, who, ct).ConfigureAwait(false),
-            _ => await FromLrcLibAsync(clean, who, durationSeconds, ct).ConfigureAwait(false)
+            _ => await FromLrcLibAsync(clean, who, durationSeconds, ct, album).ConfigureAwait(false)
                  ?? await FromGeniusAsync(clean, who, ct).ConfigureAwait(false)
                  ?? await FromLyricsOvhAsync(clean, who, ct).ConfigureAwait(false),
         };
     }
 
+    private readonly SemaphoreSlim _lrcGate = new(1, 1);
+    private DateTimeOffset _nextLrcRequest;
+    private DateTimeOffset _retryAfter;
+
     private async Task<Lyrics?> FromLrcLibAsync(
-        string title, string? artist, double duration, CancellationToken ct)
+        string title, string? artist, double duration, CancellationToken ct, string? album)
     {
+        await _lrcGate.WaitAsync(ct).ConfigureAwait(false);
         try
         {
-            var url = "https://lrclib.net/api/search?track_name=" + Uri.EscapeDataString(title);
+            var candidates = new List<JsonElement>();
+            var query = "track_name=" + Uri.EscapeDataString(title);
+            if (artist is not null) query += "&artist_name=" + Uri.EscapeDataString(artist);
             if (artist is not null)
-                url += "&artist_name=" + Uri.EscapeDataString(artist);
-
-            using var response = await _http.GetAsync(url, ct).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var items = await response.Content
-                .ReadFromJsonAsync<JsonElement>(cancellationToken: ct).ConfigureAwait(false);
-            if (items.ValueKind != JsonValueKind.Array)
-                return null;
-
-            JsonElement? best = null;
-            var bestScore = double.MaxValue;
-            foreach (var item in items.EnumerateArray())
             {
-                if (Text(item, "syncedLyrics") is null && Text(item, "plainLyrics") is null)
-                    continue;
-
-                var candidate = item.TryGetProperty("duration", out var d) && d.ValueKind == JsonValueKind.Number
-                    ? d.GetDouble()
-                    : 0;
-                var score = duration > 0 && candidate > 0 ? Math.Abs(candidate - duration) : 500;
-                if (Text(item, "syncedLyrics") is not null)
-                    score -= 1000;
-
-                if (score >= bestScore)
-                    continue;
-                bestScore = score;
-                best = item;
+                var exact = query;
+                if (!string.IsNullOrWhiteSpace(album)) exact += "&album_name=" + Uri.EscapeDataString(album);
+                if (duration is >= 1 and <= 3600) exact += "&duration=" + duration.ToString("0.###", CultureInfo.InvariantCulture);
+                var record = await FetchLrcLibAsync("https://lrclib.net/api/get?" + exact, ct).ConfigureAwait(false);
+                if (record is { ValueKind: JsonValueKind.Object } item) candidates.Add(item);
+                if (ChooseLrcLib(candidates, title, artist, album, duration) is { IsSynced: true } found) return found;
             }
-
-            if (best is not { } pick)
-                return null;
-
-            if (Text(pick, "syncedLyrics") is { } synced && ParseLrc(synced) is { Count: > 0 } timed)
-                return new Lyrics { Lines = timed, Provider = "LRCLIB", IsSynced = true };
-
-            if (Text(pick, "plainLyrics") is { } plain && ParsePlain(plain) is { Count: > 0 } lines)
-                return new Lyrics { Lines = lines, Provider = "LRCLIB", IsSynced = false };
-
-            return null;
+            var searches = new[] { query, "q=" + Uri.EscapeDataString(title + " " + artist) };
+            foreach (var search in searches)
+            {
+                var records = await FetchLrcLibAsync("https://lrclib.net/api/search?" + search, ct).ConfigureAwait(false);
+                if (records is { ValueKind: JsonValueKind.Array } items) candidates.AddRange(items.EnumerateArray());
+                if (ChooseLrcLib(candidates, title, artist, album, duration) is { IsSynced: true } found) return found;
+            }
+            return ChooseLrcLib(candidates, title, artist, album, duration);
         }
-        catch (OperationCanceledException)
-        {
-            throw;
-        }
-        catch
-        {
-            return null;
-        }
+        catch (OperationCanceledException) { throw; }
+        catch { return null; }
+        finally { _lrcGate.Release(); }
     }
 
+    private async Task<JsonElement?> FetchLrcLibAsync(string url, CancellationToken ct)
+    {
+        if (DateTimeOffset.UtcNow < _retryAfter) return null;
+        var delay = _nextLrcRequest - DateTimeOffset.UtcNow;
+        if (delay > TimeSpan.Zero) await Task.Delay(delay, ct).ConfigureAwait(false);
+        using var response = await _http.GetAsync(url, ct).ConfigureAwait(false);
+        _nextLrcRequest = DateTimeOffset.UtcNow.AddMilliseconds(250);
+        if ((int)response.StatusCode == 429)
+        {
+            _retryAfter = response.Headers.RetryAfter?.Date
+                ?? DateTimeOffset.UtcNow.Add(response.Headers.RetryAfter?.Delta ?? TimeSpan.FromSeconds(30));
+            return null;
+        }
+        if (!response.IsSuccessStatusCode) return null;
+        return await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: ct).ConfigureAwait(false);
+    }
+
+    private static Lyrics? ChooseLrcLib(IEnumerable<JsonElement> records, string title, string? artist, string? album, double duration)
+    {
+        static string Key(string value) => Regex.Replace(Clean(value), @"[^\p{L}\p{N}]", "").ToLowerInvariant();
+        var choices = new List<(Lyrics Lyrics, double Score)>();
+        foreach (var record in records)
+        {
+            if (Text(record, "trackName") is not { } name || Key(name) != Key(title)) continue;
+            if (artist is not null && (Text(record, "artistName") is not { } who
+                || !(Key(who).Contains(Key(artist)) || Key(artist).Contains(Key(who))))) continue;
+            var seconds = record.TryGetProperty("duration", out var d) && d.ValueKind == JsonValueKind.Number ? d.GetDouble() : 0;
+            var difference = duration > 0 && seconds > 0 ? Math.Abs(seconds - duration) : 0;
+            if (difference > 8) continue;
+            var score = difference + (album is not null && Text(record, "albumName") is { } candidateAlbum && Key(candidateAlbum) == Key(album) ? -2 : 0);
+            if (Text(record, "syncedLyrics") is { } lrc && ParseLrc(lrc) is { Count: > 0 } timed)
+                choices.Add((new Lyrics { Provider = "LRCLIB", IsSynced = true, Lines = timed }, score - 100));
+            else if (Text(record, "plainLyrics") is { } plain && ParsePlain(plain) is { Count: > 0 } lines)
+                choices.Add((new Lyrics { Provider = "LRCLIB", IsSynced = false, Lines = lines }, score));
+        }
+        return choices.OrderBy(c => c.Score).Select(c => c.Lyrics).FirstOrDefault();
+    }
     private async Task<Lyrics?> FromLyricsOvhAsync(string title, string? artist, CancellationToken ct)
     {
         if (artist is null)

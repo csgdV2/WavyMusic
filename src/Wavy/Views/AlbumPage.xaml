@@ -37,10 +37,12 @@
                                    TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"
                                    Style="{StaticResource TitleLargeTextBlockStyle}" />
 
-                        <HyperlinkButton Padding="0" Margin="0,-2,0,0"
+                        <HyperlinkButton Style="{StaticResource ArtistLinkStyle}" Padding="0" Margin="0,-2,0,0"
                                          Click="Artist_Click"
-                                         Content="{x:Bind ViewModel.Album.Artist, Mode=OneWay}"
-                                         Visibility="{x:Bind ViewModel.CanOpenArtist, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                                         PointerEntered="Artist_PointerEntered" PointerExited="Artist_PointerExited"
+                                         Visibility="{x:Bind ViewModel.CanOpenArtist, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock Text="{x:Bind ViewModel.Album.Artist, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+                        </HyperlinkButton>
 
                         <TextBlock Text="{x:Bind ViewModel.Album.Artist, Mode=OneWay}"
                                    Style="{StaticResource BodyStrongTextBlockStyle}"

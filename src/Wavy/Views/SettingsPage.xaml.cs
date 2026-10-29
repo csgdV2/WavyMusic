@@ -12,6 +12,7 @@ namespace Wavy.Views;
 public sealed partial class SettingsPage : Page
 {
     public SettingsViewModel ViewModel { get; }
+    public AppUpdateService Updates { get; }
 
     private Slider[] _eqSliders = Array.Empty<Slider>();
     private bool _loadingEqualizer;
@@ -19,6 +20,7 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         ViewModel = App.Services.GetRequiredService<SettingsViewModel>();
+        Updates = App.Services.GetRequiredService<AppUpdateService>();
         InitializeComponent();
         _eqSliders = new[] { Eq32, Eq64, Eq125, Eq250, Eq500, Eq1k, Eq2k, Eq4k, Eq8k, Eq16k };
         ViewModel.SearchHistoryChanged += OnSearchHistoryChanged;
@@ -37,6 +39,22 @@ public sealed partial class SettingsPage : Page
 
         ViewModel.RefreshCacheSummary();
     }
+
+    public void ShowUpdates()
+    {
+        void Reveal() => UpdateCard.StartBringIntoView(new BringIntoViewOptions { AnimationDesired = true, VerticalAlignmentRatio = 0.5 });
+        if (IsLoaded) Reveal();
+        else
+        {
+            RoutedEventHandler? onLoaded = null;
+            onLoaded = (_, _) => { Loaded -= onLoaded; Reveal(); };
+            Loaded += onLoaded;
+        }
+    }
+
+    private async void Update_Click(object sender, RoutedEventArgs e) => await Updates.ActAsync();
+
+    private void CancelUpdate_Click(object sender, RoutedEventArgs e) => Updates.Cancel();
 
     private void AccentFlyout_Closed(object sender, object e) => ViewModel.CommitAccent();
 

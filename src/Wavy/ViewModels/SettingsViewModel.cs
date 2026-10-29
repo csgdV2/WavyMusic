@@ -133,18 +133,6 @@ public sealed partial class SettingsViewModel : ObservableObject
         }
     }
 
-    public int MenuLayoutIndex
-    {
-        get => (int)_settings.MenuLayout;
-        set
-        {
-            if (value < 0 || value == MenuLayoutIndex)
-                return;
-            _settings.MenuLayout = (MenuLayout)value;
-            OnPropertyChanged();
-        }
-    }
-
     public int LyricsSourceIndex
     {
         get => (int)_settings.LyricsSource;

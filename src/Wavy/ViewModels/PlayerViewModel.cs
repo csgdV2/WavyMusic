@@ -36,7 +36,9 @@ public sealed partial class PlayerViewModel : ObservableObject
     private bool _isQueueOpen;
     private bool _isLyricsOpen;
     private bool _autoplayEnabled = true;
-    private bool _extending;
+    private Task? _extension;
+    private CancellationTokenSource? _radioCts;
+    private int _queueGeneration;
 
     private int _playGeneration;
 
@@ -104,7 +106,7 @@ public sealed partial class PlayerViewModel : ObservableObject
         }
     }
 
-    public bool AutoplayIsOn => AutoplayEnabled && Repeat == RepeatMode.None;
+    public bool AutoplayIsOn => AutoplayEnabled && Repeat == RepeatMode.None && !_queueLocked;
 
     private bool _queueLocked;
 
@@ -144,7 +146,7 @@ public sealed partial class PlayerViewModel : ObservableObject
     {
         if (_index < 0 || Queue.Count == 0)
         {
-            await PlayFromAsync(new[] { track }, 0);
+            await PlayRadioAsync(track);
             return;
         }
 
@@ -155,7 +157,7 @@ public sealed partial class PlayerViewModel : ObservableObject
     {
         if (_index < 0 || Queue.Count == 0)
         {
-            await PlayFromAsync(new[] { track }, 0);
+            await PlayRadioAsync(track);
             return;
         }
 
@@ -376,9 +378,25 @@ public sealed partial class PlayerViewModel : ObservableObject
         }
     }
 
-    public async Task PlayFromAsync(IReadOnlyList<Track> tracks, int startIndex, bool lockQueue = false)
+    public async Task PlayRadioAsync(Track track)
     {
+        var playback = PlayFromAsync(new[] { track }, 0, lockQueue: false);
+        var generation = _queueGeneration;
+        await playback;
+        if (generation == _queueGeneration) await (_extension ?? ExtendWithSimilarAsync());
+    }
+
+    public async Task PlayFromAsync(IReadOnlyList<Track> tracks, int startIndex, bool lockQueue = true)
+    {
+        _queueGeneration++;
+        _radioCts?.Cancel();
+        _radioCts?.Dispose();
+        _radioCts = new CancellationTokenSource();
+        _extension = null;
         _queueLocked = lockQueue;
+        _playback.ClearPreparedNext();
+        OnPropertyChanged(nameof(AutoplayIsOn));
+        OnPropertyChanged(nameof(AutoplayOpacity));
         _reordering = true;
         try
         {
@@ -401,7 +419,7 @@ public sealed partial class PlayerViewModel : ObservableObject
         await PlayCurrentAsync(skipIfCurrent: true);
     }
 
-    public async Task PlayShuffledAsync(IReadOnlyList<Track> tracks, bool lockQueue = false)
+    public async Task PlayShuffledAsync(IReadOnlyList<Track> tracks, bool lockQueue = true)
     {
         if (tracks.Count == 0)
             return;
@@ -452,6 +470,10 @@ public sealed partial class PlayerViewModel : ObservableObject
         if (Queue.Count == 0)
             return;
 
+        var generation = _queueGeneration;
+        if (_index + 1 >= Queue.Count && CanExtendQueue)
+            await ExtendWithSimilarAsync();
+        if (generation != _queueGeneration) return;
         var next = _index + 1;
         if (next >= Queue.Count)
         {
@@ -474,47 +496,35 @@ public sealed partial class PlayerViewModel : ObservableObject
             return;
         }
 
-        if (CanExtendQueue && _index >= Queue.Count - 1)
-            await ExtendWithSimilarAsync();
-
         await NextAsync(wrapAtEnd: Repeat == RepeatMode.All);
     }
 
-    private async Task ExtendWithSimilarAsync()
+    private Task ExtendWithSimilarAsync()
     {
-        if (_extending || _index < 0 || _index >= Queue.Count)
-            return;
+        if (!CanExtendQueue || _index < 0 || _index >= Queue.Count) return Task.CompletedTask;
+        if (_extension is { IsCompleted: false }) return _extension;
+        return _extension = LoadSimilarAsync(Queue[_index], _queueGeneration, _radioCts?.Token ?? CancellationToken.None);
+    }
 
-        _extending = true;
+    private async Task LoadSimilarAsync(Track seed, int generation, CancellationToken token)
+    {
         try
         {
-            var seed = Queue[_index];
-            var similar = await _catalogue.GetSimilarAsync(seed, 12);
-            if (similar.Count == 0)
-                return;
-
+            var similar = await _catalogue.GetSimilarAsync(seed, 12, token);
+            if (token.IsCancellationRequested || generation != _queueGeneration || !CanExtendQueue) return;
             var known = new HashSet<string>(Queue.Select(t => t.Id), StringComparer.Ordinal);
             _reordering = true;
             try
             {
                 foreach (var track in similar)
-                    if (known.Add(track.Id))
-                        Queue.Add(track);
+                    if (known.Add(track.Id)) Queue.Add(track);
             }
-            finally
-            {
-                _reordering = false;
-            }
-
+            finally { _reordering = false; }
             OnPropertyChanged(nameof(HasQueue));
+            PrefetchNext();
         }
-        catch
-        {
-        }
-        finally
-        {
-            _extending = false;
-        }
+        catch (OperationCanceledException) { }
+        catch { }
     }
 
     [RelayCommand(AllowConcurrentExecutions = true)]
@@ -540,7 +550,11 @@ public sealed partial class PlayerViewModel : ObservableObject
         var track = Queue[_index];
 
         if (skipIfCurrent && _playback.IsPlaying && _playback.CurrentTrack?.Id == track.Id)
+        {
+            PrefetchNext();
+            if (CanExtendQueue && _index >= Queue.Count - 3) _ = ExtendWithSimilarAsync();
             return;
+        }
 
         var localPath = _cache.TryGetLocalPath(track.Id);
 
@@ -560,7 +574,7 @@ public sealed partial class PlayerViewModel : ObservableObject
 
         PrefetchNext();
 
-        if (CanExtendQueue && _index >= Queue.Count - 1)
+        if (CanExtendQueue && _index >= Queue.Count - 3)
             _ = ExtendWithSimilarAsync();
     }
 
@@ -609,7 +623,7 @@ public sealed partial class PlayerViewModel : ObservableObject
         _cache.MarkPlayed(track);
         PrefetchNext();
 
-        if (CanExtendQueue && _index >= Queue.Count - 1)
+        if (CanExtendQueue && _index >= Queue.Count - 3)
             _ = ExtendWithSimilarAsync();
     }
 

@@ -127,7 +127,7 @@
                                        TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" MaxLines="1"
                                        FontSize="12.5" FontWeight="SemiBold"
                                        LineHeight="15" LineStackingStrategy="BlockLineHeight" />
-                            <HyperlinkButton x:Name="ArtistLink" Click="Artist_Click"
+                            <HyperlinkButton Style="{StaticResource ArtistLinkStyle}" x:Name="ArtistLink" Click="Artist_Click"
                                              PointerEntered="Artist_PointerEntered"
                                              PointerExited="Artist_PointerExited"
                                              Padding="0" Margin="0" MinWidth="0" MinHeight="0"

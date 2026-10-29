@@ -67,7 +67,10 @@ public sealed partial class NowPlayingBar : UserControl
         ActualThemeChanged += (_, _) =>
         {
             if (_floating)
+            {
                 Root.Background = FloatingFill();
+                Outline.BorderBrush = FloatingStroke();
+            }
         };
     }
 
@@ -93,6 +96,7 @@ public sealed partial class NowPlayingBar : UserControl
                 Root.BorderThickness = new Thickness(0);
                 Outline.CornerRadius = new CornerRadius(32);
                 Outline.BorderThickness = new Thickness(1);
+                Outline.BorderBrush = FloatingStroke();
                 Outline.Margin = new Thickness(0, 0, 0, 0);
                 Outline.Height = 64;
                 Outline.VerticalAlignment = VerticalAlignment.Bottom;
@@ -160,10 +164,14 @@ public sealed partial class NowPlayingBar : UserControl
         || (ActualTheme == ElementTheme.Default
             && Application.Current.RequestedTheme == ApplicationTheme.Dark);
 
+    private Brush FloatingStroke() => new SolidColorBrush(IsDark
+        ? Windows.UI.Color.FromArgb(60, 255, 255, 255)
+        : Windows.UI.Color.FromArgb(65, 0, 0, 0));
+
     private Brush FloatingFill()
         => new SolidColorBrush(IsDark
             ? Windows.UI.Color.FromArgb(120, 26, 26, 26)
-            : Windows.UI.Color.FromArgb(140, 246, 246, 246));
+            : Windows.UI.Color.FromArgb(242, 250, 250, 250));
 
     private void EnsureGlass()
     {

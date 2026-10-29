@@ -42,7 +42,7 @@ public sealed partial class OnlinePlaylistPage : Page
             return Task.CompletedTask;
 
         var tracks = playlist.Tracks.ToList();
-        return _player.PlayFromAsync(tracks, index < 0 || index >= tracks.Count ? 0 : index);
+        return _player.PlayFromAsync(tracks, index < 0 || index >= tracks.Count ? 0 : index, lockQueue: true);
     }
 
     private async void Play_Click(object sender, RoutedEventArgs e) => await PlayFromAsync(0);
@@ -50,7 +50,7 @@ public sealed partial class OnlinePlaylistPage : Page
     private async void Shuffle_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.Playlist is { Tracks.Count: > 0 } playlist)
-            await _player.PlayShuffledAsync(playlist.Tracks.ToList());
+            await _player.PlayShuffledAsync(playlist.Tracks.ToList(), lockQueue: true);
     }
 
     private void Save_Click(object sender, RoutedEventArgs e) => ViewModel.SaveToLibrary();

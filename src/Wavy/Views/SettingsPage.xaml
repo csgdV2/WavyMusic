@@ -132,26 +132,7 @@
                     </Grid>
                 </Border>
 
-                <Border Style="{StaticResource SettingCard}">
-                    <Grid ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="Player layout" Style="{StaticResource SettingName}" />
-                            <TextBlock Style="{StaticResource SettingHint}"
-                                       Text="Top keeps the player across the top of the window. Bottom floats it as a rounded bar at the bottom, like Apple Music on the web." />
-                        </StackPanel>
-                        <ComboBox Grid.Column="1" MinWidth="140" VerticalAlignment="Center"
-                                  SelectedIndex="{x:Bind ViewModel.MenuLayoutIndex, Mode=TwoWay}">
-                            <ComboBoxItem Content="Top" />
-                            <ComboBoxItem Content="Bottom" />
-                        </ComboBox>
-                    </Grid>
-                </Border>
-
-                <TextBlock Text="Find your sound" Style="{StaticResource SectionHeading}" />
+<TextBlock Text="Find your sound" Style="{StaticResource SectionHeading}" />
 
                 <Border Style="{StaticResource SettingCard}">
                     <Grid ColumnSpacing="16">
@@ -393,7 +374,7 @@
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Where to get lyrics" Style="{StaticResource SettingName}" />
                             <TextBlock Style="{StaticResource SettingHint}"
-                                       Text="LRCLIB has time-synced lyrics that follow along with the song. Genius and lyrics.ovh are plain text only. Automatic tries LRCLIB first and falls back." />
+                                       Text="LRCLIB is the open-source, key-free synced lyrics source. Automatic tries exact track matching and searches alternate records before falling back to plain text from Genius or lyrics.ovh." />
                         </StackPanel>
                         <ComboBox Grid.Column="1" MinWidth="150" VerticalAlignment="Center"
                                   SelectedIndex="{x:Bind ViewModel.LyricsSourceIndex, Mode=TwoWay}">
@@ -505,6 +486,26 @@
                 </Border>
 
                 <TextBlock Text="About" Style="{StaticResource SectionHeading}" />
+                <Border x:Name="UpdateCard" Style="{StaticResource SettingCard}">
+                    <StackPanel Spacing="14">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Automatic update checks" Style="{StaticResource SettingName}" />
+                                <TextBlock Text="Checks GitHub when Wavy opens, at most twice a day. You choose when to download and install." Style="{StaticResource SettingHint}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" IsOn="{x:Bind Updates.AutomaticChecks, Mode=TwoWay}" OnContent="" OffContent="" MinWidth="0" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBlock Text="{x:Bind Updates.Status, Mode=OneWay}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <ProgressBar Minimum="0" Maximum="100" Value="{x:Bind Updates.DownloadProgress, Mode=OneWay}"
+                                     Visibility="{x:Bind Updates.IsDownloading, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Content="{x:Bind Updates.ActionLabel, Mode=OneWay}" IsEnabled="{x:Bind Updates.CanAct, Mode=OneWay}" Click="Update_Click" />
+                            <Button Content="Cancel" Click="CancelUpdate_Click" Visibility="{x:Bind Updates.IsBusy, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
 
                 <Border Style="{StaticResource SettingCard}">
                     <Grid ColumnSpacing="16">

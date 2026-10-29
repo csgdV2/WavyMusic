@@ -93,6 +93,11 @@ public static class ThemeManager
         if (ambient)
             InjectAmbient(resources, dark);
 
+        Brush(resources, "WavyRecentBrush", dark
+            ? Color.FromArgb(ambient ? (byte)40 : (byte)20, 255, 255, 255)
+            : Color.FromArgb(ambient ? (byte)232 : (byte)255, 242, 242, 242));
+        Brush(resources, "WavyHoverBrush", dark ? Color.FromArgb(32, 255, 255, 255) : Color.FromArgb(30, 0, 0, 0));
+
         AccentTint.Color = Shade(Parse(accent) ?? SystemAccent, dark ? 0.38 : -0.32);
         NeutralTint.Color = dark ? Colors.White : Color.FromArgb(0xE4, 0, 0, 0);
         Scrim.Color = darker ? Base : dark ? Color.FromArgb(255, 12, 12, 14) : Colors.White;

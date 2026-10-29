@@ -74,20 +74,20 @@ public sealed partial class PlaylistsViewModel : ObservableObject
     private async Task PlaySelectedAsync()
     {
         if (Tracks.Count > 0)
-            await _player.PlayFromAsync(Tracks.ToList(), 0);
+            await _player.PlayFromAsync(Tracks.ToList(), 0, lockQueue: true);
     }
 
     [RelayCommand]
     private async Task ShuffleSelectedAsync()
     {
         if (Tracks.Count > 0)
-            await _player.PlayShuffledAsync(Tracks.ToList());
+            await _player.PlayShuffledAsync(Tracks.ToList(), lockQueue: true);
     }
 
     public Task PlayFromAsync(Track track)
     {
         var index = Tracks.IndexOf(track);
-        return index < 0 ? Task.CompletedTask : _player.PlayFromAsync(Tracks.ToList(), index);
+        return index < 0 ? Task.CompletedTask : _player.PlayFromAsync(Tracks.ToList(), index, lockQueue: true);
     }
 
     public void Remove(Track track)

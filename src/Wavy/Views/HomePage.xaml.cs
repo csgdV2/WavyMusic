@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Wavy.Controls;
 using Wavy.Core.Abstractions;
 using Wavy.Core.Models;
@@ -20,7 +21,6 @@ public sealed partial class HomePage : Page
         { " feat. ", " feat ", " ft. ", " ft ", " featuring ", " with " };
 
     private bool _findingArtist;
-
     public HomeViewModel ViewModel { get; }
 
     public HomePage()
@@ -28,6 +28,37 @@ public sealed partial class HomePage : Page
         ViewModel = App.Services.GetRequiredService<HomeViewModel>();
         InitializeComponent();
         Loaded += (_, _) => ViewModel.Refresh();
+    }
+
+    private void HorizontalRow_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not GridView row) return;
+        row.RemoveHandler(UIElement.PointerWheelChangedEvent, new PointerEventHandler(HorizontalRow_WheelChanged));
+        row.AddHandler(UIElement.PointerWheelChangedEvent, new PointerEventHandler(HorizontalRow_WheelChanged), true);
+    }
+
+    private void HorizontalRow_WheelChanged(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is not GridView row) return;
+        var pointer = e.GetCurrentPoint(row).Properties;
+        if (pointer.IsHorizontalMouseWheel || pointer.MouseWheelDelta == 0) return;
+        var scroll = FindRowScrollViewer(row);
+        if (scroll is null) return;
+        var atBoundary = pointer.MouseWheelDelta < 0
+            ? scroll.HorizontalOffset >= scroll.ScrollableWidth - 1
+            : scroll.HorizontalOffset <= 1;
+        if (atBoundary) e.Handled = false;
+    }
+
+    private static ScrollViewer? FindRowScrollViewer(DependencyObject root)
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            if (child is ScrollViewer scroll) return scroll;
+            if (FindRowScrollViewer(child) is { } nested) return nested;
+        }
+        return null;
     }
 
     private async void Recent_ItemClick(object sender, ItemClickEventArgs e)

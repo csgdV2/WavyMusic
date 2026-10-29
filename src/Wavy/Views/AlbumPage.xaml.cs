@@ -42,7 +42,7 @@ public sealed partial class AlbumPage : Page
             return Task.CompletedTask;
 
         var tracks = album.Tracks.ToList();
-        return _player.PlayFromAsync(tracks, index < 0 || index >= tracks.Count ? 0 : index);
+        return _player.PlayFromAsync(tracks, index < 0 || index >= tracks.Count ? 0 : index, lockQueue: true);
     }
 
     private async void Play_Click(object sender, RoutedEventArgs e) => await PlayFromAsync(0);
@@ -61,6 +61,16 @@ public sealed partial class AlbumPage : Page
     {
         if (ViewModel.Album?.ArtistBrowseId is { Length: > 0 } browseId)
             Frame.Navigate(typeof(ArtistPage), browseId);
+    }
+
+    private void Artist_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is HyperlinkButton { Content: TextBlock text }) text.TextDecorations = Windows.UI.Text.TextDecorations.Underline;
+    }
+
+    private void Artist_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is HyperlinkButton { Content: TextBlock text }) text.TextDecorations = Windows.UI.Text.TextDecorations.None;
     }
 
     private void Row_PointerEntered(object sender, PointerRoutedEventArgs e)

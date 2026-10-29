@@ -7,6 +7,21 @@
       <Rectangle x:Name="AmbientScrim" Opacity="0.28" />
     </Grid>
     <NavigationView x:Name="Nav" PaneDisplayMode="LeftCompact" IsPaneOpen="False" CompactPaneLength="48" OpenPaneLength="48" CompactModeThresholdWidth="0" IsPaneToggleButtonVisible="False" IsBackButtonVisible="Visible" IsBackEnabled="False" IsSettingsVisible="True" BackRequested="Nav_BackRequested" SelectionChanged="Nav_SelectionChanged" ItemInvoked="Nav_ItemInvoked">
+      <NavigationView.Resources>
+        <x:Double x:Key="NavigationViewItemOnLeftMinHeight">40</x:Double>
+        <CornerRadius x:Key="NavigationViewItemCornerRadius">10</CornerRadius>
+        <Thickness x:Key="NavigationViewItemButtonMargin">0</Thickness>
+        <Style TargetType="NavigationViewItem">
+          <Setter Property="Width" Value="40" />
+          <Setter Property="Height" Value="40" />
+          <Setter Property="MinHeight" Value="40" />
+          <Setter Property="Margin" Value="4,3" />
+          <Setter Property="Padding" Value="0" />
+          <Setter Property="HorizontalContentAlignment" Value="Center" />
+          <Setter Property="VerticalContentAlignment" Value="Center" />
+          <Setter Property="CornerRadius" Value="10" />
+        </Style>
+      </NavigationView.Resources>
       <NavigationView.MenuItems>
         <NavigationViewItem x:Name="SearchNavItem" Content="Search" Tag="search">
           <NavigationViewItem.Icon>
@@ -42,14 +57,33 @@
           </Grid.ColumnDefinitions>
           <Grid Grid.Column="0">
             <Frame x:Name="ContentFrame" />
-            <InfoBar VerticalAlignment="Bottom" Margin="16" Severity="Error" Title="Playback" IsOpen="{x:Bind Player.HasStatusMessage, Mode=OneWay}" Message="{x:Bind Player.StatusMessage, Mode=OneWay}" CloseButtonClick="Status_CloseButtonClick" />
+            <InfoBar VerticalAlignment="Bottom" Margin="16,16,16,104" Canvas.ZIndex="4" Severity="Error" Title="Playback" IsOpen="{x:Bind Player.HasStatusMessage, Mode=OneWay}" Message="{x:Bind Player.StatusMessage, Mode=OneWay}" CloseButtonClick="Status_CloseButtonClick" />
           </Grid>
           <controls:LyricsPanel x:Name="LyricsSide" Grid.Column="1" Canvas.ZIndex="1" />
           <controls:QueuePanel x:Name="QueueSide" Grid.Column="2" Canvas.ZIndex="1" />
         </Grid>
-        <controls:NowPlayingBar x:Name="NowPlaying" Grid.Row="0" Canvas.ZIndex="2" />
-        <Grid x:Name="TitleStrip" Grid.Row="0" Height="48" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Transparent" Visibility="Collapsed" Canvas.ZIndex="3" />
+        <controls:NowPlayingBar x:Name="NowPlaying" Grid.Row="1" Canvas.ZIndex="2" />
+        <Grid x:Name="TitleStrip" Grid.Row="1" Height="48" VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="Transparent" Canvas.ZIndex="3" />
       </Grid>
     </NavigationView>
+    <Border HorizontalAlignment="Right" VerticalAlignment="Top" Width="360" Margin="16,64,20,0" Padding="18" CornerRadius="14"
+            Canvas.ZIndex="10" Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+            Visibility="{x:Bind Updates.NotificationVisibility, Mode=OneWay}"
+            AutomationProperties.LiveSetting="Polite" AutomationProperties.Name="Wavy update available">
+      <StackPanel Spacing="10">
+        <Grid ColumnSpacing="12">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+          <TextBlock Text="Update available" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Width="28" Height="28" MinWidth="0" MinHeight="0" Padding="0" CornerRadius="8"
+                  Background="Transparent" BorderThickness="0" Click="Update_Dismiss" ToolTipService.ToolTip="Dismiss"
+                  AutomationProperties.Name="Dismiss update notification">
+            <FontIcon Glyph="&#xE711;" FontSize="12" />
+          </Button>
+        </Grid>
+        <TextBlock Text="{x:Bind Updates.Status, Mode=OneWay}" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+        <Button Content="View update" HorizontalAlignment="Left" Click="Update_OpenSettings" />
+      </StackPanel>
+    </Border>
   </Grid>
 </Window>

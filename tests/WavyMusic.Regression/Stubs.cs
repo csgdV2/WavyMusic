@@ -4,6 +4,8 @@ namespace Wavy.Services;
 public sealed class SettingsService
 {
     public bool AudioNormalization { get; set; }
+    public double Volume { get; set; } = 0.7;
+    public bool PrefetchNext { get; set; } = true;
     public bool DiscordPresence { get; set; } = true;
     public string DiscordApplicationId => "test-application";
     public event EventHandler<string>? Changed;
@@ -13,12 +15,50 @@ public sealed class SettingsService
 }
 public sealed class CacheService
 {
+    public string? TryGetLocalPath(string id) => null;
+    public void MarkPlayed(Track track) { }
+    public Task EnsureCachedAsync(Track track, CancellationToken ct = default) => Task.CompletedTask;
     public IReadOnlyList<Track> GetCachedTracks() => new[] { new Track { Id = "recent", Title = "Recent song" } };
 }
-public sealed class PlaybackService
+public sealed class PlaybackService : System.ComponentModel.INotifyPropertyChanged
 {
+    public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+    public event EventHandler? MediaEndedNaturally;
+    public event EventHandler<Track>? AdvancedGaplessly;
+    public bool IsBusy { get; set; }
+    public bool IsBuffering { get; set; }
+    public bool IsLooping { get; set; }
+    public string? StatusMessage { get; set; }
+    public double Volume { get; set; }
+    public Track? PreparedNext { get; private set; }
+    public Task PlayAsync(Track track, string? localPath = null, CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+        CurrentTrack = track;
+        IsPlaying = true;
+        PropertyChanged?.Invoke(this, new(nameof(CurrentTrack)));
+        return Task.CompletedTask;
+    }
+    public void Seek(TimeSpan position) => Position = position;
+    public void TogglePlayPause() => IsPlaying = !IsPlaying;
+    public void Restart() => Position = TimeSpan.Zero;
+    public void ClearStatus() => StatusMessage = null;
+    public void ClearPreparedNext() => PreparedNext = null;
+    public Task PrepareNextAsync(Track track) { PreparedNext = track; return Task.CompletedTask; }
+
     public Track? CurrentTrack { get; set; }
     public bool IsPlaying { get; set; }
     public TimeSpan Position { get; set; }
     public TimeSpan Duration { get; set; }
+}
+
+public sealed class PlaylistService
+{
+    public System.Collections.ObjectModel.ObservableCollection<Playlist> Playlists { get; } = new();
+    public event EventHandler? PlaylistChanged;
+}
+
+public sealed class FavoritesService
+{
+    public System.Collections.ObjectModel.ObservableCollection<AlbumResult> Albums { get; } = new();
 }

@@ -11,6 +11,8 @@
     <ProjectReference Include="../../src/Wavy.Core/Wavy.Core.csproj" />
     <Compile Include="../../src/Wavy/Services/LoudnessNormalizationService.cs" Link="LoudnessNormalizationService.cs" />
     <Compile Include="../../src/Wavy/ViewModels/SearchViewModel.cs" Link="SearchViewModel.cs" />
+    <Compile Include="../../src/Wavy/ViewModels/PlayerViewModel.cs" Link="PlayerViewModel.cs" />
+    <Compile Include="../../src/Wavy/ViewModels/HomeViewModel.cs" Link="HomeViewModel.cs" />
     <Compile Include="../../src/Wavy/Services/DiscordPresenceService.cs" Link="DiscordPresenceService.cs" />
   </ItemGroup>
 </Project>

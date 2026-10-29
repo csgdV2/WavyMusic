@@ -28,6 +28,6 @@ public sealed partial class LibraryPage : Page
     private async void Tracks_ItemClick(object sender, ItemClickEventArgs e)
     {
         if (e.ClickedItem is Track track)
-            await _player.PlayFromAsync(new[] { track }, 0);
+            await _player.PlayRadioAsync(track);
     }
 }

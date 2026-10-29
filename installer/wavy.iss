@@ -1,5 +1,5 @@
 #define AppName "Wavy"
-#define AppVersion "1.8"
+#define AppVersion "1.9"
 #define AppExe "Wavy.exe"
 #define AppPublisher "csgd"
 
@@ -42,3 +42,11 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopico
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; \
     Flags: nowait postinstall skipifsilent
+
+Filename: "{app}\{#AppExe}"; Flags: nowait; Check: IsWavyUpdate
+
+[Code]
+function IsWavyUpdate: Boolean;
+begin
+  Result := ExpandConstant('{param:WAVYUPDATE|0}') = '1';
+end;

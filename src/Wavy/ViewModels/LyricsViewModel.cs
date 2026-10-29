@@ -136,7 +136,7 @@ public sealed partial class LyricsViewModel : ObservableObject
         try
         {
             var found = await _client.GetAsync(
-                track.Title, track.Artist, _player.DurationSeconds, _settings.LyricsSource, token);
+                track.Title, track.Artist, _player.DurationSeconds, _settings.LyricsSource, token, track.Album);
 
             if (token.IsCancellationRequested || !ReferenceEquals(track, _loadedFor))
                 return;

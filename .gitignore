@@ -10,5 +10,3 @@ publish/
 *.suo
 google-oauth.json
 client_secret_*.json
-tests/**
-tests

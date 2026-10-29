@@ -13,12 +13,6 @@ public enum AppTheme
     Darker,
 }
 
-public enum MenuLayout
-{
-    Sidebar,
-    Bottom,
-}
-
 public sealed record WindowPlacement(int X, int Y, int Width, int Height, bool Maximized);
 
 public sealed class SettingsService
@@ -49,6 +43,18 @@ public sealed class SettingsService
     }
 
     public event EventHandler<string>? Changed;
+
+    public bool AutomaticUpdateChecks
+    {
+        get => _stored.AutomaticUpdateChecks;
+        set { if (_stored.AutomaticUpdateChecks == value) return; _stored.AutomaticUpdateChecks = value; Commit(nameof(AutomaticUpdateChecks)); }
+    }
+
+    public DateTimeOffset LastUpdateCheck
+    {
+        get => _stored.LastUpdateCheck;
+        set { _stored.LastUpdateCheck = value; Save(); }
+    }
 
     public AppTheme Theme
     {
@@ -151,18 +157,6 @@ public sealed class SettingsService
     }
 
     public string DiscordApplicationId => "1542630837483343955";
-
-    public MenuLayout MenuLayout
-    {
-        get => _stored.MenuLayout;
-        set
-        {
-            if (_stored.MenuLayout == value)
-                return;
-            _stored.MenuLayout = value;
-            Commit(nameof(MenuLayout));
-        }
-    }
 
     public LyricsSource LyricsSource
     {
@@ -270,9 +264,16 @@ public sealed class SettingsService
     {
         try
         {
-            return File.Exists(_path)
-                ? JsonSerializer.Deserialize<Stored>(File.ReadAllText(_path), JsonOptions) ?? new()
-                : new();
+            if (!File.Exists(_path)) return new();
+            var data = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(_path));
+            if (data?["LyricsSource"] is System.Text.Json.Nodes.JsonValue choice)
+            {
+                if (choice.TryGetValue<string>(out var name) && (!Enum.TryParse<LyricsSource>(name, true, out var parsed) || !Enum.IsDefined(parsed)))
+                    data["LyricsSource"] = nameof(LyricsSource.Auto);
+                else if (choice.TryGetValue<int>(out var number) && !Enum.IsDefined(typeof(LyricsSource), number))
+                    data["LyricsSource"] = nameof(LyricsSource.Auto);
+            }
+            return data?.Deserialize<Stored>(JsonOptions) ?? new();
         }
         catch
         {
@@ -295,6 +296,8 @@ public sealed class SettingsService
 
     private sealed class Stored
     {
+        public bool AutomaticUpdateChecks { get; set; } = true;
+        public DateTimeOffset LastUpdateCheck { get; set; }
         public AppTheme Theme { get; set; } = AppTheme.System;
         public string AccentColor { get; set; } = string.Empty;
         public int DesignRevision { get; set; }
@@ -305,7 +308,6 @@ public sealed class SettingsService
         public double Volume { get; set; } = 1.0;
         public int VolumeStepPercent { get; set; } = 1;
         public bool DiscordPresence { get; set; } = true;
-        public MenuLayout MenuLayout { get; set; } = MenuLayout.Bottom;
         public LyricsSource LyricsSource { get; set; } = LyricsSource.Auto;
         public bool AudioNormalization { get; set; } = true;
         public double[]? EqualizerBands { get; set; }

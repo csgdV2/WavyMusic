@@ -30,13 +30,15 @@ public sealed partial class SearchPage : Page
         HistoryItems.ItemsSource = _history;
         InlineSearch.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(InlineSearch_PointerPressed), true);
         PageRoot.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(PageRoot_PointerPressed), true);
+        InlineSearch.SizeChanged += (_, _) => SizeSearchButtons(InlineSearch);
+        InlineSearch.ActualThemeChanged += (_, _) => DispatcherQueue.TryEnqueue(() => SizeSearchButtons(InlineSearch));
         RefreshSearchHistory();
 
         SelectFilterItem(ViewModel.SelectedFilter);
         ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         _settings.Changed += OnSettingsChanged;
 
-        Loaded += (_, _) => { SyncInlineSearch(); ViewModel.RefreshRecent(); };
+        Loaded += (_, _) => { SizeSearchButtons(InlineSearch); SyncInlineSearch(); ViewModel.RefreshRecent(); };
 
         Unloaded += (_, _) =>
         {
@@ -45,6 +47,32 @@ public sealed partial class SearchPage : Page
             ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _settings.Changed -= OnSettingsChanged;
         };
+    }
+
+    private static void SizeSearchButtons(DependencyObject parent)
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is Button button && button.Name is "DeleteButton" or "QueryButton")
+            {
+                button.Width = button.Height = 28;
+                button.MinWidth = button.MinHeight = 0;
+                button.Padding = new Thickness(0);
+                button.Margin = new Thickness(2, 0, 2, 0);
+                button.CornerRadius = new CornerRadius(8);
+                button.VerticalAlignment = VerticalAlignment.Center;
+            }
+            if (child is Grid { Name: "ButtonLayoutGrid" } plate)
+            {
+                plate.Width = plate.Height = 28;
+                plate.Margin = new Thickness(0);
+                plate.CornerRadius = new CornerRadius(8);
+                plate.VerticalAlignment = VerticalAlignment.Center;
+                plate.HorizontalAlignment = HorizontalAlignment.Center;
+            }
+            SizeSearchButtons(child);
+        }
     }
 
     private DispatcherQueueTimer? _debounce;
@@ -190,6 +218,7 @@ public sealed partial class SearchPage : Page
 
     private void InlineSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
+        DispatcherQueue.TryEnqueue(() => SizeSearchButtons(InlineSearch));
         _debounce ??= CreateDebounce();
         _debounce.Stop();
 
@@ -255,8 +284,14 @@ public sealed partial class SearchPage : Page
         if (e.ClickedItem is Track track)
         {
             if (ViewModel.HasQuery) _settings.AddSearchHistory(ViewModel.Query!);
-            await _player.PlayFromAsync(new[] { track }, 0);
+            await _player.PlayRadioAsync(track);
         }
+    }
+
+    private void FeaturedArtist_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.FeaturedArtist is { } artist)
+            Frame.Navigate(typeof(ArtistPage), artist.BrowseId);
     }
 
     private void Artists_ItemClick(object sender, ItemClickEventArgs e)

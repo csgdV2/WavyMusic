@@ -403,19 +403,10 @@ public sealed partial class YtDlpService : IYtDlpService
         [EnumeratorCancellation] CancellationToken ct = default)
     {
         var args = new List<string> { track.SourceUrl };
+        args.Add("-f"); args.Add(Format(QualityProvider()));
         if (!string.IsNullOrEmpty(_ffmpegPath))
         {
-
-            args.Add("-f"); args.Add(Format(QualityProvider()));
-            args.Add("-x");
-            args.Add("--audio-format"); args.Add("m4a");
-            args.Add("--audio-quality"); args.Add("0");
             args.Add("--ffmpeg-location"); args.Add(_ffmpegPath);
-        }
-        else
-        {
-
-            args.Add("-f"); args.Add(Format(QualityProvider()));
         }
         args.Add("-o"); args.Add(outputTemplate);
         args.Add("--newline");

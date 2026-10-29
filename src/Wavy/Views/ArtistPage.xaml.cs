@@ -77,6 +77,12 @@ public sealed partial class ArtistPage : Page
             Frame.Navigate(typeof(AlbumPage), release.BrowseId);
     }
 
+    private void Song_PointerEntered(object sender, PointerRoutedEventArgs e) => TrackMenu.SetHoverActionsVisible(sender, true);
+
+    private void Song_PointerExited(object sender, PointerRoutedEventArgs e) => TrackMenu.SetHoverActionsVisible(sender, false);
+
+    private void SongActions_Click(object sender, RoutedEventArgs e) => TrackMenu.ShowForSender(sender);
+
     private void Tile_PointerEntered(object sender, PointerRoutedEventArgs e)
         => TrackMenu.SetHoverPlateVisible(sender, true);
 

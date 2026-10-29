@@ -9,6 +9,7 @@ A music player for Windows with search, local playlists, lyrics, and Discord act
 - Choose audio quality, adjust the ten-band equalizer, and enable loudness normalization.
 - Read lyrics and jump to a line during playback when timed lyrics are available.
 - Share the current song and artist through Discord Rich Presence.
+- Get notified about new releases, then download and install updates from Settings.
 - Use light, dark, or darker mode, with artwork based ambient backgrounds.
 
 ## Download
@@ -33,7 +34,7 @@ powershell -ExecutionPolicy Bypass -File tools/build-release.ps1
 .\publish\win-x64\Wavy.exe
 ```
 
-The output is in `publish/win-x64`. To also build the installer, install Inno Setup 6 and run:
+The output is in `publish/win-x64`. To also build the installer, install Inno Setup 6 or 7 and run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/build-release.ps1 -BuildInstaller

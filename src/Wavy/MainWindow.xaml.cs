@@ -24,6 +24,7 @@ public sealed partial class MainWindow : Window
 {
 
     public PlayerViewModel Player { get; }
+    public AppUpdateService Updates { get; }
 
     private readonly SearchViewModel _search;
     private readonly SettingsService _settings;
@@ -33,13 +34,13 @@ public sealed partial class MainWindow : Window
     private readonly SystemMediaControls? _systemControls;
     private readonly MediaKeys? _mediaKeys;
 
-    private RectInt32[] _passthroughRects = Array.Empty<RectInt32>();
 
     private readonly DispatcherTimer _placementSave = new() { Interval = TimeSpan.FromMilliseconds(400) };
 
     public MainWindow()
     {
         Player = App.Services.GetRequiredService<PlayerViewModel>();
+        Updates = App.Services.GetRequiredService<AppUpdateService>();
         _search = App.Services.GetRequiredService<SearchViewModel>();
         _settings = App.Services.GetRequiredService<SettingsService>();
         InitializeComponent();
@@ -48,6 +49,8 @@ public sealed partial class MainWindow : Window
         SystemBackdrop = new MicaBackdrop();
         Title = "Wavy";
 
+        ConfigureMinimumSize();
+        RootGrid.Loaded += (_, _) => ConfigureMinimumSize();
         RestorePlacement();
         AppWindow.Changed += OnAppWindowChanged;
         _placementSave.Tick += (_, _) => { _placementSave.Stop(); SavePlacement(); };
@@ -68,9 +71,6 @@ public sealed partial class MainWindow : Window
             if (name is nameof(SettingsService.Theme) or nameof(SettingsService.AccentColor))
                 ApplyTheme();
 
-            if (name == nameof(SettingsService.MenuLayout))
-                ApplyMenuLayout();
-
             if (name == nameof(SettingsService.AmbientBackground))
             {
                 _ambient.IsEnabled = _settings.AmbientBackground;
@@ -82,10 +82,8 @@ public sealed partial class MainWindow : Window
 
         ExtendsContentIntoTitleBar = true;
         ConfigureCaptionButtons();
-        ApplyMenuLayout();
+        ConfigurePlayerLayout();
 
-        NowPlaying.Loaded += (_, _) => UpdateTitleBarPassthrough();
-        NowPlaying.LayoutUpdated += (_, _) => UpdateTitleBarPassthrough();
 
         var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "app.ico");
         if (File.Exists(iconPath))
@@ -125,8 +123,13 @@ public sealed partial class MainWindow : Window
         Environment.Exit(0);
     }
 
-    private void ApplyTheme() =>
+    private void ApplyTheme()
+    {
         ThemeManager.Apply(this, RootGrid, _settings.Theme, _settings.AccentColor, _settings.AmbientBackground);
+        var dark = _settings.Theme is AppTheme.Dark or AppTheme.Darker
+            || (_settings.Theme == AppTheme.System && Application.Current.RequestedTheme == ApplicationTheme.Dark);
+        AmbientScrim.Opacity = dark ? 0.28 : 0.78;
+    }
 
     #region Window placement
 
@@ -135,7 +138,8 @@ public sealed partial class MainWindow : Window
         if (_settings.Placement is not { } saved)
             return;
 
-        var rect = new RectInt32(saved.X, saved.Y, saved.Width, saved.Height);
+        var minimum = MinimumSize();
+        var rect = new RectInt32(saved.X, saved.Y, Math.Max(saved.Width, minimum.Width), Math.Max(saved.Height, minimum.Height));
         var work = DisplayArea.GetFromRect(rect, DisplayAreaFallback.Nearest)?.WorkArea;
         if (work is { } screen)
         {
@@ -210,36 +214,39 @@ public sealed partial class MainWindow : Window
         titleBar.ButtonPressedForegroundColor = glyph;
     }
 
-    private void ApplyMenuLayout()
+    private SizeInt32 MinimumSize()
     {
-        var bottom = _settings.MenuLayout == MenuLayout.Bottom;
+        var scale = RootGrid.XamlRoot?.RasterizationScale ?? 1.0;
+        var work = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Nearest)?.WorkArea;
+        return new SizeInt32(Math.Min((int)Math.Ceiling(960 * scale), work?.Width ?? int.MaxValue),
+            Math.Min((int)Math.Ceiling(640 * scale), work?.Height ?? int.MaxValue));
+    }
 
+    private void ConfigureMinimumSize()
+    {
+        var minimum = MinimumSize();
+        if (AppWindow.Presenter is OverlappedPresenter presenter)
+        {
+            presenter.PreferredMinimumWidth = minimum.Width;
+            presenter.PreferredMinimumHeight = minimum.Height;
+            if (presenter.State == OverlappedPresenterState.Restored)
+                AppWindow.Resize(new SizeInt32(Math.Max(AppWindow.Size.Width, minimum.Width), Math.Max(AppWindow.Size.Height, minimum.Height)));
+        }
+    }
+
+    private void ConfigurePlayerLayout()
+    {
         ConfigureCaptionButtons();
-
-        Grid.SetRow(NowPlaying, bottom ? 1 : 0);
-        NowPlaying.VerticalAlignment = bottom ? VerticalAlignment.Bottom : VerticalAlignment.Stretch;
-        NowPlaying.IsFloating = bottom;
-        TitleStrip.Visibility = bottom ? Visibility.Visible : Visibility.Collapsed;
-        Grid.SetRow(TitleStrip, bottom ? 1 : 0);
-
-        var corner = bottom ? new CornerRadius(12, 0, 0, 0) : new CornerRadius(0);
-        LyricsSide.PanelCorner = corner;
-        QueueSide.PanelCorner = corner;
-
-        var inset = bottom ? 32.0 : 16.0;
-        ContentArea.Margin = new Thickness(0, inset, 0, 0);
-
-        var panelInset = bottom ? Math.Max(0, CaptionHeight() - inset) : 0;
-        LyricsSide.PanelTopInset = panelInset;
-        QueueSide.PanelTopInset = panelInset;
+        NowPlaying.VerticalAlignment = VerticalAlignment.Bottom;
+        NowPlaying.IsFloating = true;
+        LyricsSide.PanelCorner = new CornerRadius(12, 0, 0, 0);
+        QueueSide.PanelCorner = new CornerRadius(12, 0, 0, 0);
+        ContentArea.Margin = new Thickness(0, 32, 0, 0);
+        LyricsSide.PanelTopInset = Math.Max(0, CaptionHeight() - 32);
+        QueueSide.PanelTopInset = Math.Max(0, CaptionHeight() - 32);
+        TitleStrip.Height = CaptionHeight();
+        SetTitleBar(TitleStrip);
         UpdateSidePanelLayout();
-
-        if (bottom)
-            TitleStrip.Height = CaptionHeight();
-
-        SetTitleBar(bottom ? TitleStrip : NowPlaying);
-        ClearTitleBarPassthrough();
-        UpdateTitleBarPassthrough();
     }
 
     private void UpdateSidePanelLayout()
@@ -269,78 +276,9 @@ public sealed partial class MainWindow : Window
         return Math.Ceiling(height);
     }
 
-    private void ClearTitleBarPassthrough()
-    {
-        if (!AppWindowTitleBar.IsCustomizationSupported())
-            return;
-
-        _passthroughRects = Array.Empty<RectInt32>();
-        try
-        {
-            InputNonClientPointerSource.GetForWindowId(AppWindow.Id)
-                .SetRegionRects(NonClientRegionKind.Passthrough, Array.Empty<RectInt32>());
-        }
-        catch
-        {
-        }
-    }
-
-    private void UpdateTitleBarPassthrough()
-    {
-        if (!AppWindowTitleBar.IsCustomizationSupported())
-            return;
-
-        if (_settings.MenuLayout == MenuLayout.Bottom)
-            return;
-
-        var xamlRoot = NowPlaying.XamlRoot;
-        if (xamlRoot is null)
-            return;
-
-        try
-        {
-            var scale = xamlRoot.RasterizationScale;
-            var rects = new List<RectInt32>();
-            foreach (var el in NowPlaying.InteractiveRegions)
-            {
-                if (el is null || el.ActualWidth <= 0 || el.ActualHeight <= 0)
-                    continue;
-
-                var bounds = el.TransformToVisual(null)
-                               .TransformBounds(new Windows.Foundation.Rect(0, 0, el.ActualWidth, el.ActualHeight));
-                rects.Add(new RectInt32(
-                    (int)Math.Round(bounds.X * scale),
-                    (int)Math.Round(bounds.Y * scale),
-                    (int)Math.Round(bounds.Width * scale),
-                    (int)Math.Round(bounds.Height * scale)));
-            }
-
-            if (rects.Count == 0 || SameRects(rects, _passthroughRects))
-                return;
-            _passthroughRects = rects.ToArray();
-
-            InputNonClientPointerSource.GetForWindowId(AppWindow.Id)
-                .SetRegionRects(NonClientRegionKind.Passthrough, _passthroughRects);
-        }
-        catch
-        {
-
-        }
-    }
-
-    private static bool SameRects(List<RectInt32> a, RectInt32[] b)
-    {
-        if (a.Count != b.Length)
-            return false;
-        for (int i = 0; i < b.Length; i++)
-            if (a[i].X != b[i].X || a[i].Y != b[i].Y || a[i].Width != b[i].Width || a[i].Height != b[i].Height)
-                return false;
-        return true;
-    }
-
     private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        UpdateHomeIcon(args.SelectedItemContainer as NavigationViewItem);
+        UpdateNavigationIcons(args.IsSettingsSelected ? Nav.SettingsItem as NavigationViewItem : args.SelectedItemContainer as NavigationViewItem);
         if (args.IsSettingsSelected)
         {
             ShowPage(typeof(SettingsPage));
@@ -353,24 +291,33 @@ public sealed partial class MainWindow : Window
     {
         if (args.IsSettingsInvoked)
         {
+            UpdateNavigationIcons(Nav.SettingsItem as NavigationViewItem);
             ClearSearch();
             ShowPage(typeof(SettingsPage));
             return;
         }
 
         var invoked = args.InvokedItemContainer as NavigationViewItem;
-        UpdateHomeIcon(invoked);
+        UpdateNavigationIcons(invoked);
         if (invoked?.Tag as string != "search")
             ClearSearch();
 
         NavigateTo(invoked);
     }
 
-    private void UpdateHomeIcon(NavigationViewItem? selectedItem = null)
+    private void UpdateNavigationIcons(NavigationViewItem? selectedItem = null)
     {
         selectedItem ??= Nav.SelectedItem as NavigationViewItem;
         HomeIcon.Glyph = ReferenceEquals(selectedItem, HomeNavItem) ? "\uEA8A" : "\uE80F";
+        AlbumsNavItem.Icon = ReferenceEquals(selectedItem, AlbumsNavItem)
+            ? NavigationIcon("F0 M3,1 H17 Q19,1 19,3 V17 Q19,19 17,19 H3 Q1,19 1,17 V3 Q1,1 3,1 Z M10,5 A5,5 0 1 0 10,15 A5,5 0 1 0 10,5 Z M10,8.5 A1.5,1.5 0 1 0 10,11.5 A1.5,1.5 0 1 0 10,8.5 Z") : new FontIcon { Glyph = "\uE93C" };
+        if (Nav.SettingsItem is NavigationViewItem settingsItem)
+            settingsItem.Icon = new FontIcon { Glyph = ReferenceEquals(selectedItem, settingsItem) ? "\uF8B0" : "\uE713" };
+
     }
+
+    private static PathIcon NavigationIcon(string data) =>
+        (PathIcon)Microsoft.UI.Xaml.Markup.XamlReader.Load($"<PathIcon xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Data='{data}' />");
 
     private void ClearSearch()
     {
@@ -427,6 +374,16 @@ public sealed partial class MainWindow : Window
         if (ContentFrame.CanGoBack)
             ContentFrame.GoBack();
     }
+
+    private void Update_OpenSettings(object sender, RoutedEventArgs e)
+    {
+        Updates.DismissNotification();
+        Nav.SelectedItem = Nav.SettingsItem;
+        ShowPage(typeof(SettingsPage));
+        if (ContentFrame.Content is SettingsPage page) page.ShowUpdates();
+    }
+
+    private void Update_Dismiss(object sender, RoutedEventArgs e) => Updates.DismissNotification();
 
     private void Status_CloseButtonClick(InfoBar sender, object args) => Player.ClearStatus();
 

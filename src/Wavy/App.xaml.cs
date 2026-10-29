@@ -67,6 +67,7 @@ public partial class App : Application
 
         MainWindow = new MainWindow();
         MainWindow.Activate();
+        _ = Services.GetRequiredService<AppUpdateService>().CheckAtStartupAsync();
 
         Services.GetRequiredService<DiscordPresenceService>();
     }
@@ -94,6 +95,8 @@ public partial class App : Application
 
         services.AddSingleton(new FavoritesService(AppPaths.DataRoot));
         services.AddSingleton(new SettingsService(AppPaths.DataRoot));
+        services.AddSingleton<GitHubUpdateClient>();
+        services.AddSingleton<AppUpdateService>();
         services.AddSingleton<LoudnessNormalizationService>();
 
         services.AddSingleton<PlaybackService>();
