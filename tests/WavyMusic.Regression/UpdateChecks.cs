@@ -27,6 +27,8 @@ internal static class UpdateChecks
             Console.WriteLine("PASS: " + name);
         }
         var release = Parse(Fixture())!;
+        Check(Parse(Fixture("1.9.1"), new Version(1, 9, 0)) is not null && Parse(Fixture("1.9.1"), new Version(1, 9, 1, 0)) is null,
+            "updater offers newer patch releases without offering the installed patch again");
         Check(release.Version == new Version(1, 9) && Parse(Fixture("v1.9")) is not null, "updater accepts newer stable releases with plain or v-prefixed tags");
         Check(Parse(Fixture("1.8")) is null && Parse(Fixture("1.7")) is null && Parse(Fixture(prerelease: true)) is null,
             "updater ignores equivalent, older and prerelease versions");

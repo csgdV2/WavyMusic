@@ -28,6 +28,8 @@ public sealed partial class MainWindow : Window
 
     private readonly SearchViewModel _search;
     private readonly SettingsService _settings;
+    private readonly AppTheme _startupTheme;
+    private bool _themeRestartDialogOpen;
 
     private readonly AmbientBackdrop _ambient;
 
@@ -43,6 +45,7 @@ public sealed partial class MainWindow : Window
         Updates = App.Services.GetRequiredService<AppUpdateService>();
         _search = App.Services.GetRequiredService<SearchViewModel>();
         _settings = App.Services.GetRequiredService<SettingsService>();
+        _startupTheme = _settings.Theme;
         InitializeComponent();
         ContentArea.SizeChanged += (_, _) => UpdateSidePanelLayout();
 
@@ -64,11 +67,18 @@ public sealed partial class MainWindow : Window
         {
             if (args.PropertyName == nameof(PlayerViewModel.CurrentTrack))
                 _ambient.Show(Player.CurrentTrack);
+            if (args.PropertyName is nameof(PlayerViewModel.IsLyricsOpen) or nameof(PlayerViewModel.IsQueueOpen))
+                UpdateSidePanelLayout();
         };
 
         _settings.Changed += (_, name) =>
         {
-            if (name is nameof(SettingsService.Theme) or nameof(SettingsService.AccentColor))
+            if (name == nameof(SettingsService.Theme))
+            {
+                DispatcherQueue.TryEnqueue(async () => await RequireThemeRestartAsync());
+                return;
+            }
+            if (name == nameof(SettingsService.AccentColor))
                 ApplyTheme();
 
             if (name == nameof(SettingsService.AmbientBackground))
@@ -123,11 +133,44 @@ public sealed partial class MainWindow : Window
         Environment.Exit(0);
     }
 
+    private async Task RequireThemeRestartAsync()
+    {
+        if (_themeRestartDialogOpen || _settings.Theme == _startupTheme) return;
+        _themeRestartDialogOpen = true;
+        var dialog = new ContentDialog
+        {
+            XamlRoot = RootGrid.XamlRoot,
+            Title = "Restart required",
+            Content = "Restart Wavy to apply the new theme. Playback will stop when the app restarts.",
+            PrimaryButtonText = "Restart Wavy",
+            DefaultButton = ContentDialogButton.Primary
+        };
+        dialog.Closing += (_, args) => args.Cancel = true;
+        dialog.PrimaryButtonClick += (_, args) =>
+        {
+            args.Cancel = true;
+            _placementSave.Stop();
+            SavePlacement();
+            try
+            {
+                App.Services.GetRequiredService<PlaybackService>().Stop();
+                Microsoft.Windows.AppLifecycle.AppInstance.Restart(string.Empty);
+                dialog.Content = "Wavy couldn't restart automatically. Try again, or close and reopen the app to apply the theme.";
+            }
+            catch
+            {
+                dialog.Content = "Wavy couldn't restart automatically. Try again, or close and reopen the app to apply the theme.";
+            }
+        };
+        try { await dialog.ShowAsync(); }
+        finally { _themeRestartDialogOpen = false; }
+    }
+
     private void ApplyTheme()
     {
-        ThemeManager.Apply(this, RootGrid, _settings.Theme, _settings.AccentColor, _settings.AmbientBackground);
-        var dark = _settings.Theme is AppTheme.Dark or AppTheme.Darker
-            || (_settings.Theme == AppTheme.System && Application.Current.RequestedTheme == ApplicationTheme.Dark);
+        ThemeManager.Apply(this, RootGrid, _startupTheme, _settings.AccentColor, _settings.AmbientBackground);
+        var dark = _startupTheme is AppTheme.Dark or AppTheme.Darker
+            || (_startupTheme == AppTheme.System && Application.Current.RequestedTheme == ApplicationTheme.Dark);
         AmbientScrim.Opacity = dark ? 0.28 : 0.78;
     }
 
@@ -252,13 +295,14 @@ public sealed partial class MainWindow : Window
     private void UpdateSidePanelLayout()
     {
         var width = Math.Max(0, ContentArea.ActualWidth);
-        var overlay = width < 920;
-        Grid.SetColumn(LyricsSide, overlay ? 0 : 1);
-        Grid.SetColumn(QueueSide, overlay ? 0 : 2);
-        LyricsSide.HorizontalAlignment = overlay ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
-        QueueSide.HorizontalAlignment = overlay ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
-        LyricsSide.PanelWidth = Math.Min(380, width * (overlay ? 0.62 : 1));
-        QueueSide.PanelWidth = Math.Min(320, width * (overlay ? 0.62 : 1));
+        Grid.SetColumn(LyricsSide, 1);
+        Grid.SetColumn(QueueSide, 2);
+        LyricsSide.HorizontalAlignment = HorizontalAlignment.Stretch;
+        QueueSide.HorizontalAlignment = HorizontalAlignment.Stretch;
+        LyricsSide.Visibility = Player.IsLyricsOpen ? Visibility.Visible : Visibility.Collapsed;
+        QueueSide.Visibility = Player.IsQueueOpen ? Visibility.Visible : Visibility.Collapsed;
+        LyricsSide.PanelWidth = Math.Clamp(width * 0.36, 300, 380);
+        QueueSide.PanelWidth = Math.Clamp(width * 0.32, 280, 320);
     }
 
     private double CaptionHeight()

@@ -1,5 +1,5 @@
 #define AppName "Wavy"
-#define AppVersion "1.9"
+#define AppVersion "1.9.1"
 #define AppExe "Wavy.exe"
 #define AppPublisher "csgd"
 
