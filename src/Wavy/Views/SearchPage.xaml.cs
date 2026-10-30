@@ -51,6 +51,7 @@ public sealed partial class SearchPage : Page
 
     private static void SizeSearchButtons(DependencyObject parent)
     {
+        if (parent is TextBox box) SearchFieldAlignment.Align(box);
         for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);

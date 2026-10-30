@@ -1,4 +1,6 @@
 using System.IO;
+using System.Diagnostics;
+using Wavy.Core.Services;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -23,6 +25,9 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
     private readonly LoudnessNormalizationService _normalizer;
     private readonly DispatcherQueue _dispatcher;
     private readonly DispatcherQueueTimer _handoff;
+    private readonly DispatcherQueueTimer _listeningTimer;
+    private readonly ListeningHistoryService? _history;
+    private long _lastListeningTick = Stopwatch.GetTimestamp();
 
     private MediaPlayer _player;
     private MediaPlayer _standby;
@@ -60,13 +65,14 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
     [ObservableProperty] private string? _statusMessage;
 
     public PlaybackService(IYtDlpService ytDlp, CacheService cache, SettingsService settings,
-        LoudnessNormalizationService normalizer, DispatcherQueue dispatcher)
+        LoudnessNormalizationService normalizer, DispatcherQueue dispatcher, ListeningHistoryService? history = null)
     {
         _ytDlp = ytDlp;
         _cache = cache;
         _settings = settings;
         _normalizer = normalizer;
         _dispatcher = dispatcher;
+        _history = history;
 
         _player = CreatePlayer();
         _standby = CreatePlayer();
@@ -76,6 +82,19 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
         _handoff.IsRepeating = true;
         _handoff.Tick += (_, _) => TryHandoff();
         _settings.Changed += OnAudioSettingChanged;
+        _listeningTimer = dispatcher.CreateTimer();
+        _listeningTimer.Interval = TimeSpan.FromSeconds(1);
+        _listeningTimer.Tick += (_, _) => TrackListening();
+        _listeningTimer.Start();
+    }
+
+    private void TrackListening()
+    {
+        var now = Stopwatch.GetTimestamp();
+        var elapsed = Stopwatch.GetElapsedTime(_lastListeningTick, now);
+        _lastListeningTick = now;
+        _history?.Advance(CurrentTrack, _source is not null && _player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing,
+            elapsed, DateTimeOffset.Now);
     }
 
     public event EventHandler? MediaEndedNaturally;
@@ -144,6 +163,7 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
         var token = _resolveCts.Token;
         var generation = ++_generation;
 
+        TrackListening();
         CurrentTrack = track;
         Duration = TimeSpan.Zero;
         Position = TimeSpan.Zero;
@@ -151,7 +171,7 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
         _streamingTrackId = null;
         _sawProgress = false;
 
-        RunOnUi(() => { ClearPrepared(); ClearSource(); });
+        RunOnUi(() => { ClearPrepared(); ClearSource(); TrackListening(); });
 
         if (!string.IsNullOrEmpty(localPath) && File.Exists(localPath))
         {
@@ -307,7 +327,7 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
     public void Stop()
     {
         _generation++;
-        RunOnUi(() => { ClearPrepared(); ClearSource(); });
+        RunOnUi(() => { ClearPrepared(); ClearSource(); TrackListening(); });
     }
 
     public void TogglePlayPause()
@@ -464,6 +484,7 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
 
         DisposeLater(previousSource);
 
+        TrackListening();
         CurrentTrack = track;
         Position = TimeSpan.Zero;
         Duration = _player.PlaybackSession.NaturalDuration;
@@ -535,6 +556,7 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
 
         RunOnUi(() =>
         {
+            TrackListening();
             IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
             IsBuffering = sender.PlaybackState is MediaPlaybackState.Buffering or MediaPlaybackState.Opening;
         });
@@ -590,7 +612,7 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
             return;
         }
 
-        RunOnUi(() => MediaEndedNaturally?.Invoke(this, EventArgs.Empty));
+        RunOnUi(() => { TrackListening(); _history?.EndSession(); MediaEndedNaturally?.Invoke(this, EventArgs.Empty); });
     }
 
     private void OnMediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
@@ -661,6 +683,9 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        TrackListening();
+        _history?.EndSession();
+        _listeningTimer.Stop();
         _settings.Changed -= OnAudioSettingChanged;
         _handoff.Stop();
         _player.Dispose();

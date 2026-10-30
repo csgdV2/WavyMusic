@@ -14,6 +14,7 @@ public sealed class HomeViewModel : ObservableObject
     private readonly FavoritesService _favorites;
     private readonly IYtDlpService _catalogue;
     private readonly PlayerViewModel _player;
+    private readonly RadioFeedbackService? _feedback;
     private CancellationTokenSource? _load;
     private string? _loadedKey;
     private DateTimeOffset _loadedAt;
@@ -23,13 +24,21 @@ public sealed class HomeViewModel : ObservableObject
     private string? _message;
 
     public HomeViewModel(CacheService cache, PlaylistService playlists, FavoritesService favorites,
-        IYtDlpService catalogue, PlayerViewModel player)
+        IYtDlpService catalogue, PlayerViewModel player, RadioFeedbackService? feedback = null)
     {
         _cache = cache;
         _playlists = playlists;
         _favorites = favorites;
         _catalogue = catalogue;
         _player = player;
+        _feedback = feedback;
+        if (_feedback is not null) _feedback.Changed += (_, _) =>
+        {
+            RemoveExcluded(Suggestions, nameof(HasSuggestions));
+            RemoveExcluded(Trending, nameof(HasTrending));
+            RemoveExcluded(Fresh, nameof(HasFresh));
+            _ = RefreshRecommendationsAsync(force: true);
+        };
         _playlists.Playlists.CollectionChanged += (_, _) => { BuildMix(); SectionsChanged(); };
         _playlists.PlaylistChanged += (_, _) => { BuildMix(); SectionsChanged(); };
         _favorites.Albums.CollectionChanged += (_, _) => SectionsChanged();
@@ -86,8 +95,9 @@ public sealed class HomeViewModel : ObservableObject
     public async Task RefreshRecommendationsAsync(bool force = false)
     {
         var history = _cache.GetCachedTracks();
-        var seeds = RecommendationSelector.Seeds(history.Take(30).Concat(Mix), 3);
-        var key = string.Join("|", seeds.Select(t => t.Id));
+        var seeds = _feedback?.Seeds(history.Take(30).Concat(Mix), 3)
+            ?? RecommendationSelector.Seeds(history.Take(30).Concat(Mix), 3);
+        var key = string.Join("|", seeds.Select(t => t.Id)) + ":" + _feedback?.Revision;
         if (!force && key == _loadedKey && HasSuggestions
             && DateTimeOffset.UtcNow - _loadedAt < TimeSpan.FromMinutes(30)) return;
 
@@ -110,13 +120,13 @@ public sealed class HomeViewModel : ObservableObject
             ct.ThrowIfCancellationRequested();
 
             var excluded = history.Take(20).Concat(Mix).ToList();
-            var radioRows = radios.Select(t => (IEnumerable<Track>)t.Result).ToList();
-            if (radioRows.Count == 0) radioRows.Add(chartsTask.Result);
+            var radioRows = radios.Select(t => Allowed(t.Result)).ToList();
+            if (radioRows.Count == 0) radioRows.Add(Allowed(chartsTask.Result));
             var picks = RecommendationSelector.Pick(radioRows, excluded, 10);
             Fill(Suggestions, picks, nameof(HasSuggestions));
-            var trending = RecommendationSelector.Pick(new[] { chartsTask.Result.AsEnumerable() }, excluded.Concat(picks), 8);
+            var trending = RecommendationSelector.Pick(new[] { Allowed(chartsTask.Result) }, excluded.Concat(picks), 8);
             Fill(Trending, trending, nameof(HasTrending));
-            Fill(Fresh, RecommendationSelector.Pick(new[] { freshTask.Result.AsEnumerable() },
+            Fill(Fresh, RecommendationSelector.Pick(new[] { Allowed(freshTask.Result) },
                 excluded.Concat(picks).Concat(trending), 8), nameof(HasFresh));
             if (picks.Count == 0 && trending.Count == 0 && Fresh.Count == 0)
                 RecommendationMessage = "No new picks right now. Try refreshing in a moment.";
@@ -137,6 +147,14 @@ public sealed class HomeViewModel : ObservableObject
             load.Dispose();
             OnPropertyChanged(nameof(ShowSuggestions));
         }
+    }
+
+    private IEnumerable<Track> Allowed(IEnumerable<Track> tracks) => tracks.Where(t => _feedback?.IsExcluded(t) != true);
+
+    private void RemoveExcluded(ObservableCollection<Track> tracks, string flag)
+    {
+        foreach (var track in tracks.Where(t => _feedback?.IsExcluded(t) == true).ToList()) tracks.Remove(track);
+        OnPropertyChanged(flag);
     }
 
     private static async Task<IReadOnlyList<Track>> SafeFetchAsync(Func<Task<IReadOnlyList<Track>>> fetch, CancellationToken ct)

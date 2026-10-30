@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Wavy.Core.Models;
+using Wavy.Core.Services;
 using Wavy.Services;
 using Wavy.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
@@ -82,6 +83,26 @@ internal static class TrackMenu
             menu.Items.Add(enqueue);
         }
 
+        menu.Items.Add(new MenuFlyoutSeparator());
+
+        var feedback = App.Services.GetRequiredService<RadioFeedbackService>();
+        var preference = feedback.GetPreference(track);
+        var moreLike = new ToggleMenuFlyoutItem
+        {
+            Text = "More like this",
+            IsChecked = preference == RadioPreference.MoreLikeThis,
+        };
+        moreLike.Click += (_, _) => feedback.SetPreference(track,
+            moreLike.IsChecked ? RadioPreference.MoreLikeThis : RadioPreference.None);
+        var avoid = new ToggleMenuFlyoutItem
+        {
+            Text = "Don’t recommend this",
+            IsChecked = preference == RadioPreference.DontRecommend,
+        };
+        avoid.Click += (_, _) => feedback.SetPreference(track,
+            avoid.IsChecked ? RadioPreference.DontRecommend : RadioPreference.None);
+        menu.Items.Add(moreLike);
+        menu.Items.Add(avoid);
         menu.Items.Add(new MenuFlyoutSeparator());
 
         var copy = new MenuFlyoutItem

@@ -18,6 +18,9 @@ public sealed partial class PlaylistsViewModel : ObservableObject
     private readonly SpotifyImportService _spotify;
 
     private bool _loading;
+    private bool _filtering;
+    private bool _savingOrder;
+    [ObservableProperty] private string _searchQuery = string.Empty;
 
     [ObservableProperty] private Playlist? _selected;
 
@@ -30,16 +33,48 @@ public sealed partial class PlaylistsViewModel : ObservableObject
 
         _playlists.PlaylistChanged += (_, playlist) =>
         {
-            if (playlist == Selected)
+            if (playlist == Selected && !_savingOrder)
                 LoadTracks(playlist);
             OnPropertyChanged(nameof(SelectedSummary));
         };
 
+        VisibleTracks.CollectionChanged += (_, _) =>
+        {
+            if (!_filtering && CanReorderTracks && Selected is { } playlist)
+            {
+                _savingOrder = true;
+                _loading = true;
+                try
+                {
+                    Tracks.Clear();
+                    foreach (var track in VisibleTracks) Tracks.Add(track);
+                    _playlists.SetTracks(playlist, Tracks);
+                }
+                finally { _loading = false; _savingOrder = false; }
+            }
+        };
         Tracks.CollectionChanged += (_, _) =>
         {
             if (!_loading && Selected is { } playlist)
                 _playlists.SetTracks(playlist, Tracks);
         };
+    }
+
+    public ObservableCollection<Track> VisibleTracks { get; } = new();
+    public bool CanReorderTracks => string.IsNullOrWhiteSpace(SearchQuery);
+    public bool NoSearchMatches => Tracks.Count > 0 && VisibleTracks.Count == 0;
+    partial void OnSearchQueryChanged(string value) => FilterTracks();
+    private void FilterTracks()
+    {
+        _filtering = true;
+        try
+        {
+            VisibleTracks.Clear();
+            foreach (var track in PlaylistSearch.Filter(Tracks, SearchQuery)) VisibleTracks.Add(track);
+        }
+        finally { _filtering = false; }
+        OnPropertyChanged(nameof(CanReorderTracks));
+        OnPropertyChanged(nameof(NoSearchMatches));
     }
 
     public ObservableCollection<Playlist> Playlists => _playlists.Playlists;
@@ -181,6 +216,7 @@ public sealed partial class PlaylistsViewModel : ObservableObject
 
     partial void OnSelectedChanged(Playlist? value)
     {
+        SearchQuery = string.Empty;
         LoadTracks(value);
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(SelectedSummary));
@@ -205,6 +241,7 @@ public sealed partial class PlaylistsViewModel : ObservableObject
         finally
         {
             _loading = false;
+            FilterTracks();
         }
 
         OnPropertyChanged(nameof(SelectedIsEmpty));

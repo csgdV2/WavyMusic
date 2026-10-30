@@ -28,7 +28,10 @@ await DiscordPresenceChecks.RunAsync();
 await DownloadSourceChecks.RunAsync();
 await LyricsProviderChecks.RunAsync();
 await UpdateChecks.RunAsync();
+await UpdateFlowChecks.RunAsync();
 await PlaybackQueueChecks.RunAsync();
+await RadioFeedbackChecks.RunAsync();
+await ListeningAndPlaylistChecks.RunAsync();
 
 Track PickTrack(string id, string title, string artist) => new() { Id = id, Title = title, Artist = artist };
 var seedTracks = new[] { PickTrack("a", "One", "First"), PickTrack("b", "Two", "First"), PickTrack("c", "Three", "Second"), PickTrack("d", "Four", "Third") };

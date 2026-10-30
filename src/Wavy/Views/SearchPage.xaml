@@ -24,7 +24,7 @@
 
             <AutoSuggestBox Grid.Column="1" x:Name="InlineSearch"
                             HorizontalAlignment="Right" VerticalAlignment="Center"
-                            Width="440" MinWidth="120" MaxWidth="480" MinHeight="36"
+                            Width="440" MinWidth="120" MaxWidth="480" Height="36" MinHeight="36"
                             PlaceholderText="Search"
                             GotFocus="InlineSearch_GotFocus"
                             LostFocus="HistoryFocus_Lost" PreviewKeyDown="Search_KeyDown"
@@ -35,7 +35,7 @@
                     <Thickness x:Key="AutoSuggestBoxInnerButtonMargin">0</Thickness>
                     <Thickness x:Key="TextBoxInnerButtonMargin">0</Thickness>
                     <CornerRadius x:Key="ControlCornerRadius">8</CornerRadius>
-                    <Thickness x:Key="TextControlThemePadding">12,5</Thickness>
+                    <Thickness x:Key="TextControlThemePadding">12,0</Thickness>
                     <Style TargetType="TextBox"><Setter Property="MinHeight" Value="36" /><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
                 </AutoSuggestBox.Resources>
                 <AutoSuggestBox.QueryIcon>

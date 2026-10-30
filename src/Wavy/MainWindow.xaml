@@ -8,6 +8,7 @@
     </Grid>
     <NavigationView x:Name="Nav" PaneDisplayMode="LeftCompact" IsPaneOpen="False" CompactPaneLength="48" OpenPaneLength="48" CompactModeThresholdWidth="0" IsPaneToggleButtonVisible="False" IsBackButtonVisible="Visible" IsBackEnabled="False" IsSettingsVisible="True" BackRequested="Nav_BackRequested" SelectionChanged="Nav_SelectionChanged" ItemInvoked="Nav_ItemInvoked">
       <NavigationView.Resources>
+        <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{ThemeResource TextFillColorPrimary}" />
         <x:Double x:Key="NavigationViewItemOnLeftMinHeight">40</x:Double>
         <CornerRadius x:Key="NavigationViewItemCornerRadius">10</CornerRadius>
         <Thickness x:Key="NavigationViewItemButtonMargin">0</Thickness>
@@ -42,6 +43,9 @@
           <NavigationViewItem.Icon>
             <FontIcon Glyph="" />
           </NavigationViewItem.Icon>
+        </NavigationViewItem>
+        <NavigationViewItem x:Name="RecapNavItem" Content="Recap" Tag="recap" ToolTipService.ToolTip="Recap">
+          <NavigationViewItem.Icon><FontIcon Glyph="&#xE9D2;" /></NavigationViewItem.Icon>
         </NavigationViewItem>
       </NavigationView.MenuItems>
       <Grid RowSpacing="0">

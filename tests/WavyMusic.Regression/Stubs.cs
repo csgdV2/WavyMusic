@@ -3,6 +3,8 @@ using Wavy.Core.Models;
 namespace Wavy.Services;
 public sealed class SettingsService
 {
+    public bool AutomaticUpdateChecks { get; set; } = true;
+    public DateTimeOffset LastUpdateCheck { get; set; }
     public bool AudioNormalization { get; set; }
     public double Volume { get; set; } = 0.7;
     public bool PrefetchNext { get; set; } = true;
@@ -64,7 +66,19 @@ public sealed class PlaybackService : System.ComponentModel.INotifyPropertyChang
 public sealed class PlaylistService
 {
     public System.Collections.ObjectModel.ObservableCollection<Playlist> Playlists { get; } = new();
-    public event EventHandler? PlaylistChanged;
+    public event EventHandler<Playlist>? PlaylistChanged;
+    public Playlist Create(string name) { var p = new Playlist { Id = Guid.NewGuid().ToString(), Name = name }; Playlists.Add(p); return p; }
+    public void Rename(Playlist p, string name) => p.Name = name;
+    public void Delete(Playlist p) => Playlists.Remove(p);
+    public string SuggestName() => "Playlist";
+    public void SetTracks(Playlist p, IEnumerable<Track> tracks)
+    {
+        var copy = tracks.ToList();
+        if (p.Tracks.SequenceEqual(copy)) return;
+        p.Tracks.Clear(); p.Tracks.AddRange(copy); PlaylistChanged?.Invoke(this, p);
+    }
+    public void TryAdd(Playlist p, Track t) { if (!p.Tracks.Any(x => x.Id == t.Id)) { p.Tracks.Add(t); PlaylistChanged?.Invoke(this, p); } }
+    public void Remove(Playlist p, Track t) { p.Tracks.Remove(t); PlaylistChanged?.Invoke(this, p); }
 }
 
 public sealed class FavoritesService

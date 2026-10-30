@@ -1,4 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
+using Wavy.Core.Services;
 using Wavy.Core.Abstractions;
 using Wavy.Core.Models;
 using Wavy.Services;
@@ -16,6 +18,17 @@ public sealed partial class OnlinePlaylistViewModel : ObservableObject
     [ObservableProperty] private string? _saveMessage;
 
     [ObservableProperty] private PlaylistDetails? _playlist;
+
+    [ObservableProperty] private string _searchQuery = string.Empty;
+    public ObservableCollection<Track> VisibleTracks { get; } = new();
+    public bool NoSearchMatches => HasTracks && VisibleTracks.Count == 0;
+    partial void OnSearchQueryChanged(string value) => FilterTracks();
+    private void FilterTracks()
+    {
+        VisibleTracks.Clear();
+        foreach (var track in PlaylistSearch.Filter(Playlist?.Tracks ?? Array.Empty<Track>(), SearchQuery)) VisibleTracks.Add(track);
+        OnPropertyChanged(nameof(NoSearchMatches));
+    }
 
     public bool IsLoaded => Playlist is not null;
 
@@ -36,6 +49,8 @@ public sealed partial class OnlinePlaylistViewModel : ObservableObject
 
     partial void OnPlaylistChanged(PlaylistDetails? value)
     {
+        SearchQuery = string.Empty;
+        FilterTracks();
         OnPropertyChanged(nameof(IsLoaded));
         OnPropertyChanged(nameof(HasTracks));
         OnPropertyChanged(nameof(CountText));

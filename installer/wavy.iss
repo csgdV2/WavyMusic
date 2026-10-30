@@ -1,7 +1,10 @@
 #define AppName "Wavy"
-#define AppVersion "1.9.4"
+#define AppVersion "2.0"
 #define AppExe "Wavy.exe"
 #define AppPublisher "csgd"
+#ifndef AppSource
+#define AppSource "..\publish\win-x64"
+#endif
 
 [Setup]
 AppId={{8F3C1A62-5D74-4E1B-9A0F-2C6B7D8E4F51}
@@ -36,7 +39,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"
 
 [Files]
-Source: "..\publish\win-x64\*"; DestDir: "{app}"; \
+Source: "{#AppSource}\*"; DestDir: "{app}"; \
     Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
@@ -51,7 +54,25 @@ Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; \
 Filename: "{app}\{#AppExe}"; Flags: nowait; Check: IsWavyUpdate
 
 [Code]
+var
+  LastReportedProgress: Integer;
+
 function IsWavyUpdate: Boolean;
 begin
   Result := ExpandConstant('{param:WAVYUPDATE|0}') = '1';
+end;
+
+procedure CurInstallProgressChanged(CurProgress, MaxProgress: Integer);
+var
+  ProgressFile: String;
+  Percent: Integer;
+begin
+  ProgressFile := ExpandConstant('{param:WAVYPROGRESS|}');
+  if (ProgressFile = '') or (MaxProgress <= 0) then Exit;
+  Percent := Round(100.0 * CurProgress / MaxProgress);
+  if Percent <> LastReportedProgress then
+  begin
+    LastReportedProgress := Percent;
+    SaveStringToFile(ProgressFile, IntToStr(Percent), False);
+  end;
 end;

@@ -99,7 +99,9 @@ public partial class App : Application
         services.AddSingleton<AppUpdateService>();
         services.AddSingleton<LoudnessNormalizationService>();
 
+        services.AddSingleton(new ListeningHistoryService(Path.Combine(AppPaths.DataRoot, "listening-history.json")));
         services.AddSingleton<PlaybackService>();
+        services.AddSingleton(new RadioFeedbackService(Path.Combine(AppPaths.DataRoot, "radio-feedback.json")));
         services.AddSingleton<PlayerViewModel>();
         services.AddSingleton<LyricsViewModel>();
 

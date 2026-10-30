@@ -44,7 +44,7 @@
                       ItemsSource="{x:Bind ViewModel.Playlists, Mode=OneWay}"
                       SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
                       SelectionMode="Single"
-                      CanReorderItems="True" AllowDrop="True" ReorderMode="Enabled" Padding="0,0,20,0">
+                      CanReorderItems="{x:Bind ViewModel.CanReorderTracks, Mode=OneWay}" AllowDrop="{x:Bind ViewModel.CanReorderTracks, Mode=OneWay}" ReorderMode="Enabled" Padding="0,0,20,0">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:Playlist">
                         <Grid Height="56" ColumnSpacing="10">
@@ -99,17 +99,26 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="1">
-            <TextBlock Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center"
+        <Grid x:Name="PlaylistDetailArea" Grid.Row="1" Grid.Column="1" RowSpacing="10">
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+            <Grid Width="280" MaxWidth="{Binding ActualWidth, ElementName=PlaylistDetailArea}" HorizontalAlignment="Left"
+                  Visibility="{x:Bind ViewModel.HasSelection, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                <TextBox Style="{StaticResource PlaylistSearchStyle}" PlaceholderText="Search this playlist"
+                         Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <FontIcon Glyph="&#xE721;" FontSize="13" HorizontalAlignment="Left" Margin="12,0,0,0" IsHitTestVisible="False" Opacity="0.65" />
+            </Grid>
+            <TextBlock Grid.Row="1" Text="No matching songs" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Visibility="{x:Bind ViewModel.NoSearchMatches, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+            <TextBlock Grid.Row="1" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center"
                        TextWrapping="Wrap" TextAlignment="Center" MaxWidth="360"
                        Text="This playlist is empty. Play something, then add it from the ⋯ menu on the now-playing bar."
                        Visibility="{x:Bind ViewModel.SelectedIsEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
 
-            <ListView x:Name="TrackList"
-                      ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+            <ListView Grid.Row="1" x:Name="TrackList"
+                      ItemsSource="{x:Bind ViewModel.VisibleTracks, Mode=OneWay}"
                       IsItemClickEnabled="True" ItemClick="Tracks_ItemClick"
                       SelectionMode="None" Padding="0,0,20,110"
-                      CanReorderItems="True" AllowDrop="True" ReorderMode="Enabled">
+                      CanReorderItems="{x:Bind ViewModel.CanReorderTracks, Mode=OneWay}" AllowDrop="{x:Bind ViewModel.CanReorderTracks, Mode=OneWay}" ReorderMode="Enabled">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:Track">
                         <Grid Height="60" ColumnSpacing="12" Background="Transparent"

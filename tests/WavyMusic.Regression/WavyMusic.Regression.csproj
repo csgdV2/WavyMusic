@@ -12,7 +12,10 @@
     <Compile Include="../../src/Wavy/Services/LoudnessNormalizationService.cs" Link="LoudnessNormalizationService.cs" />
     <Compile Include="../../src/Wavy/ViewModels/SearchViewModel.cs" Link="SearchViewModel.cs" />
     <Compile Include="../../src/Wavy/ViewModels/PlayerViewModel.cs" Link="PlayerViewModel.cs" />
+    <Compile Include="../../src/Wavy/ViewModels/PlaylistsViewModel.cs" Link="PlaylistsViewModel.cs" />
+    <Compile Include="../../src/Wavy/ViewModels/OnlinePlaylistViewModel.cs" Link="OnlinePlaylistViewModel.cs" />
     <Compile Include="../../src/Wavy/ViewModels/HomeViewModel.cs" Link="HomeViewModel.cs" />
+    <Compile Include="../../src/Wavy/Services/AppUpdateService.cs" Link="AppUpdateService.cs" />
     <Compile Include="../../src/Wavy/Services/DiscordPresenceService.cs" Link="DiscordPresenceService.cs" />
   </ItemGroup>
 </Project>

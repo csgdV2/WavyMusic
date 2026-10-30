@@ -26,6 +26,7 @@ public sealed partial class MainWindow : Window
     public PlayerViewModel Player { get; }
     public AppUpdateService Updates { get; }
 
+    private bool _syncingNavigation;
     private readonly SearchViewModel _search;
     private readonly SettingsService _settings;
     private readonly AppTheme _startupTheme;
@@ -102,7 +103,8 @@ public sealed partial class MainWindow : Window
             catch {  }
         }
 
-        ContentFrame.Navigated += (_, _) => Nav.IsBackEnabled = ContentFrame.CanGoBack;
+        ContentFrame.Navigated += (_, _) => SyncNavigation();
+        RootGrid.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(OnNavigationPointerPressed), handledEventsToo: true);
 
         RootGrid.AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(OnKeyDown), handledEventsToo: true);
 
@@ -172,6 +174,7 @@ public sealed partial class MainWindow : Window
         var dark = _startupTheme is AppTheme.Dark or AppTheme.Darker
             || (_startupTheme == AppTheme.System && Application.Current.RequestedTheme == ApplicationTheme.Dark);
         AmbientScrim.Opacity = dark ? 0.28 : 0.78;
+        UpdateNavigationIcons();
     }
 
     #region Window placement
@@ -322,6 +325,7 @@ public sealed partial class MainWindow : Window
 
     private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        if (_syncingNavigation) return;
         UpdateNavigationIcons(args.IsSettingsSelected ? Nav.SettingsItem as NavigationViewItem : args.SelectedItemContainer as NavigationViewItem);
         if (args.IsSettingsSelected)
         {
@@ -353,15 +357,13 @@ public sealed partial class MainWindow : Window
     {
         selectedItem ??= Nav.SelectedItem as NavigationViewItem;
         HomeIcon.Glyph = ReferenceEquals(selectedItem, HomeNavItem) ? "\uEA8A" : "\uE80F";
-        AlbumsNavItem.Icon = ReferenceEquals(selectedItem, AlbumsNavItem)
-            ? NavigationIcon("F0 M3,1 H17 Q19,1 19,3 V17 Q19,19 17,19 H3 Q1,19 1,17 V3 Q1,1 3,1 Z M10,5 A5,5 0 1 0 10,15 A5,5 0 1 0 10,5 Z M10,8.5 A1.5,1.5 0 1 0 10,11.5 A1.5,1.5 0 1 0 10,8.5 Z") : new FontIcon { Glyph = "\uE93C" };
+        var dark = _startupTheme is AppTheme.Dark or AppTheme.Darker
+            || (_startupTheme == AppTheme.System && Application.Current.RequestedTheme == ApplicationTheme.Dark);
+        NavigationArtwork.Set(AlbumsNavItem, NavigationArtwork.AlbumPath, ReferenceEquals(selectedItem, AlbumsNavItem), dark);
         if (Nav.SettingsItem is NavigationViewItem settingsItem)
-            settingsItem.Icon = new FontIcon { Glyph = ReferenceEquals(selectedItem, settingsItem) ? "\uF8B0" : "\uE713" };
-
+            NavigationArtwork.Set(settingsItem, NavigationArtwork.GearPath, ReferenceEquals(selectedItem, settingsItem), dark);
+        RecapNavItem.ClearValue(Control.ForegroundProperty);
     }
-
-    private static PathIcon NavigationIcon(string data) =>
-        (PathIcon)Microsoft.UI.Xaml.Markup.XamlReader.Load($"<PathIcon xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' Data='{data}' />");
 
     private void ClearSearch()
     {
@@ -393,6 +395,7 @@ public sealed partial class MainWindow : Window
         "history" => typeof(LibraryPage),
         "playlists" => typeof(PlaylistsPage),
         "albums" => typeof(AlbumsPage),
+        "recap" => typeof(ListeningStatsPage),
         _ => typeof(HomePage),
     });
 
@@ -402,15 +405,46 @@ public sealed partial class MainWindow : Window
             return;
 
         ContentFrame.Navigate(pageType);
-        ContentFrame.BackStack.Clear();
-        Nav.IsBackEnabled = false;
+
     }
 
     public void ShowArtist(string browseId)
     {
         ContentFrame.Navigate(typeof(ArtistPage), browseId);
-        ContentFrame.BackStack.Clear();
-        Nav.IsBackEnabled = false;
+
+    }
+
+    private void SyncNavigation()
+    {
+        Nav.IsBackEnabled = ContentFrame.CanGoBack;
+        var type = ContentFrame.CurrentSourcePageType;
+        var tag = type == typeof(HomePage) ? "home" : type == typeof(SearchPage) ? "search"
+            : type == typeof(PlaylistsPage) || type == typeof(OnlinePlaylistPage) ? "playlists"
+            : type == typeof(AlbumsPage) || type == typeof(AlbumPage) ? "albums"
+            : type == typeof(ListeningStatsPage) ? "recap" : null;
+        _syncingNavigation = true;
+        try
+        {
+            Nav.SelectedItem = type == typeof(SettingsPage) ? Nav.SettingsItem
+                : Nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => tag is not null && item.Tag as string == tag);
+            UpdateNavigationIcons();
+        }
+        finally { _syncingNavigation = false; }
+    }
+
+    private void OnNavigationPointerPressed(object sender, PointerRoutedEventArgs args)
+    {
+        var kind = args.GetCurrentPoint(RootGrid).Properties.PointerUpdateKind;
+        if (kind == Microsoft.UI.Input.PointerUpdateKind.XButton1Pressed)
+        {
+            if (ContentFrame.CanGoBack) ContentFrame.GoBack();
+            args.Handled = true;
+        }
+        else if (kind == Microsoft.UI.Input.PointerUpdateKind.XButton2Pressed)
+        {
+            if (ContentFrame.CanGoForward) ContentFrame.GoForward();
+            args.Handled = true;
+        }
     }
 
     private void Nav_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)

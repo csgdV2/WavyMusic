@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Wavy.Core.Abstractions;
 using Wavy.Core.Models;
+using Wavy.Core.Services;
 using Wavy.Services;
 
 namespace Wavy.ViewModels;
@@ -26,6 +27,7 @@ public sealed partial class PlayerViewModel : ObservableObject
     private readonly CacheService _cache;
     private readonly SettingsService _settings;
     private readonly IYtDlpService _catalogue;
+    private readonly RadioFeedbackService? _feedback;
     private readonly Random _rng = new();
     private List<Track>? _unshuffled;
     private int _index = -1;
@@ -44,12 +46,14 @@ public sealed partial class PlayerViewModel : ObservableObject
 
     private CancellationTokenSource? _playCts;
 
-    public PlayerViewModel(PlaybackService playback, CacheService cache, SettingsService settings, IYtDlpService catalogue)
+    public PlayerViewModel(PlaybackService playback, CacheService cache, SettingsService settings, IYtDlpService catalogue, RadioFeedbackService? feedback = null)
     {
         _playback = playback;
         _cache = cache;
         _settings = settings;
         _catalogue = catalogue;
+        _feedback = feedback;
+        if (_feedback is not null) _feedback.Changed += OnRadioFeedbackChanged;
         _playback.PropertyChanged += OnPlaybackPropertyChanged;
         _playback.MediaEndedNaturally += (_, _) => _ = OnTrackEndedAsync();
         _playback.AdvancedGaplessly += (_, track) => OnAdvancedGaplessly(track);
@@ -510,14 +514,17 @@ public sealed partial class PlayerViewModel : ObservableObject
     {
         try
         {
-            var similar = await _catalogue.GetSimilarAsync(seed, 12, token);
+            var seeds = _feedback?.RadioSeeds(seed) ?? new[] { seed };
+            var rows = await Task.WhenAll(seeds.Select(t => _catalogue.GetSimilarAsync(t, 12, token)));
+            var similar = _feedback is null ? rows.SelectMany(t => t)
+                : RecommendationSelector.Pick(rows.Select(row => row.Where(t => !_feedback.IsExcluded(t))), Queue, 12);
             if (token.IsCancellationRequested || generation != _queueGeneration || !CanExtendQueue) return;
             var known = new HashSet<string>(Queue.Select(t => t.Id), StringComparer.Ordinal);
             _reordering = true;
             try
             {
                 foreach (var track in similar)
-                    if (known.Add(track.Id)) Queue.Add(track);
+                    if (_feedback?.IsExcluded(track) != true && known.Add(track.Id)) Queue.Add(track);
             }
             finally { _reordering = false; }
             OnPropertyChanged(nameof(HasQueue));
@@ -525,6 +532,22 @@ public sealed partial class PlayerViewModel : ObservableObject
         }
         catch (OperationCanceledException) { }
         catch { }
+    }
+
+    private void OnRadioFeedbackChanged(object? sender, EventArgs args)
+    {
+        if (_queueLocked) return;
+        _reordering = true;
+        try
+        {
+            for (var i = Queue.Count - 1; i > _index; i--)
+                if (_feedback?.IsExcluded(Queue[i]) == true) Queue.RemoveAt(i);
+        }
+        finally { _reordering = false; }
+        _playback.ClearPreparedNext();
+        OnPropertyChanged(nameof(HasQueue));
+        PrefetchNext();
+        if (CanExtendQueue && _index >= Queue.Count - 3) _ = ExtendWithSimilarAsync();
     }
 
     [RelayCommand(AllowConcurrentExecutions = true)]

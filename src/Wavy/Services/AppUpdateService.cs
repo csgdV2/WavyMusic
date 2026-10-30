@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Wavy.Core.Services;
 
@@ -8,22 +7,25 @@ public sealed partial class AppUpdateService : ObservableObject
 {
     private readonly SettingsService _settings;
     private readonly GitHubUpdateClient _client;
+    private readonly UpdateInstallerLauncher _installerLauncher;
     private CancellationTokenSource? _operation;
     private string? _installer;
     private AppRelease? _release;
-    private static Version InstalledVersion => typeof(App).Assembly.GetName().Version ?? new Version(1, 9, 4);
+    private static Version InstalledVersion => typeof(App).Assembly.GetName().Version ?? new Version(2, 0, 0);
 
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private bool _hasUpdate;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(NotificationVisibility))] private bool _isUpdateNotificationVisible;
     [ObservableProperty] private bool _isDownloading;
+    [ObservableProperty] private bool _isInstalling;
     [ObservableProperty] private double _downloadProgress;
     [ObservableProperty] private string _status = "Checks GitHub releases for newer versions of Wavy.";
 
-    public AppUpdateService(SettingsService settings, GitHubUpdateClient client)
+    public AppUpdateService(SettingsService settings, GitHubUpdateClient client, UpdateInstallerLauncher? installerLauncher = null)
     {
         _settings = settings;
         _client = client;
+        _installerLauncher = installerLauncher ?? new UpdateInstallerLauncher();
     }
 
     public bool AutomaticChecks
@@ -34,12 +36,16 @@ public sealed partial class AppUpdateService : ObservableObject
 
     public Microsoft.UI.Xaml.Visibility NotificationVisibility => IsUpdateNotificationVisible ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
     public bool CanAct => !IsBusy;
-    public string ActionLabel => _release is null ? "Check for updates" : _installer is null ? "Download update" : "Install and restart";
-    partial void OnIsBusyChanged(bool value) => OnPropertyChanged(nameof(CanAct));
+    public string ActionLabel => IsInstalling ? "Installing update…" : IsDownloading ? "Downloading update…"
+        : _release is null ? "Check for updates" : _installer is null ? "Download update" : "Retry update";
+    public bool CanCancel => IsBusy && !IsInstalling;
+    partial void OnIsBusyChanged(bool value) { OnPropertyChanged(nameof(CanAct)); OnPropertyChanged(nameof(CanCancel)); }
+    partial void OnIsDownloadingChanged(bool value) => OnPropertyChanged(nameof(ActionLabel));
+    partial void OnIsInstallingChanged(bool value) { OnPropertyChanged(nameof(ActionLabel)); OnPropertyChanged(nameof(CanCancel)); }
 
     public async Task CheckAtStartupAsync()
     {
-        if (!AutomaticChecks || DateTimeOffset.UtcNow - _settings.LastUpdateCheck < TimeSpan.FromHours(12)) return;
+        if (!AutomaticChecks) return;
         await CheckAsync();
     }
 
@@ -71,49 +77,44 @@ public sealed partial class AppUpdateService : ObservableObject
     {
         if (IsBusy) return;
         if (_release is null) { await CheckAsync(); return; }
-        if (_installer is not null) { await InstallAsync(); return; }
-        IsBusy = IsDownloading = true;
-        DownloadProgress = 0;
-        _operation = new CancellationTokenSource(TimeSpan.FromMinutes(15));
-        Status = "Downloading update…";
-        try
-        {
-            _installer = await _client.DownloadAsync(_release, Path.Combine(AppPaths.DataRoot, "updates"),
-                new Progress<double>(value => DownloadProgress = value), _operation.Token);
-            Status = "Update downloaded and verified. Install when you're ready to restart Wavy.";
-        }
-        catch (OperationCanceledException) { Status = "Download canceled. You can try again."; }
-        catch (Exception ex) { Status = $"Couldn't download the update: {ex.Message}"; }
-        finally { IsDownloading = IsBusy = false; _operation.Dispose(); _operation = null; OnPropertyChanged(nameof(ActionLabel)); }
-    }
-
-    public void Cancel() => _operation?.Cancel();
-
-    public void DismissNotification() => IsUpdateNotificationVisible = false;
-
-    private async Task InstallAsync()
-    {
-        if (_installer is null || _release is null) return;
         IsBusy = true;
-        Status = "Verifying installer…";
+        _operation = new CancellationTokenSource(TimeSpan.FromMinutes(15));
         try
         {
-            if (!await GitHubUpdateClient.VerifyAsync(_installer, _release))
+            if (_installer is null)
+            {
+                IsDownloading = true;
+                DownloadProgress = 0;
+                Status = "Downloading update…";
+                _installer = await _client.DownloadAsync(_release, Path.Combine(AppPaths.DataRoot, "updates"),
+                    new Progress<double>(value => DownloadProgress = value), _operation.Token);
+            }
+            IsDownloading = false;
+            IsInstalling = true;
+            Status = "Verifying update…";
+            if (!await GitHubUpdateClient.VerifyAsync(_installer, _release, _operation.Token))
             {
                 _installer = null;
                 throw new InvalidDataException("Installer verification failed. Download the update again.");
             }
-            var folder = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            var process = Process.Start(new ProcessStartInfo(_installer)
-            {
-                UseShellExecute = true,
-                Arguments = $"/SP- /SILENT /NORESTART /CLOSEAPPLICATIONS /WAVYUPDATE=1 /DIR=\"{folder}\""
-            });
-            if (process is null) throw new IOException("The installer could not be started.");
-            process.Dispose();
+            Status = "Installing update… Wavy will restart automatically.";
+            await _installerLauncher.LaunchAsync(_installer, _release, _operation.Token);
+            IsUpdateNotificationVisible = false;
             App.MainWindow?.Close();
         }
-        catch (Exception ex) { Status = $"Couldn't install the update: {ex.Message}"; }
-        finally { IsBusy = false; OnPropertyChanged(nameof(ActionLabel)); }
+        catch (OperationCanceledException) { Status = "Update canceled or timed out. You can try again."; }
+        catch (Exception ex) { Status = $"Couldn't update Wavy: {ex.Message}"; }
+        finally
+        {
+            IsInstalling = IsDownloading = IsBusy = false;
+            _operation?.Dispose();
+            _operation = null;
+            OnPropertyChanged(nameof(ActionLabel));
+        }
     }
+
+    public void Cancel() { if (CanCancel) _operation?.Cancel(); }
+
+    public void DismissNotification() => IsUpdateNotificationVisible = false;
+
 }
