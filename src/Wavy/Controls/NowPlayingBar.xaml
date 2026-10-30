@@ -170,11 +170,11 @@
                         <Border x:Name="ProgressTrack" Grid.Column="1" Height="3" CornerRadius="2"
                                 VerticalAlignment="Center"
                                 Background="{ThemeResource ControlFillColorDisabledBrush}">
-                            <ProgressBar Height="3" MaxHeight="3" MinHeight="3" Padding="0" Margin="0"
+                            <ProgressBar x:Name="SeekProgress" Height="3" MaxHeight="3" MinHeight="3" Padding="0" Margin="0"
                                          ShowPaused="False" ShowError="False"
                                          Minimum="0"
                                          Maximum="{x:Bind ViewModel.DurationSeconds, Mode=OneWay}"
-                                         Value="{x:Bind ViewModel.PositionSeconds, Mode=OneWay}" />
+                                         Value="0" />
                         </Border>
 
                         <Border x:Name="SeekThumb" Grid.Column="1" Opacity="0"

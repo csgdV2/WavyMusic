@@ -179,7 +179,7 @@
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Normalize audio" Style="{StaticResource SettingName}" />
                             <TextBlock Style="{StaticResource SettingHint}"
-                                       Text="Balances loudness toward −16 LUFS with peak headroom. Preserves dynamics using a lossless copy. Applies on next play." />
+                                       Text="Keeps songs at a similar volume so you don’t need to keep adjusting it." />
                         </StackPanel>
                         <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" MinWidth="0"
                                       OnContent="" OffContent=""

@@ -26,4 +26,4 @@ if ($BuildInstaller) {
     & $compilerPath (Join-Path $projectRoot 'installer/wavy.iss')
     if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed.' }
 }
-Write-Output "Wavy 1.9.3 is ready in $publishFolder"
+Write-Output "Wavy 1.9.4 is ready in $publishFolder"

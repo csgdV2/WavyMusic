@@ -29,6 +29,7 @@ public sealed partial class NowPlayingBar : UserControl
         { " feat. ", " feat ", " ft. ", " ft ", " featuring ", " with " };
 
     private bool _scrubbing;
+    private double _scrubPosition;
 
     private bool _findingArtist;
 
@@ -258,9 +259,21 @@ public sealed partial class NowPlayingBar : UserControl
         if (width <= 0)
             return;
 
+        var position = _scrubbing ? _scrubPosition : ViewModel.PositionSeconds;
         var ratio = ViewModel.DurationSeconds > 0
-            ? Math.Clamp(ViewModel.PositionSeconds / ViewModel.DurationSeconds, 0, 1)
+            ? Math.Clamp(position / ViewModel.DurationSeconds, 0, 1)
             : 0;
+        SeekProgress.Value = position;
+        if (_scrubbing)
+        {
+            ElapsedLabel.Text = FormatSeekTime(position);
+            RemainingLabel.Text = "-" + FormatSeekTime(ViewModel.DurationSeconds - position);
+        }
+        else
+        {
+            ElapsedLabel.Text = ViewModel.PositionText;
+            RemainingLabel.Text = ViewModel.RemainingText;
+        }
 
         var left = Math.Round(Math.Clamp(ratio * width - SeekThumb.Width / 2, 0, width - SeekThumb.Width));
         if (left == SeekThumb.Margin.Left)
@@ -279,7 +292,7 @@ public sealed partial class NowPlayingBar : UserControl
 
         _scrubbing = true;
         fe.CapturePointer(e.Pointer);
-        SeekFromPointer(fe, e);
+        PreviewSeekFromPointer(fe, e);
         e.Handled = true;
     }
 
@@ -297,23 +310,27 @@ public sealed partial class NowPlayingBar : UserControl
     private void CardGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
     {
         if (_scrubbing && sender is FrameworkElement fe)
-            SeekFromPointer(fe, e);
+            PreviewSeekFromPointer(fe, e);
     }
 
     private void CardGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
     {
         if (_scrubbing && sender is FrameworkElement fe)
         {
-            SeekFromPointer(fe, e);
+            PreviewSeekFromPointer(fe, e);
+            var target = _scrubPosition;
+            _scrubbing = false;
+            ViewModel.SeekTo(target);
             fe.ReleasePointerCapture(e.Pointer);
+            e.Handled = true;
         }
-        _scrubbing = false;
         SetHoverDetailsVisible(IsOverCard(e));
     }
 
     private void CardGrid_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
     {
         _scrubbing = false;
+        PlaceSeekThumb();
         SetHoverDetailsVisible(IsOverCard(e));
     }
 
@@ -345,7 +362,7 @@ public sealed partial class NowPlayingBar : UserControl
             && point.X <= CardGrid.ActualWidth && point.Y <= CardGrid.ActualHeight;
     }
 
-    private void SeekFromPointer(FrameworkElement card, PointerRoutedEventArgs e)
+    private void PreviewSeekFromPointer(FrameworkElement card, PointerRoutedEventArgs e)
     {
 
         var seekWidth = card.ActualWidth;
@@ -357,14 +374,16 @@ public sealed partial class NowPlayingBar : UserControl
         {
             if (cardX <= EdgeZone)
             {
-                ViewModel.SeekTo(0);
+                _scrubPosition = 0;
+                PlaceSeekThumb();
                 return;
             }
 
             if (cardX >= seekWidth - EdgeZone)
             {
 
-                ViewModel.SeekTo(Math.Max(0, ViewModel.DurationSeconds - 0.25));
+                _scrubPosition = Math.Max(0, ViewModel.DurationSeconds - 0.25);
+                PlaceSeekThumb();
                 return;
             }
         }
@@ -372,7 +391,14 @@ public sealed partial class NowPlayingBar : UserControl
         var track = ProgressTrack.ActualWidth > 0 ? (FrameworkElement)ProgressTrack : card;
         var x = e.GetCurrentPoint(track).Position.X;
         var ratio = Math.Clamp(x / track.ActualWidth, 0, 1);
-        ViewModel.SeekTo(ratio * ViewModel.DurationSeconds);
+        _scrubPosition = ratio * ViewModel.DurationSeconds;
+        PlaceSeekThumb();
+    }
+
+    private static string FormatSeekTime(double seconds)
+    {
+        var time = TimeSpan.FromSeconds(Math.Max(0, seconds));
+        return $"{(int)time.TotalMinutes}:{time.Seconds:00}";
     }
 
     private void More_Click(object sender, RoutedEventArgs e)

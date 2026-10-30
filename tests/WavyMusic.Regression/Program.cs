@@ -102,6 +102,27 @@ try
     Check(processedSamples.Length == originalSamples.Length && processedSamples.Zip(originalSamples).All(pair => Math.Abs(pair.First - pair.Second * gain) < 0.00001), "normalization applies constant gain without compression");
     Check(processedSamples.Max(x => Math.Abs(x)) <= Math.Pow(10, -2.0 / 20) + 0.00001, "normalization leaves peak headroom");
     Check(normalized.WaveFormat.Encoding == WaveFormatEncoding.IeeeFloat, "playback audio stays lossless float PCM");
+    var quieterPath = Path.Combine(folder, "quieter.wav");
+    using (var writer = new WaveFileWriter(quieterPath, WaveFormat.CreateIeeeFloatWaveFormat(48000, 2)))
+    {
+        var quieter = originalSamples.Select(value => value * 0.25f).ToArray();
+        writer.WriteSamples(quieter, 0, quieter.Length);
+    }
+    var quieterOutput = ReadAudio(await processor.OpenAudioAsync(quieterPath));
+    Check(quieterOutput.Length == processedSamples.Length && quieterOutput.Zip(processedSamples).All(p => Math.Abs(p.First - p.Second) < 0.00001),
+        "quiet and loud recordings of the same song normalize to the same playback level");
+    var quietPassage = Rms(processedSamples.Take(96000).ToArray());
+    var loudPassage = Rms(processedSamples.Skip(96000).ToArray());
+    Check(Math.Abs(loudPassage / quietPassage - 3) < 0.001,
+        "normalization preserves the original loud-to-quiet passage ratio throughout the song");
+    using (var seekCheck = await processor.OpenAudioAsync(source))
+    {
+        seekCheck.Seek(TimeSpan.FromSeconds(1));
+        var afterSeek = new float[96000];
+        var count = seekCheck.Read(afterSeek, 0, afterSeek.Length);
+        Check(count == afterSeek.Length && afterSeek.Zip(processedSamples.Skip(96000)).All(p => Math.Abs(p.First - p.Second) < 0.00001),
+            "seeking retains the same fixed normalization gain");
+    }
     settings.AudioNormalization = false;
     settings.EqualizerBands[5] = -12;
     var equalized = ReadAudio(await processor.OpenAudioAsync(source));
@@ -170,7 +191,7 @@ try
     using var cancelled = new CancellationTokenSource(); cancelled.Cancel();
     try { await processor.OpenAudioAsync(source, cancelled.Token); throw new Exception("Cancellation was ignored"); }
     catch (OperationCanceledException) { Console.WriteLine("PASS: audio processing honors cancellation"); }
-    Check(Directory.GetFiles(folder).Length == 4, "normalization and EQ create no additional audio files");
+    Check(Directory.GetFiles(folder).Length == 5, "normalization and EQ create no additional audio files");
     using var seekable = await processor.OpenAudioAsync(source);
     seekable.Seek(TimeSpan.FromSeconds(1));
     var seekBuffer = new float[960];

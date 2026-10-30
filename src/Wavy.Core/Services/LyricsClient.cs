@@ -17,7 +17,7 @@ public sealed class LyricsClient
     public LyricsClient(HttpClient? http = null)
     {
         _http = http ?? new HttpClient(Ipv4Http.CreateHandler()) { Timeout = TimeSpan.FromSeconds(12) };
-        _http.DefaultRequestHeaders.UserAgent.ParseAdd("Wavy/1.9.3 (https://github.com/csgdV2/WavyMusic)");
+        _http.DefaultRequestHeaders.UserAgent.ParseAdd("Wavy/1.9.4 (https://github.com/csgdV2/WavyMusic)");
     }
 
     public async Task<Lyrics?> GetAsync(
