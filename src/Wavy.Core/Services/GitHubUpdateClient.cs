@@ -104,7 +104,7 @@ public sealed class GitHubUpdateClient
     private static HttpRequestMessage Request(string url)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.UserAgent.ParseAdd("Wavy/2.0 (+https://github.com/csgdV2/WavyMusic)");
+        request.Headers.UserAgent.ParseAdd("Wavy/2.1 (+https://github.com/csgdV2/WavyMusic)");
         return request;
     }
 }

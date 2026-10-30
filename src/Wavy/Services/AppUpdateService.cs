@@ -11,7 +11,7 @@ public sealed partial class AppUpdateService : ObservableObject
     private CancellationTokenSource? _operation;
     private string? _installer;
     private AppRelease? _release;
-    private static Version InstalledVersion => typeof(App).Assembly.GetName().Version ?? new Version(2, 0, 0);
+    private static Version InstalledVersion => typeof(App).Assembly.GetName().Version ?? new Version(2, 1, 0);
 
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private bool _hasUpdate;
@@ -26,6 +26,7 @@ public sealed partial class AppUpdateService : ObservableObject
         _settings = settings;
         _client = client;
         _installerLauncher = installerLauncher ?? new UpdateInstallerLauncher();
+        UpdateCacheCleanup.RemoveObsolete(Path.Combine(AppPaths.DataRoot, "updates"), InstalledVersion);
     }
 
     public bool AutomaticChecks

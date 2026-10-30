@@ -29,6 +29,7 @@ await DownloadSourceChecks.RunAsync();
 await LyricsProviderChecks.RunAsync();
 await UpdateChecks.RunAsync();
 await UpdateFlowChecks.RunAsync();
+UpdateCleanupChecks.Run();
 await PlaybackQueueChecks.RunAsync();
 await RadioFeedbackChecks.RunAsync();
 await ListeningAndPlaylistChecks.RunAsync();
