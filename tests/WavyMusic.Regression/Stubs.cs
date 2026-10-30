@@ -15,6 +15,15 @@ public sealed class SettingsService
 }
 public sealed class CacheService
 {
+    public Dictionary<string, (string Key, double Lufs, double Peak)> AudioAnalysis { get; } = new();
+    public int SavedAnalysisReads { get; private set; }
+    public (double IntegratedLufs, double Peak)? GetAudioAnalysis(string path, string key)
+    {
+        if (!AudioAnalysis.TryGetValue(path, out var saved) || saved.Key != key) return null;
+        SavedAnalysisReads++;
+        return (saved.Lufs, saved.Peak);
+    }
+    public void SaveAudioAnalysis(string path, string key, double lufs, double peak) => AudioAnalysis[path] = (key, lufs, peak);
     public string? TryGetLocalPath(string id) => null;
     public void MarkPlayed(Track track) { }
     public Task EnsureCachedAsync(Track track, CancellationToken ct = default) => Task.CompletedTask;

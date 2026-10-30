@@ -93,18 +93,18 @@ try
         writer.WriteSamples(samples, 0, samples.Length);
     }
     var processor = new LoudnessNormalizationService(settings);
-    Check(await processor.NormalizeAsync(source) == source, "flat EQ with normalization off preserves the original file");
+    Check(ReadAudio(await processor.OpenAudioAsync(source)).SequenceEqual(Read(source)), "flat EQ with normalization off preserves the original samples");
     settings.AudioNormalization = true;
-    var normalized = await processor.NormalizeAsync(source);
+    var normalized = await processor.OpenAudioAsync(source);
     var originalSamples = Read(source);
-    var processedSamples = Read(normalized);
+    var processedSamples = ReadAudio(normalized);
     var gain = processedSamples[24002] / originalSamples[24002];
     Check(processedSamples.Length == originalSamples.Length && processedSamples.Zip(originalSamples).All(pair => Math.Abs(pair.First - pair.Second * gain) < 0.00001), "normalization applies constant gain without compression");
     Check(processedSamples.Max(x => Math.Abs(x)) <= Math.Pow(10, -2.0 / 20) + 0.00001, "normalization leaves peak headroom");
-    using (var reader = new WaveFileReader(normalized)) Check(reader.WaveFormat.Encoding == WaveFormatEncoding.IeeeFloat, "processed audio stays lossless float PCM");
+    Check(normalized.WaveFormat.Encoding == WaveFormatEncoding.IeeeFloat, "playback audio stays lossless float PCM");
     settings.AudioNormalization = false;
     settings.EqualizerBands[5] = -12;
-    var equalized = Read(await processor.NormalizeAsync(source));
+    var equalized = ReadAudio(await processor.OpenAudioAsync(source));
     Check(Rms(equalized) < Rms(originalSamples) * 0.35, "1 kHz EQ cut changes actual output audio");
     settings.EqualizerBands = new double[10];
     settings.AudioNormalization = true;
@@ -122,21 +122,73 @@ try
             writer.WriteSamples(samples, 0, samples.Length);
         }
         var before = Read(brightPath);
-        var brightOutput = await processor.NormalizeAsync(brightPath);
-        var after = Read(brightOutput);
+        var brightOutput = await processor.OpenAudioAsync(brightPath);
+        var after = ReadAudio(brightOutput);
         var scale = before.Zip(after).Sum(p => (double)p.First * p.Second) / before.Sum(x => (double)x * x);
-        using var outputReader = new WaveFileReader(brightOutput);
-        Check(outputReader.WaveFormat.SampleRate == sampleRate && outputReader.WaveFormat.Channels == 2
+        Check(brightOutput.WaveFormat.SampleRate == sampleRate && brightOutput.WaveFormat.Channels == 2
             && before.Length == after.Length && before.Zip(after).All(p => Math.Abs(p.Second - p.First * scale) < 0.000001),
             $"normalization preserves bass, 12/18 kHz detail, stereo and sample rate at {sampleRate} Hz");
     }
+    using (var liveSource = await processor.CreateSourceAsync(source))
+    using (var player = new Windows.Media.Playback.MediaPlayer { IsMuted = true })
+    {
+        var opened = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var ended = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        player.MediaOpened += (_, _) => opened.TrySetResult();
+        player.MediaEnded += (_, _) => ended.TrySetResult();
+        player.MediaFailed += (_, e) =>
+        {
+            opened.TrySetException(new Exception(e.ErrorMessage));
+            ended.TrySetException(new Exception(e.ErrorMessage));
+        };
+        player.Source = liveSource;
+        player.Play();
+        await opened.Task.WaitAsync(TimeSpan.FromSeconds(15));
+        Check(player.PlaybackSession.CanSeek && Math.Abs(player.PlaybackSession.NaturalDuration.TotalSeconds - 2) < 0.05,
+            "Windows playback opens the in-memory processed audio with duration and seeking");
+        player.PlaybackSession.Position = TimeSpan.FromSeconds(1.5);
+        await ended.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        Check(true, "Windows playback seeks and reaches the end of processed audio");
+        player.Source = null;
+    }
+    var analysisCache = new CacheService();
+    var persistedProcessor = new LoudnessNormalizationService(settings, analysisCache);
+    typeof(LoudnessNormalizationService).GetField("Measurements", BindingFlags.NonPublic | BindingFlags.Static)!
+        .GetValue(null)!.GetType().GetMethod("Clear")!.Invoke(
+            typeof(LoudnessNormalizationService).GetField("Measurements", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null), null);
+    using (var analyzed = await persistedProcessor.OpenAudioAsync(source)) { }
+    Check(analysisCache.AudioAnalysis.ContainsKey(source), "loudness results are saved through the existing cache index");
+    typeof(LoudnessNormalizationService).GetField("Measurements", BindingFlags.NonPublic | BindingFlags.Static)!
+        .GetValue(null)!.GetType().GetMethod("Clear")!.Invoke(
+            typeof(LoudnessNormalizationService).GetField("Measurements", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null), null);
+    using (var reused = await new LoudnessNormalizationService(settings, analysisCache).OpenAudioAsync(source)) { }
+    Check(analysisCache.SavedAnalysisReads == 1, "a new playback session reuses saved loudness analysis");
+    settings.EqualizerBands[5] = -6;
+    using (var changedEq = await persistedProcessor.OpenAudioAsync(source)) { }
+    Check(analysisCache.SavedAnalysisReads == 1, "changing EQ invalidates saved analysis");
+    settings.EqualizerBands = new double[10];
     using var cancelled = new CancellationTokenSource(); cancelled.Cancel();
-    try { await processor.NormalizeAsync(source, cancelled.Token); throw new Exception("Cancellation was ignored"); }
+    try { await processor.OpenAudioAsync(source, cancelled.Token); throw new Exception("Cancellation was ignored"); }
     catch (OperationCanceledException) { Console.WriteLine("PASS: audio processing honors cancellation"); }
-    Check(!Directory.EnumerateFiles(folder, "*.partial.wav").Any(), "processing leaves no partial files");
+    Check(Directory.GetFiles(folder).Length == 4, "normalization and EQ create no additional audio files");
+    using var seekable = await processor.OpenAudioAsync(source);
+    seekable.Seek(TimeSpan.FromSeconds(1));
+    var seekBuffer = new float[960];
+    Check(seekable.Read(seekBuffer, 0, seekBuffer.Length) == seekBuffer.Length && Math.Abs(seekable.Position.TotalSeconds - 1.01) < 0.001,
+        "processed playback seeks with frame-accurate timestamps");
 }
 finally { Directory.Delete(folder, true); }
 Console.WriteLine("All regression checks passed.");
+
+static float[] ReadAudio(LoudnessNormalizationService.PlaybackAudio audio)
+{
+    using (audio)
+    {
+        var result = new List<float>(); var buffer = new float[8192]; int count;
+        while ((count = audio.Read(buffer, 0, buffer.Length)) > 0) result.AddRange(buffer.Take(count));
+        return result.ToArray();
+    }
+}
 
 static float[] Read(string path)
 {

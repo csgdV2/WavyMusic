@@ -2,60 +2,154 @@ using System.Collections.Concurrent;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using NAudio.Dsp;
-using System.Security.Cryptography;
-using System.Text;
 using System.Globalization;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Media.Core;
+using Windows.Media.MediaProperties;
 
 namespace Wavy.Services;
 
 public sealed class LoudnessNormalizationService
 {
     private readonly SettingsService _settings;
-    public LoudnessNormalizationService(SettingsService settings) => _settings = settings;
+    private readonly CacheService? _cache;
+    public LoudnessNormalizationService(SettingsService settings, CacheService? cache = null)
+    {
+        _settings = settings;
+        _cache = cache;
+    }
     public bool IsEnabled => _settings.AudioNormalization || _settings.EqualizerBands.Any(x => Math.Abs(x) > 0.01);
     public const double TargetLufs = -16.0;
-    private static readonly ConcurrentDictionary<string, SemaphoreSlim> Locks = new(StringComparer.OrdinalIgnoreCase);
 
-    public async Task<string> NormalizeAsync(string sourcePath, CancellationToken ct = default)
+    private static readonly ConcurrentDictionary<string, LoudnessResult> Measurements = new(StringComparer.OrdinalIgnoreCase);
+
+    public async Task<MediaSource> CreateSourceAsync(string sourcePath, CancellationToken ct = default)
     {
-        var bands = _settings.EqualizerBands;
-        var normalize = _settings.AudioNormalization;
-        if (!normalize && bands.All(x => Math.Abs(x) <= 0.01)) return sourcePath;
-        var signature = $"v2:{normalize}:" + string.Join(",", bands.Select(x => x.ToString("F2", CultureInfo.InvariantCulture)));
-        var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(signature)))[..16];
-        var outputPath = sourcePath + $".dsp-{hash}.wav";
-        var gate = Locks.GetOrAdd(outputPath, _ => new SemaphoreSlim(1, 1));
-        await gate.WaitAsync(ct).ConfigureAwait(false);
-        try
-        {
-            if (File.Exists(outputPath) && File.GetLastWriteTimeUtc(outputPath) >= File.GetLastWriteTimeUtc(sourcePath))
-                return outputPath;
+        var audio = await OpenAudioAsync(sourcePath, ct).ConfigureAwait(false);
+        try { return CreatePlaybackSource(audio); }
+        catch { audio.Dispose(); throw; }
+    }
 
-            var tempPath = outputPath + ".partial.wav";
-            TryDelete(tempPath);
+    internal async Task<PlaybackAudio> OpenAudioAsync(string sourcePath, CancellationToken ct = default)
+    {
+        var bands = _settings.EqualizerBands.ToArray();
+        var normalize = _settings.AudioNormalization;
+        var file = new FileInfo(sourcePath);
+        var signature = "v1:" + sourcePath + ":" + file.LastWriteTimeUtc.Ticks + ":" + file.Length + ":" +
+            string.Join(",", bands.Select(x => x.ToString("R", CultureInfo.InvariantCulture)));
+        if (!Measurements.TryGetValue(signature, out var loudness))
+        {
+            if (_cache?.GetAudioAnalysis(sourcePath, signature) is { } saved)
+                loudness = new LoudnessResult(saved.IntegratedLufs, saved.Peak);
+            else
+            {
+                loudness = await Task.Run(() => Measure(sourcePath, bands, ct), ct).ConfigureAwait(false);
+                ct.ThrowIfCancellationRequested();
+                _cache?.SaveAudioAnalysis(sourcePath, signature, loudness.IntegratedLufs, loudness.Peak);
+            }
+            Measurements[signature] = loudness;
+        }
+        var desiredGain = normalize ? Math.Clamp(TargetLufs - loudness.IntegratedLufs, -24.0, 18.0) : 0;
+        var peakGain = loudness.Peak > 0 ? -2.0 - 20 * Math.Log10(loudness.Peak) : 0;
+        var gain = (float)Math.Pow(10, Math.Min(desiredGain, peakGain) / 20.0);
+        ct.ThrowIfCancellationRequested();
+        return new PlaybackAudio(sourcePath, bands, gain);
+    }
+
+    internal sealed class PlaybackAudio : ISampleProvider, IDisposable
+    {
+        private readonly MediaFoundationReader _reader;
+        private readonly double[] _bands;
+        private readonly float _gain;
+        private EqualizerSampleProvider _samples;
+        private long _framePosition;
+        public WaveFormat WaveFormat => _samples.WaveFormat;
+        public TimeSpan Duration => _reader.TotalTime;
+        public TimeSpan Position => TimeSpan.FromSeconds((double)_framePosition / WaveFormat.SampleRate);
+
+        public PlaybackAudio(string path, double[] bands, float gain)
+        {
+            _reader = new MediaFoundationReader(path, new MediaFoundationReader.MediaFoundationReaderSettings { RequestFloatOutput = true });
+            _bands = bands;
+            _gain = gain;
+            _samples = new EqualizerSampleProvider(_reader.ToSampleProvider(), bands);
+        }
+
+        public void Seek(TimeSpan position)
+        {
+            _reader.CurrentTime = position;
+            _samples = new EqualizerSampleProvider(_reader.ToSampleProvider(), _bands);
+            _framePosition = _reader.Position / _reader.WaveFormat.BlockAlign;
+        }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            var read = _samples.Read(buffer, offset, count);
+            for (var i = offset; i < offset + read; i++) buffer[i] *= _gain;
+            _framePosition += read / WaveFormat.Channels;
+            return read;
+        }
+
+        public void Dispose() => _reader.Dispose();
+    }
+
+    private static MediaSource CreatePlaybackSource(PlaybackAudio audio)
+    {
+        var rate = audio.WaveFormat.SampleRate;
+        var channels = audio.WaveFormat.Channels;
+        var properties = AudioEncodingProperties.CreatePcm((uint)rate, (uint)channels, 32);
+        properties.Subtype = MediaEncodingSubtypes.Float;
+        var stream = new MediaStreamSource(new AudioStreamDescriptor(properties))
+        {
+            CanSeek = true,
+            Duration = audio.Duration,
+            BufferTime = TimeSpan.FromMilliseconds(250),
+        };
+        var gate = new object();
+        var closed = false;
+        var buffer = new float[Math.Max(1, rate / 50) * channels];
+        stream.Starting += (_, args) =>
+        {
             try
             {
-                var loudness = await Task.Run(() => Measure(sourcePath, bands, ct), ct).ConfigureAwait(false);
-                ct.ThrowIfCancellationRequested();
-                var desiredGain = normalize ? Math.Clamp(TargetLufs - loudness.IntegratedLufs, -24.0, 18.0) : 0;
-                var peakGain = loudness.Peak > 0 ? -2.0 - 20 * Math.Log10(loudness.Peak) : 0;
-                var gainDb = Math.Min(desiredGain, peakGain);
-                await Task.Run(() => Encode(sourcePath, tempPath, bands, gainDb, ct), ct).ConfigureAwait(false);
-                ct.ThrowIfCancellationRequested();
-                File.Move(tempPath, outputPath, overwrite: true);
-                foreach (var old in Directory.EnumerateFiles(Path.GetDirectoryName(sourcePath)!, Path.GetFileName(sourcePath) + ".dsp-*.wav"))
-                    if (!string.Equals(old, outputPath, StringComparison.OrdinalIgnoreCase)) TryDelete(old);
-                return outputPath;
+                lock (gate)
+                {
+                    if (closed) return;
+                    if (args.Request.StartPosition is { } position) audio.Seek(position);
+                    args.Request.SetActualStartPosition(audio.Position);
+                }
             }
-            finally
-            {
-                TryDelete(tempPath);
-            }
-        }
-        finally
+            catch { stream.NotifyError(MediaStreamSourceErrorStatus.Other); }
+        };
+        stream.SampleRequested += (_, args) =>
         {
-            gate.Release();
-        }
+            try
+            {
+                lock (gate)
+                {
+                    if (closed) return;
+                    var start = audio.Position;
+                    var read = audio.Read(buffer, 0, buffer.Length);
+                    if (read == 0) return;
+                    var bytes = new byte[read * sizeof(float)];
+                    Buffer.BlockCopy(buffer, 0, bytes, 0, bytes.Length);
+                    var sample = MediaStreamSample.CreateFromBuffer(bytes.AsBuffer(), start);
+                    sample.Duration = audio.Position - start;
+                    args.Request.Sample = sample;
+                }
+            }
+            catch { stream.NotifyError(MediaStreamSourceErrorStatus.Other); }
+        };
+        stream.Closed += (_, _) =>
+        {
+            lock (gate)
+            {
+                if (closed) return;
+                closed = true;
+                audio.Dispose();
+            }
+        };
+        return MediaSource.CreateFromMediaStreamSource(stream);
     }
 
     private static LoudnessResult Measure(string path, double[] bands, CancellationToken ct)
@@ -121,29 +215,6 @@ public sealed class LoudnessNormalizationService
         if (gated.Length == 0) gated = absolute;
         var energySum = gated.Average();
         return new LoudnessResult(-0.691 + 10 * Math.Log10(energySum), peak);
-    }
-
-    private static void Encode(string sourcePath, string outputPath, double[] bands, double gainDb, CancellationToken ct)
-    {
-        ct.ThrowIfCancellationRequested();
-        using var reader = new MediaFoundationReader(sourcePath, new MediaFoundationReader.MediaFoundationReaderSettings { RequestFloatOutput = true });
-        var samples = new EqualizerSampleProvider(reader.ToSampleProvider(), bands);
-        var gain = (float)Math.Pow(10, gainDb / 20.0);
-        using var writer = new WaveFileWriter(outputPath, samples.WaveFormat);
-        var buffer = new float[samples.WaveFormat.SampleRate * samples.WaveFormat.Channels];
-        int read;
-        while ((read = samples.Read(buffer, 0, buffer.Length)) > 0)
-        {
-            ct.ThrowIfCancellationRequested();
-            for (var i = 0; i < read; i++) buffer[i] *= gain;
-            writer.WriteSamples(buffer, 0, read);
-        }
-        ct.ThrowIfCancellationRequested();
-    }
-
-    private static void TryDelete(string path)
-    {
-        try { if (File.Exists(path)) File.Delete(path); } catch { }
     }
 
     private readonly record struct LoudnessResult(double IntegratedLufs, double Peak);

@@ -160,9 +160,9 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
                 IsBusy = true;
                 try
                 {
-                    var normalized = await _normalizer.NormalizeAsync(localPath, token).ConfigureAwait(false);
+                    var normalized = await _normalizer.CreateSourceAsync(localPath, token).ConfigureAwait(false);
                     token.ThrowIfCancellationRequested();
-                    Play(generation, MediaSource.CreateFromUri(new Uri(normalized)));
+                    Play(generation, normalized);
                     return;
                 }
                 catch (OperationCanceledException) { return; }
@@ -179,16 +179,26 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
             var stream = await _ytDlp.ResolveStreamAsync(track, token).ConfigureAwait(false);
             token.ThrowIfCancellationRequested();
 
-            if (_normalizer.IsEnabled && stream.DashManifest is { Length: > 0 })
+            if (!_normalizer.IsEnabled)
             {
-                await _cache.EnsureCachedFromSourceAsync(track, token).ConfigureAwait(false);
+                var immediate = await CreateSourceAsync(stream).ConfigureAwait(false);
+                token.ThrowIfCancellationRequested();
+                _streamingTrackId = track.Id;
+                Play(generation, immediate);
+                return;
+            }
+
+            if (stream.DashManifest is { Length: > 0 })
+            {
+                if (await _cache.FetchAsync(track, stream.Url, token).ConfigureAwait(false) is null)
+                    await _cache.EnsureCachedFromSourceAsync(track, token).ConfigureAwait(false);
                 if (_cache.TryGetLocalPath(track.Id) is { } downloaded)
                 {
                     try
                     {
-                        var normalized = await _normalizer.NormalizeAsync(downloaded, token).ConfigureAwait(false);
+                        var normalized = await _normalizer.CreateSourceAsync(downloaded, token).ConfigureAwait(false);
                         token.ThrowIfCancellationRequested();
-                        Play(generation, MediaSource.CreateFromUri(new Uri(normalized)));
+                        Play(generation, normalized);
                         return;
                     }
                     catch (OperationCanceledException) { throw; }
@@ -204,9 +214,9 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
                 {
                     try
                     {
-                        var normalized = await _normalizer.NormalizeAsync(file, token).ConfigureAwait(false);
+                        var normalized = await _normalizer.CreateSourceAsync(file, token).ConfigureAwait(false);
                         token.ThrowIfCancellationRequested();
-                        Play(generation, MediaSource.CreateFromUri(new Uri(normalized)));
+                        Play(generation, normalized);
                         return;
                     }
                     catch (OperationCanceledException) { throw; }
@@ -326,8 +336,12 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
                 var stream = await _ytDlp.ResolveStreamAsync(track, ct).ConfigureAwait(false);
                 if (_normalizer.IsEnabled && stream.DashManifest is { Length: > 0 })
                 {
-                    await _cache.EnsureCachedFromSourceAsync(track, ct).ConfigureAwait(false);
-                    local = _cache.TryGetLocalPath(track.Id);
+                    local = await _cache.FetchAsync(track, stream.Url, ct).ConfigureAwait(false);
+                    if (local is null)
+                    {
+                        await _cache.EnsureCachedFromSourceAsync(track, ct).ConfigureAwait(false);
+                        local = _cache.TryGetLocalPath(track.Id);
+                    }
                     if (local is null)
                     {
                         Arm(track, await CreateSourceAsync(stream).ConfigureAwait(false), local: false);
@@ -346,13 +360,16 @@ public sealed partial class PlaybackService : ObservableObject, IDisposable
                 }
             }
 
-            if (_normalizer.IsEnabled && File.Exists(local))
+            MediaSource prepared;
+            try
             {
-                try { local = await _normalizer.NormalizeAsync(local, ct).ConfigureAwait(false); }
-                catch (OperationCanceledException) { throw; }
-                catch {   }
+                prepared = _normalizer.IsEnabled && File.Exists(local)
+                    ? await _normalizer.CreateSourceAsync(local, ct).ConfigureAwait(false)
+                    : MediaSource.CreateFromUri(new Uri(local));
             }
-            Arm(track, MediaSource.CreateFromUri(new Uri(local)), local: true);
+            catch (OperationCanceledException) { throw; }
+            catch { prepared = MediaSource.CreateFromUri(new Uri(local)); }
+            Arm(track, prepared, local: true);
         }
         catch
         {

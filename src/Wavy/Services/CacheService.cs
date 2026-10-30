@@ -1,4 +1,5 @@
 using System.IO;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -15,6 +16,7 @@ public sealed class CacheService
     private readonly string _cacheDir;
     private readonly string _indexPath;
 
+    private readonly ConcurrentDictionary<string, SemaphoreSlim> _fetchGates = new(StringComparer.Ordinal);
     private readonly object _gate = new();
     private readonly Dictionary<string, CacheEntry> _entries = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Task> _inFlight = new(StringComparer.Ordinal);
@@ -38,6 +40,31 @@ public sealed class CacheService
     {
         lock (_gate)
             return _entries.TryGetValue(trackId, out var e) && File.Exists(e.FilePath) ? e.FilePath : null;
+    }
+
+    public (double IntegratedLufs, double Peak)? GetAudioAnalysis(string path, string key)
+    {
+        lock (_gate)
+        {
+            var entry = _entries.Values.FirstOrDefault(e => string.Equals(e.FilePath, path, StringComparison.OrdinalIgnoreCase));
+            return entry?.AudioAnalysisKey == key && entry.IntegratedLufs is { } lufs && entry.AnalyzedPeak is { } peak
+                && double.IsFinite(lufs) && double.IsFinite(peak) && peak >= 0
+                ? (lufs, peak) : null;
+        }
+    }
+
+    public void SaveAudioAnalysis(string path, string key, double integratedLufs, double peak)
+    {
+        if (!double.IsFinite(integratedLufs) || !double.IsFinite(peak) || peak < 0) return;
+        lock (_gate)
+        {
+            var entry = _entries.Values.FirstOrDefault(e => string.Equals(e.FilePath, path, StringComparison.OrdinalIgnoreCase));
+            if (entry is null) return;
+            entry.AudioAnalysisKey = key;
+            entry.IntegratedLufs = integratedLufs;
+            entry.AnalyzedPeak = peak;
+            Save();
+        }
     }
 
     public void MarkPlayed(Track track)
@@ -181,7 +208,7 @@ public sealed class CacheService
             if (!forceYtDlp && await TryDownloadDirectAsync(track, ct).ConfigureAwait(false) is not null)
                 return;
 
-            var template = Path.Combine(_cacheDir, track.Id + ".%(ext)s");
+            var template = Path.Combine(_cacheDir, CacheFileStem(track).Replace("%", "%%") + ".%(ext)s");
             string? destination = null;
             await foreach (var progress in _ytDlp.DownloadAsync(track, template, ct).ConfigureAwait(false))
             {
@@ -189,7 +216,7 @@ public sealed class CacheService
                     destination = progress.Destination;
             }
 
-            var finalPath = ResolveDownloadedFile(track.Id, destination);
+            var finalPath = ResolveDownloadedFile(CacheFileStem(track), destination);
             if (finalPath is null)
                 return;
 
@@ -217,9 +244,18 @@ public sealed class CacheService
 
     public async Task<string?> FetchAsync(Track track, string url, CancellationToken ct = default)
     {
-        if (TryGetLocalPath(track.Id) is { } already)
-            return already;
+        var gate = _fetchGates.GetOrAdd(track.Id, _ => new SemaphoreSlim(1, 1));
+        await gate.WaitAsync(ct).ConfigureAwait(false);
+        try
+        {
+            if (TryGetLocalPath(track.Id) is { } already) return already;
+            return await FetchCoreAsync(track, url, ct).ConfigureAwait(false);
+        }
+        finally { gate.Release(); }
+    }
 
+    private async Task<string?> FetchCoreAsync(Track track, string url, CancellationToken ct)
+    {
         var temp = Path.Combine(_cacheDir, track.Id + ".partial");
         try
         {
@@ -237,11 +273,12 @@ public sealed class CacheService
             if (new FileInfo(temp).Length < 1024)
                 return null;
 
-            var destination = Path.Combine(_cacheDir, track.Id + ".m4a");
+            var destination = Path.Combine(_cacheDir, CacheFileStem(track) + ".m4a");
             File.Move(temp, destination, overwrite: true);
             Register(track, destination);
             return destination;
         }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
         catch
         {
             return null;
@@ -251,6 +288,37 @@ public sealed class CacheService
             if (File.Exists(temp))
                 TryDelete(temp);
         }
+    }
+
+    private static string CacheFileStem(Track track)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        var title = new string(track.Title.Select(c => invalid.Contains(c) ? '_' : c).ToArray()).Trim().TrimEnd('.');
+        if (title.Length == 0) title = "Untitled";
+        if (title.Length > 100) title = title[..100].TrimEnd();
+        var id = new string(track.Id.Select(c => invalid.Contains(c) ? '_' : c).ToArray());
+        return $"{title} [{id}]";
+    }
+
+    private void RenameCachedFiles()
+    {
+        var changed = false;
+        foreach (var entry in _entries.Values)
+        {
+            try
+            {
+                if (!File.Exists(entry.FilePath)) continue;
+                var old = entry.FilePath;
+                var renamed = Path.Combine(_cacheDir, CacheFileStem(entry.ToTrack()) + Path.GetExtension(old));
+                if (string.Equals(old, renamed, StringComparison.OrdinalIgnoreCase)) continue;
+                File.Move(old, renamed);
+                entry.FilePath = renamed;
+                DeleteProcessed(old);
+                changed = true;
+            }
+            catch { }
+        }
+        if (changed) Save();
     }
 
     private void Register(Track track, string filePath)
@@ -311,6 +379,7 @@ public sealed class CacheService
 
         }
 
+        RenameCachedFiles();
         PruneOrphans();
     }
 
@@ -328,11 +397,7 @@ public sealed class CacheService
             {
                 if (string.Equals(path, _indexPath, StringComparison.OrdinalIgnoreCase))
                     continue;
-                var dspIndex = path.IndexOf(".dsp-", StringComparison.OrdinalIgnoreCase);
-                var normalizedSource = dspIndex >= 0 ? path[..dspIndex] : path.EndsWith(".norm16.m4a", StringComparison.OrdinalIgnoreCase)
-                    ? path[..^".norm16.m4a".Length]
-                    : null;
-                if (!known.Contains(path) && (normalizedSource is null || !known.Contains(normalizedSource)))
+                if (!known.Contains(path))
                     TryDelete(path);
             }
         }

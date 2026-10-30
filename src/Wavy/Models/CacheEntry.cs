@@ -11,6 +11,10 @@ public sealed class CacheEntry
     public DateTimeOffset CachedUtc { get; set; }
     public DateTimeOffset LastPlayedUtc { get; set; }
 
+    public string? AudioAnalysisKey { get; set; }
+    public double? IntegratedLufs { get; set; }
+    public double? AnalyzedPeak { get; set; }
+
     public bool HiddenFromHistory { get; set; }
 
     public Core.Models.Track ToTrack() => new()
